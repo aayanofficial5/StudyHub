@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const port = process.env.PORT || 4000; // Use PORT for the server
 
-// request body json data parser
+// request body   json data parser
 app.use(express.json());
 
 // mapping of routes with app
