@@ -12,17 +12,19 @@ exports.sendOTP = async (req, res) => {
         message: "User Already Exists with Given Email.",
       });
     }
+    let result = null;
+    let otp;
     do {
       // generate otp
-      const otp = otpGenerator.generate(6, {
+      otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
         specialChars: false,
       });
       // check otp is unique or not
-      let result = await OTP.findOne({ otp });
-    } while (result);
-    console.log(result);
+      result = await OTP.findOne({ otp });
+    } while (result !== null);
+    // console.log(result);
 
     const otpPayload = { email, otp };
     // create a OTP document in database
@@ -41,4 +43,4 @@ exports.sendOTP = async (req, res) => {
   }
 };
 
-exports.signup = async (req, res) => {};
+// exports.signup = async (req, res) => {};
