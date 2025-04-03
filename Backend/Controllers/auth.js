@@ -169,3 +169,64 @@ exports.signup = async (req, res) => {
     });
   }
 };
+
+// login
+exports.login = async (req, res) => {
+  try {
+    // get data from request body
+    const { email, password } = req.body;
+    // validate data
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required, please try again",
+      });
+    }
+    // check if user exists or not
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        sucess: false,
+        message: "User is not registered, please signup first",
+      });
+    }
+    // compare password with stored hashedPassword
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.status(403).json({
+        success: false,
+        message: "Password is incorrect,please try again",
+      });
+    }
+
+    // sign(generate) a token for user login
+    const payload = {
+      id: user._id,
+      email: user.email,
+      role: user.accountType,
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    user = user.toObject(); // findOne() return a document 'user' which is then converted to object to add token to it 
+    user.token = token;
+    user.password = undefined;
+    // console.log(user.token);
+    // console.log(user.password);
+    const options = {
+      expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+    };
+    return res.cookie("token", token, options).status(200).json({
+      success: true,
+      user,
+      message: "Logged in successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Login failure, please try again",
+    });
+  }
+};
