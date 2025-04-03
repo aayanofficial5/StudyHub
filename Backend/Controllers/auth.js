@@ -134,14 +134,14 @@ exports.signup = async (req, res) => {
     // Create user data entry in the database
 
     // entry in profile collection
-    const additionalDetails = await Profile.create({
+    const profileDetails = await Profile.create({
       gender: null,
       dateOfBirth: null,
       about: null,
       contactNumber: null,
     });
 
-    console.log(additionalDetails);
+    // console.log(profileDetails);
 
     // entry in user collection
     const user = await User.create({
@@ -150,7 +150,7 @@ exports.signup = async (req, res) => {
       email,
       password: hashedPassword,
       accountType,
-      additionalDetails,
+      additionalDetails: profileDetails._id,
       image: `https://ui-avatars.com/api/?name=${firstName}+${lastName}`,
     });
 
@@ -210,7 +210,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    user = user.toObject(); // findOne() return a document 'user' which is then converted to object to add token to it 
+    user = user.toObject(); // findOne() return a document 'user' which is then converted to object to add token to it
     user.token = token;
     user.password = undefined;
     // console.log(user.token);
