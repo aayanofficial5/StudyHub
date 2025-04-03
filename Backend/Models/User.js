@@ -26,19 +26,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  confirmPassword: {
-    type: String,
-    required: true,
-  },
   accountType: {
     type: String,
     enum: ["Admin", "Student", "Instructor"],
     required: true,
   },
+  image: {
+    type: String,
+  },
   additionalDetails: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Profile",
-    required: true,
+    required:true,
   },
   courses: [
     {
@@ -46,10 +45,6 @@ const userSchema = new mongoose.Schema({
       ref: "Course",
     },
   ],
-  image: {
-    type: String,
-    required: true,
-  },
   courseProgress: [
     {
       type: mongoose.Schema.Types.ObjectId,
