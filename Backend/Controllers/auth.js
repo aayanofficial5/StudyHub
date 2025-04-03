@@ -43,4 +43,8 @@ exports.sendOTP = async (req, res) => {
   }
 };
 
-// exports.signup = async (req, res) => {};
+exports.signup = async (req, res) => {
+  // data fetch from request ki body
+  // validate krlo
+  
+};
