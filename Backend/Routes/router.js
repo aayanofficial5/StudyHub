@@ -1,5 +1,5 @@
 const express = require("express");
-const { sendOTP, signup, login } = require("../Controllers/auth.js");
+const { sendOTP, login, signup } = require("../Controllers/Auth");
 
 const router = express.Router();
 // write routes here
