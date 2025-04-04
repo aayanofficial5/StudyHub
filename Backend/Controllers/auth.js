@@ -5,7 +5,7 @@ const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mailSender = require("../utils/mailSender");
-const { passwordUpdated } = require("../MailTemplates/passwordUpdate");
+const { passwordUpdated } = require("../Templates/Mails/passwordUpdate");
 require("dotenv").config();
 
 // sendOTP
@@ -206,7 +206,7 @@ exports.login = async (req, res) => {
     const payload = {
       id: user._id,
       email: user.email,
-      role: user.accountType,
+      accountType: user.accountType,
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -226,6 +226,7 @@ exports.login = async (req, res) => {
       message: "Logged in successfully",
     });
   } catch (error) {
+    console.log("Login failure, please try again : " + error);
     res.status(500).json({
       success: false,
       message: "Login failure, please try again",
@@ -280,7 +281,7 @@ exports.changePassword = async (req, res) => {
         passwordUpdated(updatedDetails.email, updatedDetails.firstName)
       );
 
-      console.log("Email sent successfully:", emailResponse);
+      console.log("Email sent successfully:", emailResponse.response);
     } catch (error) {
       console.error("Error occurred while sending email:", error);
       return res.status(500).json({

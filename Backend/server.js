@@ -1,14 +1,16 @@
 const express = require("express");
 const dbConnect = require("./Config/database");
 const router = require("./Routes/User");
+const cookieParser = require("cookie-parser");
 const app = express();
 require("dotenv").config();
 
 const port = process.env.PORT || 4000; // Use PORT for the server
 
-// request body   json data parser
+// request body json data parser
 app.use(express.json());
-
+// cookie data parser
+app.use(cookieParser());
 // mapping of routes with app
 app.use("/api/v1", router);
 // server starting
