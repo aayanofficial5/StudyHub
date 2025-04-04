@@ -1,6 +1,6 @@
 const express = require("express");
 const dbConnect = require("./Config/database");
-const router = require("./Routes/router");
+const router = require("./Routes/User");
 const app = express();
 require("dotenv").config();
 
@@ -11,7 +11,6 @@ app.use(express.json());
 
 // mapping of routes with app
 app.use("/api/v1", router);
-
 // server starting
 app.listen(port, () => {
   console.log(`server is running on port ${port}...`);
