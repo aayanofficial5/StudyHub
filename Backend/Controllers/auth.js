@@ -5,7 +5,7 @@ const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mailSender = require("../utils/mailSender");
-const { passwordUpdated } = require("../Templates/Mails/passwordUpdate");
+const { passwordUpdated } = require("../Templates/Mails/passwordUpdated");
 require("dotenv").config();
 
 // sendOTP
@@ -205,12 +205,13 @@ exports.login = async (req, res) => {
     // sign(generate) a token for user login
     const payload = {
       id: user._id,
+      firstName:user.firstName,
       email: user.email,
       accountType: user.accountType,
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
     user = user.toObject(); // findOne() return a document 'user' which is then converted to object to add token to it
     user.token = token;
