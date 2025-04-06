@@ -12,6 +12,11 @@ const sectionSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course",
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Section", sectionSchema);

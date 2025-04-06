@@ -17,6 +17,11 @@ const subSectionSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  sectionId: {
+    type:mongoose.Schema.Types.ObjectId,
+    ref: "Section",
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("SubSection", subSectionSchema);
