@@ -27,8 +27,8 @@ const sendVerificationEmail = async (email, otp) => {
       "OTP Verification Email",
       "<h2>This Otp is only valid for 5mins : </h2><h3>" + otp + "</h3>"
     );
-    console.log("Email sent successfully...");
-    console.log(mailResponse);
+    console.log("OTP Email sent successfully...");
+    // console.log(mailResponse);
   } catch (err) {
     console.log("Error occurred while sending email : " + err.message);
   }

@@ -11,11 +11,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  userName:{
-    type:String,
-    required:true,
-    unique:true,
-  },
+  // userName:{
+  //   type:String,
+  //   required:true,
+  //   unique:true,
+  // },
   email: {
     type: String,
     required: true,
@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
   additionalDetails: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Profile",
-    required:true,
+    required: true,
   },
   courses: [
     {
@@ -54,13 +54,3 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("User", userSchema);
-
-// middleware to send email when user is deleted
-
-userSchema.post('deleteOne',async (doc)=>{
-  try{
-    await mailSender(doc.email,"Account Deleted Successfully",accountDeleted(doc.email,doc.firstName));
-  }catch(error){
-    console.log("Error occurred while sending email:",error);
-  }
-});

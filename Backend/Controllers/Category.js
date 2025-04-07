@@ -34,21 +34,24 @@ exports.createCategory = async (req, res) => {
 
 // getAllCategories handler function
 
-exports.getAllCategories = async (req,res)=>{
-  try{
+exports.getAllCategories = async (req, res) => {
+  try {
     // fetch all tags from DB
-    const allCategories = await Category.find({},{name:true,description:true});
+    const allCategories = await Category.find(
+      {},
+      { name: true, description: true }
+    );
 
     return res.status(200).json({
-      success:true,
+      success: true,
       allCategories,
-      message:"All Categories fetched successfully"
-    })
-  }catch(error){
+      message: "All Categories fetched successfully",
+    });
+  } catch (error) {
     console.log("Error occured while fetching all categories");
     res.status(500).json({
       success: false,
       message: "Error occured while fetching all categories : " + error.message,
     });
   }
-}
+};

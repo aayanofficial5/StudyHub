@@ -205,7 +205,7 @@ exports.login = async (req, res) => {
     // sign(generate) a token for user login
     const payload = {
       id: user._id,
-      firstName:user.firstName,
+      firstName: user.firstName,
       email: user.email,
       accountType: user.accountType,
     };

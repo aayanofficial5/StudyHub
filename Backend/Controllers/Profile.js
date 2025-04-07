@@ -1,6 +1,7 @@
 const User = require("../Models/User");
 const Profile = require("../Models/Profile");
-
+const mailSender = require("../utils/mailSender");
+const { accountDeleted } = require("../Templates/Mails/accountDeleted");
 // updateProfile handler function
 exports.updateProfile = async (req, res) => {
   try {
@@ -78,6 +79,12 @@ exports.deleteAccount = async (req, res) => {
 
     // delete user
     await User.deleteOne({ _id: userId });
+    // send email to user
+    await mailSender(
+      user.email,
+      "Account Deleted Successfully",
+      accountDeleted(user.email, user.firstName)
+    );
     // return response
     return res.status(200).json({
       success: true,
@@ -93,11 +100,11 @@ exports.deleteAccount = async (req, res) => {
 };
 
 // getUserDetails handler function
-exports.getUserDetails = async (req,res)=>{
-  try{
+exports.getUserDetails = async (req, res) => {
+  try {
     const userId = req.user.id;
     const user = await User.findById(userId).populate("additionalDetails");
-    if(!user){
+    if (!user) {
       return res.status(400).json({
         success: false,
         message: "User not found",
@@ -108,8 +115,8 @@ exports.getUserDetails = async (req,res)=>{
       message: "User details fetched successfully",
       user,
     });
-  }catch(error){
-    console.log("Error occurred while fetching user details:",error);
+  } catch (error) {
+    console.log("Error occurred while fetching user details:", error);
     return res.status(500).json({
       success: false,
       message: "Error occurred while fetching user details",

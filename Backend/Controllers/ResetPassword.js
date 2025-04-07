@@ -30,7 +30,6 @@ exports.resetPasswordToken = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "5m",
     });
-    console.log(token);
     // create a reset password link (client's route + token as a parameter)
     const resetLink = `http://localhost:5173/reset-password/${token}`;
 
@@ -39,9 +38,6 @@ exports.resetPasswordToken = async (req, res) => {
       email,
       "Password Reset",
       resetPasswordLink(user.firstName, resetLink)
-    );
-    console.log(
-      "Password Reset Mail Sent Successfully : " + mailResponse.response
     );
 
     // send response of email sent successfully

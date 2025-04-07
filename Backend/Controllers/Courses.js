@@ -8,8 +8,14 @@ const Category = require("../Models/Category");
 exports.createCourse = async (req, res) => {
   try {
     // fetch data from request body
-    const { courseName, courseDescription, whatYouWillLearn, price, tag , category } =
-      req.body;
+    const {
+      courseName,
+      courseDescription,
+      whatYouWillLearn,
+      price,
+      tag,
+      category,
+    } = req.body;
     // fetch user from request
     const user = req.user;
     // fetch image from req.files
@@ -51,7 +57,10 @@ exports.createCourse = async (req, res) => {
 
     // upload thumbnail to cloud
 
-    const thumbnailImage = await fileUploader(thumbnail, process.env.FOLDER_NAME);
+    const thumbnailImage = await fileUploader(
+      thumbnail,
+      process.env.FOLDER_NAME
+    );
 
     // craete an entry of course
 
