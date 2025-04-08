@@ -1,14 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const { auth } = require("../Middlewares/Authentication/auth");
-const { updateProfilePicture, updateProfile, getUserDetails, deleteAccount } = require("../Controllers/Profile");
+const {
+  updateProfilePicture,
+  updateProfile,
+  getUserDetails,
+  deleteAccount,
+  updatePassword,
+} = require("../Controllers/Profile");
 
 // routes
 
-router.put("/updateProfilePicture", auth, updateProfilePicture);
-router.put("/updateProfile", auth, updateProfile);
-// router.post("/changePassword", auth, changePassword);
-router.get("/getUserDetails", auth, getUserDetails);
-router.delete("/deleteAccount", auth, deleteAccount);
+router.patch("/update-password", auth, updatePassword);
+router.delete("/delete-account", auth, deleteAccount);
+router.put("/update-profile-picture", auth, updateProfilePicture);
+router.put("/update-profile", auth, updateProfile);
+router.get("/get-user-details", auth, getUserDetails);
 
-module.exports= router;
+module.exports = router;
