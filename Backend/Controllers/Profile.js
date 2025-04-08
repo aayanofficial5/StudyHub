@@ -2,6 +2,8 @@ const User = require("../Models/User");
 const Profile = require("../Models/Profile");
 const mailSender = require("../utils/mailSender");
 const { accountDeleted } = require("../Templates/Mails/accountDeleted");
+const { fileUploader } = require("../utils/fileUploader");
+require("dotenv").config();
 // updateProfile handler function
 exports.updateProfile = async (req, res) => {
   try {
@@ -120,6 +122,59 @@ exports.getUserDetails = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Error occurred while fetching user details",
+    });
+  }
+};
+
+// updateProfilePicture handler function
+exports.updateProfilePicture = async (req, res) => {
+  try {
+    // fetch userId from request
+    const userId = req.user.id;
+    // fetch profile picture from request
+    const profilePicture = req.files?.profilePicture;
+    // find user by id
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    // validation of profile picture
+    if (!profilePicture) {
+      return res.status(400).json({
+        success: false,
+        message: "Profile picture is required",
+      });
+    }
+    // upload profile picture to cloudinary
+    const uploadDetails = await fileUploader(
+      profilePicture,
+      process.env.FOLDER_NAME,
+      0,
+      0
+    );
+    // update profile picture in database
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        image: uploadDetails.secure_url,
+      },
+      { new: true }
+    );
+
+    // return response
+    return res.status(200).json({
+      success: true,
+      message: "Profile picture updated successfully",
+      profilePicture: updatedUser.image,
+    });
+  } catch (error) {
+    console.log("Error occurred while updating profile picture:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error occurred while updating profile picture",
     });
   }
 };

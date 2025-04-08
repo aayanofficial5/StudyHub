@@ -51,7 +51,6 @@ exports.sendOTP = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "OTP sent successfully!",
-      otp: otpDocument, // Sending OTP for testing
     });
   } catch (error) {
     // console.error("OTP Sending Error:", error);
@@ -132,7 +131,8 @@ exports.signup = async (req, res) => {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
+    // console.log(hashedPassword);
+    
     // Create user data entry in the database
 
     // entry in profile collection
@@ -156,12 +156,12 @@ exports.signup = async (req, res) => {
       image: `https://ui-avatars.com/api/?name=${firstName}+${lastName}`,
     });
 
-    console.log(user);
+    // console.log(user);
+
     // Send success response
     return res.status(201).json({
       success: true,
       message: "User registered successfully!",
-      user,
     });
   } catch (error) {
     console.error("Signup Error:", error);
