@@ -11,16 +11,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  // userName:{
-  //   type:String,
-  //   required:true,
-  //   unique:true,
-  // },
   email: {
     type: String,
     required: true,
     trim: true,
-    // unique:true,
   },
   password: {
     type: String,
@@ -59,6 +53,12 @@ const userSchema = new mongoose.Schema({
       ref: "CourseProgress",
     },
   ],
+  resetPasswordToken: {
+    type: String,
+  },
+  resetPasswordExpires: {
+    type: Date,
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);
