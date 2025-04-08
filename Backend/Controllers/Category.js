@@ -55,3 +55,46 @@ exports.getAllCategories = async (req, res) => {
     });
   }
 };
+
+// getCategoryPageDetails handler function
+exports.getCategoryPageDetails = async (req, res) => {
+  try {
+    // fetch categoryId from request body
+    const {categoryId} = req.body;
+
+    // validate categoryId
+    if(!categoryId){
+      return res.status(400).json({
+        success: false,
+        message: "Category ID is required",
+      });
+    }
+    // get category details
+    const categoryDetails = await Category.findById(categoryId).populate("courses");
+    if(!categoryDetails){
+      return res.status(400).json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+
+    // get courses under the category
+    const courses = await Course.find({category:{$in:[categoryId]}})
+    .populate("ratingAndReviews")
+    .populate("studentsEnrolled");
+
+    // get all courses
+    const allCourses = await Course.find({});
+
+    // get all categories
+    const allCategories = await Category.find({});
+    
+  }catch(error){
+    console.log("Error occured while fetching category page details : " + error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Error occured while fetching category page details",
+    });
+  }
+}
+
