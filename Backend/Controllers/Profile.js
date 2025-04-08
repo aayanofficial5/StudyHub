@@ -3,6 +3,13 @@ const Profile = require("../Models/Profile");
 const mailSender = require("../utils/mailSender");
 const { accountDeleted } = require("../Templates/Mails/accountDeleted");
 const { fileUploader } = require("../utils/fileUploader");
+const { passwordUpdated } = require("../Templates/Mails/passwordUpdated");
+const RatingAndReview = require("../Models/RatingAndReview");
+const Course = require("../Models/Course");
+const CourseProgress = require("../Models/CourseProgress");
+const bcrypt = require("bcrypt");
+
+
 require("dotenv").config();
 // updateProfile handler function
 exports.updateProfile = async (req, res) => {
@@ -68,6 +75,8 @@ exports.deleteAccount = async (req, res) => {
     }
     // delete profile
     await Profile.findByIdAndDelete(user.additionalDetails);
+    // update rating and reviews of user
+    await RatingAndReview.updateMany({ user: userId }, { user: null });
     // if user is student
     if (user.accountType === "Student") {
       // delete course progress of user
@@ -79,14 +88,22 @@ exports.deleteAccount = async (req, res) => {
       );
     }
 
+    // if user is instructor
+    if (user.accountType === "Instructor") {
+      // update courses in which user is enrolled
+      await Course.updateMany({ instructor: userId }, { instructor: null });
+    }
+
     // delete user
     await User.deleteOne({ _id: userId });
+
     // send email to user
     await mailSender(
       user.email,
       "Account Deleted Successfully",
       accountDeleted(user.email, user.firstName)
     );
+
     // return response
     return res.status(200).json({
       success: true,
@@ -112,6 +129,7 @@ exports.getUserDetails = async (req, res) => {
         message: "User not found",
       });
     }
+    user.password = undefined;
     return res.status(200).json({
       success: true,
       message: "User details fetched successfully",
@@ -175,6 +193,92 @@ exports.updateProfilePicture = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Error occurred while updating profile picture",
+    });
+  }
+};
+
+// changePassword
+exports.updatePassword = async (req, res) => {
+  try {
+    // fetch data from req.body and req.user
+    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+    const userId = req.user.id;
+
+    // find user by id
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // validate data
+    if (!oldPassword || !newPassword || !confirmNewPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required, please try again",
+      });
+    }
+
+    // confirm new password
+    if (newPassword != confirmNewPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "new password & confirm new password does not match",
+      });
+    }
+
+    // check if new password is same as old password
+    if (newPassword === oldPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New password cannot be same as old password",
+      });
+    }
+
+    // fetch stored hashed password of user & compare with user entered password
+    const isMatched = await bcrypt.compare(oldPassword, user.password); // it means compare(textPassword,hashedPassword)
+
+    if (!isMatched) {
+      return res.status(401).json({
+        success: false,
+        message: "The password is incorrect, please enter correct password",
+      });
+    }
+
+    // update password in DB to new hashed password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const updatedDetails = await User.findByIdAndUpdate(user.id, {
+      password: hashedPassword,
+    });
+    // sending mail to inform about password upadation
+    try {
+      const emailResponse = await mailSender(
+        updatedDetails.email,
+        "Account Password changed",
+        passwordUpdated(updatedDetails.email, updatedDetails.firstName)
+      );
+      console.log("Email sent successfully...");
+    } catch (error) {
+      console.error("Error occurred while sending email:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Error occurred while sending email",
+        error: error.message,
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Error occurred while updating password:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error occurred while updating password",
+      error: error.message,
     });
   }
 };

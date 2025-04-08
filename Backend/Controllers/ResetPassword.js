@@ -5,7 +5,7 @@ const User = require("../Models/User");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const { passwordUpdated } = require("../Templates/Mails/passwordUpdated");
-
+const crypto = require("crypto");
 exports.resetPasswordToken = async (req, res) => {
   try {
     const { email } = req.body;
@@ -26,17 +26,35 @@ exports.resetPasswordToken = async (req, res) => {
       });
     }
 
-    // generate a token with 5 min expiry
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "5m",
-    });
+    // generate a token with crypto
+    const token = crypto.randomBytes(32).toString("hex");
+    // console.log("Token:", token);
+
+    // store token in DB by hashing it
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        {
+          $set: {
+            resetPasswordToken: hashedToken,
+            resetPasswordExpires: Date.now() + 5 * 60 * 1000,
+          },
+        },
+        { new: true }
+      );
+    } catch (error) {
+      console.log("Error occurred while storing token in DB");
+    }
+
     // create a reset password link (client's route + token as a parameter)
-    const resetLink = `http://localhost:5173/reset-password/${token}`;
+    const resetLink = `${process.env.FRONTEND_URL}/forgot-password/${token}`;
 
     // send this link attached to mail
-    const mailResponse = await mailSender(
+    await mailSender(
       email,
-      "Password Reset",
+      "Password Reset Link",
       resetPasswordLink(user.firstName, resetLink)
     );
 
@@ -75,39 +93,55 @@ exports.resetPassword = async (req, res) => {
         message: "Passwords does not match",
       });
     }
-    let payload;
-    try {
-      // decode token and get id
-      payload = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (error) {
-      console.log("Token Invalid or Expired.");
+
+    // check if token is valid
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    // console.log("Hashed Token:", hashedToken);
+        
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
       return res.status(400).json({
-        success: true,
+        success: false,
         message: "Token Invalid or Expired.",
       });
     }
 
     // hash the new password
     const hashedPassword = await bcrypt.hash(password, 10);
+
     // find user in DB and update password
-    const user = await User.findByIdAndUpdate(payload.id, {
-      password: hashedPassword,
-    });
-    if (!user) {
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      {
+        $set: {
+          password: hashedPassword,
+          resetPasswordToken: null,
+          resetPasswordExpires: null,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-    console.log("Password Reset Successful");
 
-    // send a mail to user informing of password updation
+    // send a mail to user to inform of password updation
     await mailSender(
       user.email,
       "Password Reset Successful",
       passwordUpdated(user.email, user.firstName)
     );
 
+    // return response
     return res.status(200).json({
       success: true,
       message: "Password Reset Successful",
