@@ -210,7 +210,7 @@ exports.login = async (req, res) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "10d",
     });
     user = user.toObject(); // findOne() return a document 'user' which is then converted to object to add token to it
     user.token = token;
@@ -218,7 +218,7 @@ exports.login = async (req, res) => {
     // console.log(user.token);
     // console.log(user.password);
     const options = {
-      expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
     };
     return res.cookie("token", token, options).status(200).json({
       success: true,

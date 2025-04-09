@@ -13,11 +13,19 @@ exports.createCategory = async (req, res) => {
       });
     }
 
+    // check if category already exists
+    const existingCategory = await Category.findOne({ name });
+    if (existingCategory) {
+      return res.status(400).json({
+        success: false,
+        message: "Category already exists",
+      });
+    }
+
     // create entry in db
+    await Category.create({ name, description });
 
-    const categoryDetails = await Category.create({ name, description });
-
-    console.log(categoryDetails);
+    // console.log(categoryDetails);
 
     return res.status(201).json({
       success: true,
@@ -56,22 +64,24 @@ exports.getAllCategories = async (req, res) => {
   }
 };
 
-// getCategoryPageDetails handler function
+//PENDING:getCategoryPageDetails handler function
 exports.getCategoryPageDetails = async (req, res) => {
   try {
     // fetch categoryId from request body
-    const {categoryId} = req.body;
+    const { categoryId } = req.body;
 
     // validate categoryId
-    if(!categoryId){
+    if (!categoryId) {
       return res.status(400).json({
         success: false,
         message: "Category ID is required",
       });
     }
     // get category details
-    const categoryDetails = await Category.findById(categoryId).populate("courses");
-    if(!categoryDetails){
+    const categoryDetails = await Category.findById(categoryId).populate(
+      "courses"
+    );
+    if (!categoryDetails) {
       return res.status(400).json({
         success: false,
         message: "Category not found",
@@ -79,22 +89,22 @@ exports.getCategoryPageDetails = async (req, res) => {
     }
 
     // get courses under the category
-    const courses = await Course.find({category:{$in:[categoryId]}})
-    .populate("ratingAndReviews")
-    .populate("studentsEnrolled");
+    const courses = await Course.find({ category: { $in: [categoryId] } })
+      .populate("ratingAndReviews")
+      .populate("studentsEnrolled");
 
     // get all courses
     const allCourses = await Course.find({});
 
     // get all categories
     const allCategories = await Category.find({});
-    
-  }catch(error){
-    console.log("Error occured while fetching category page details : " + error.message);
+  } catch (error) {
+    console.log(
+      "Error occured while fetching category page details : " + error.message
+    );
     return res.status(500).json({
       success: false,
       message: "Error occured while fetching category page details",
     });
   }
-}
-
+};

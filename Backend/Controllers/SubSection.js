@@ -6,12 +6,19 @@ const { fileDeleter } = require("../utils/fileDeleter");
 exports.createSubSection = async (req, res) => {
   try {
     // fetch data from request body
-    const { sectionId, title, description, timeDuration } = req.body;
+    const { subSectionName, description, timeDuration } = req.body;
     // fetch video from request
     const video = req.files.video;
+    const sectionId = req.params.sectionId;
 
     // validation of data
-    if (!sectionId || !title || !description || !timeDuration || !videoUrl) {
+    if (
+      !sectionId ||
+      !subSectionName ||
+      !description ||
+      !timeDuration ||
+      !video
+    ) {
       return res.status(400).json({
         success: false,
         message: "Missing Properties",
@@ -21,10 +28,11 @@ exports.createSubSection = async (req, res) => {
     const { secure_url } = await fileUploader(video, process.env.FOLDER_NAME);
     // create a new subSection
     const newSubSection = await SubSection.create({
-      title,
+      subSectionName,
       description,
       timeDuration,
       videoUrl: secure_url,
+      sectionId,
     });
     // update section with subSectionId
     const updatedSection = await Section.findByIdAndUpdate(
@@ -53,27 +61,39 @@ exports.createSubSection = async (req, res) => {
 // updateSubSection handler function
 exports.updateSubSection = async (req, res) => {
   try {
-    const { subSectionId, title, description, timeDuration } = req.body;
+    const { subSectionName=0, description=0, timeDuration=0 } = req.body;
     // fetch video from request
-    const video = req.files.video;
-    // validation of data
-    if (!subSectionId || !title || !description || !timeDuration || !video) {
+    const video = req.files?.video;
+    const subSectionId = req.params?.subSectionId;
+
+    // check if subSectionId is present
+    if(!subSectionId){
       return res.status(400).json({
         success: false,
-        message: "Missing Properties",
+        message: "Missing Section Id",
       });
     }
-
+    // check if subSection is present
+    const subSection = await SubSection.findById(subSectionId);
+    if(!subSection){
+      return res.status(400).json({
+        success: false,
+        message: "SubSection not found",
+      });
+    }
     // upload video to cloudinary
-    const { secure_url } = await fileUploader(video, process.env.FOLDER_NAME);
+    let secure_url = subSection.videoUrl;
+    if(video){
+      const { secure_url } = await fileUploader(video, process.env.FOLDER_NAME);
+    }
 
     // update subSection
     const updatedSubSection = await SubSection.findByIdAndUpdate(
       subSectionId,
       {
-        title,
-        description,
-        timeDuration,
+        subSectionName: subSectionName || subSection.subSectionName,
+        description: description || subSection.description,
+        timeDuration: timeDuration || subSection.timeDuration,
         videoUrl: secure_url,
       },
       { new: true }
@@ -97,9 +117,10 @@ exports.updateSubSection = async (req, res) => {
 // deleteSubSection handler function
 exports.deleteSubSection = async (req, res) => {
   try {
-    const { subSectionId } = req.body;
+    const subSectionId = req.params.subSectionId;
+    const sectionId = req.params.sectionId;
     // validation of data
-    if (!subSectionId) {
+    if (!subSectionId || !sectionId) {
       return res.status(400).json({
         success: false,
         message: "Missing Properties",

@@ -6,7 +6,7 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const { passwordUpdated } = require("../Templates/Mails/passwordUpdated");
 const crypto = require("crypto");
-exports.resetPasswordToken = async (req, res) => {
+exports.resetToken = async (req, res) => {
   try {
     const { email } = req.body;
     // validate email

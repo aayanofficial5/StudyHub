@@ -4,20 +4,28 @@ const Tag = require("../Models/Tag");
 exports.createTag = async (req, res) => {
   try {
     // fetch tag data from request body
-    const { name, description } = req.body;
+    const { name } = req.body;
     // validation of tag data
-    if (!name || !description) {
+    if (!name) {
       return res.status(400).json({
         success: true,
         message: "All fields are required",
       });
     }
 
+    // check if tag already exists
+    const existingTag = await Tag.findOne({ name });
+    if (existingTag) {
+      return res.status(400).json({
+        success: false,
+        message: "Tag already exists",
+      });
+    }
     // create entry in db
 
-    const tagDetails = await Tag.create({ name, description });
+    const tagDetails = await Tag.create({ name });
 
-    console.log(tagDetails);
+    // console.log(tagDetails);
 
     return res.status(201).json({
       success: true,
@@ -37,7 +45,7 @@ exports.createTag = async (req, res) => {
 exports.getAllTags = async (req, res) => {
   try {
     // fetch all tags from DB
-    const allTags = await Tag.find({}, { name: true, description: true });
+    const allTags = await Tag.find({},{name:true});
 
     return res.status(200).json({
       success: true,
