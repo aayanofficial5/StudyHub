@@ -5,7 +5,7 @@ exports.isStudent = async (req, res, next) => {
     if (user.accountType !== "Student") {
       return res.status(401).json({
         success: false,
-        message: "This is a Protected Route for Students",
+        message: "This is a Protected Route for Students Only",
       });
     }
     next();

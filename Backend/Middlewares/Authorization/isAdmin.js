@@ -5,7 +5,7 @@ exports.isAdmin = async (req, res, next) => {
     if (user.accountType !== "Admin") {
       return res.status(401).json({
         success: false,
-        message: "This is a Protected Route for Admins",
+        message: "This is a Protected Route for Admins Only",
       });
     }
     next();
