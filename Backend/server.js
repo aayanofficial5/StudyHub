@@ -10,7 +10,7 @@ const profileRoutes = require("./Routes/Profile");
 const app = express();
 require("dotenv").config();
 const cors = require("cors");
-
+const { auth } = require("./Middlewares/Authentication/auth");
 const port = process.env.PORT || 4000; // Use PORT for the server
 
 // MIDDLEWARES
@@ -35,7 +35,7 @@ app.use(
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
-app.use("/api/v1/profile", profileRoutes);
+app.use("/api/v1/profile", auth, profileRoutes);
 
 // default route
 app.get("/", (req, res) => {
