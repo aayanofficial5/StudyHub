@@ -15,7 +15,7 @@ const OTPSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now(), // date are created in ISO format in mongoose but have a different time zone
-    expires: 3000, // document delete automatically after metioned seconds
+    expires: 5 * 60, // document delete automatically after metioned seconds
   },
 });
 
