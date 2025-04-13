@@ -9,7 +9,7 @@ export default function Password({ passwordType, passwordName, handleLoginData, 
   return (
       <label htmlFor={passwordType} className="relative">
         {passwordName}
-        <sup>*</sup>
+        <sup className="text-red-500 text-[16px] relative -top-1 -right-0.5">*</sup>
         <input
           className="w-full h-12 p-3 rounded-lg mt-1 text-[15px]"
           onChange={handleLoginData}
@@ -20,7 +20,7 @@ export default function Password({ passwordType, passwordName, handleLoginData, 
           placeholder="Enter Password"
           value={loginFormData[passwordType]}
         />
-        <span className="absolute top-9 right-1 text-2xl">
+        <span className="absolute top-9 right-1 text-2xl cursor-pointer">
           {showP ? (
             <IoEyeOffOutline onClick={()=>handlePassword(name,setShowP)}  />
           ) : (

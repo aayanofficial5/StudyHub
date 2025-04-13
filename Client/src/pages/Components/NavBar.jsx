@@ -1,11 +1,8 @@
 import logo from "../assets/Logo.svg";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
-
 export default function NavBar({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
-
   return (
     <nav className="flex justify-around items-center mt-4">
       <NavLink to="/">

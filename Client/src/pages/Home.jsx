@@ -15,8 +15,24 @@ import CourseCard from "../components/Home/CourseCard";
 import Coding2 from "../assets/coding2.png";
 import TestimonialCard from "../components/Home/TestimonialCard";
 import { testimonials } from "../assets/api_data/Testimonials";
+import { apiConnector } from "../services/apiConnector";
+import { courses } from "../services/apiCollection";
+import { useEffect } from "react";
 const Home = () => {
   const [search, setSearch] = useState("");
+  const [courseData, setCourseData] = useState([]);
+  const fetchTopCourses = async () => {
+    try {
+      const response = await apiConnector("GET",courses.getAllCourses);
+      // console.log(response);
+      setCourseData(response.data.allCourses);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchTopCourses();
+  }, []);
 
   return (
     <div>
@@ -119,24 +135,19 @@ const Home = () => {
           <img src={paypal_logo} alt="PayPal" className="h-8" />
         </div>
 
-        <h2 className="text-3xl font-bold text-white mb-3">Learn from the best</h2>
+        <h2 className="text-3xl font-bold text-white mb-3">
+          Learn from the best
+        </h2>
         <p className="text-gray-400 max-w-3xl mx-auto text-lg opacity-70">
           Discover our top-rated courses across various categories. From coding
           and design to business and wellness, our courses are crafted to
           deliver results.
         </p>
-        <div className="flex flex-row gap-2 my-7 px-30">
-          {[...Array(4)].map((_, i) => (
-            <CourseCard
-              key={i}
-              course_image={Coding}
-              course_title="Coding for Beginners"
-              course_instructor="John Doe"
-              course_rating="4.5"
-              enrolled_students="5"
-              course_price="100"
-            />
-          ))}
+        <div className="flex flex-col md:flex-row gap-2 my-7 px-30">
+          {courseData.length > 0 &&
+            courseData.map((course, index) => (
+              <CourseCard key={index} course={course} />
+            ))}
         </div>
         <NavLink to="/course-list">
           <CTAButton active={true} arrow={true} text="View All Courses" />
@@ -152,23 +163,33 @@ const Home = () => {
             in their lives.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
-            {testimonials.map(({name, title, rating, text, img}, idx) => (
-              <TestimonialCard name={name} title={title} rating={rating} text={text} img={img} key={idx} />
+            {testimonials.map(({ name, title, rating, text, img }, idx) => (
+              <TestimonialCard
+                name={name}
+                title={title}
+                rating={rating}
+                text={text}
+                img={img}
+                key={idx}
+              />
             ))}
           </div>
         </div>
         <div className="flex flex-col justify-center flex-wrap gap-3 items-center text-center">
-        <h2 className="text-3xl font-bold text-white mb-3">Learn anything, anytime, anywhere</h2>
-        <p className="text-gray-400 max-w-3xl mx-auto text-lg opacity-70">
-        "This section is dedicated to delivering meaningful insights with integrity, purpose, and attention to user satisfaction."
-        </p>
-        <div className="flex flex-row gap-4 text-white mt-5">
-        <NavLink to="/course-list">
-          <CTAButton active={true} arrow={false} text="Get Started" />
-        </NavLink>
-        <NavLink to="/course-list">
-          <CTAButton active={false} arrow={true} text="Learn More" />
-        </NavLink>
+          <h2 className="text-3xl font-bold text-white mb-3">
+            Learn anything, anytime, anywhere
+          </h2>
+          <p className="text-gray-400 max-w-3xl mx-auto text-lg opacity-70">
+            "This section is dedicated to delivering meaningful insights with
+            integrity, purpose, and attention to user satisfaction."
+          </p>
+          <div className="flex flex-row gap-4 text-white mt-5">
+            <NavLink to="/course-list">
+              <CTAButton active={true} arrow={false} text="Get Started" />
+            </NavLink>
+            <NavLink to="/course-list">
+              <CTAButton active={false} arrow={true} text="Learn More" />
+            </NavLink>
           </div>
         </div>
       </section>

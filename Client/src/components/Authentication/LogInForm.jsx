@@ -2,26 +2,55 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { useNavigate, NavLink } from "react-router-dom";
-import CTAButton from "../Home/CTAButton";
-export default function LogInForm({ setIsLoggedIn }) {
+import { apiConnector } from "../../services/apiConnector";
+import { auth } from "../../services/apiCollection";
+export default function LogInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [loginFormData, setLoginFormData] = useState({
-    email: "",
-    password: "",
+    email: "aayanofficial5@gmail.com",
+    password: "Aadi@op5",
   });
 
+  const login = async ({email, password}) => {
+    try {
+      const response = await apiConnector(
+        "POST",
+        auth.login,
+        {
+          email,
+          password,
+        }
+      );
+      // console.log("Login Response:", response.data);
+      if (response?.data?.success) {
+        toast.success(response?.data?.message);
+        return 1;
+      } else {
+        toast.error(response?.data?.message);
+        return 0;
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      const errMsg = error.response?.data?.message || "Something went wrong";
+      toast.error(errMsg);
+      return 0;
+    }
+  };
+  
   function handleLoginData(event) {
     const { name, value } = event.target;
     setLoginFormData((pState) => ({ ...pState, [name]: value }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    console.log(loginFormData);
-    toast.success("Logged In");
-    navigate("/dashboard");
-    setIsLoggedIn(true);
+    // console.log(loginFormData);
+    const res = await login(loginFormData);
+    if(res===1){
+      navigate("/dashboard");
+      setIsLoggedIn(true);
+    }
   }
   function handlePassword() {
     setShowPassword((prev) => !prev);
@@ -29,7 +58,7 @@ export default function LogInForm({ setIsLoggedIn }) {
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="email">
-        Email Address<sup>*</sup>
+        Email Address<sup className="text-red-500 text-[16px] relative -top-1">*</sup>
         <input
           className="w-full h-12 p-3 rounded-lg mt-1 mb-3 text-[15px] border-2 border-gray-900"
           onChange={handleLoginData}
@@ -43,7 +72,7 @@ export default function LogInForm({ setIsLoggedIn }) {
       </label>
       <br />
       <label htmlFor="password" className="relative">
-        Password<sup>*</sup>
+        Password<sup className="text-red-500 text-[16px] relative -top-1 -right-0.5">*</sup>
         <input
           className="w-full h-12 p-3 rounded-lg mt-1 text-[15px] border-2 border-gray-900"
           onChange={handleLoginData}
@@ -54,15 +83,15 @@ export default function LogInForm({ setIsLoggedIn }) {
           placeholder="Enter Password"
           value={loginFormData.password}
         />
-        <span className="absolute top-10 right-5 text-2xl">
+        <span className="absolute top-10 right-5 text-2xl cursor-pointer">
           {showPassword ? (
             <IoEyeOffOutline onClick={handlePassword} />
           ) : (
             <IoEyeOutline onClick={handlePassword} />
           )}
           <p
-            onClick={() => navigate("/reset-password")}
-            className="text-[11px] text-blue-400 absolute top-9 right-[-30px] w-25"
+            onClick={() => navigate("/reset-password-link")}
+            className="text-[12px] text-blue-400 absolute top-9 right-[-30px] w-25 cursor-pointer"
           >
             Forgot Password
           </p>

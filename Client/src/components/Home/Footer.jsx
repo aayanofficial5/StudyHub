@@ -8,8 +8,8 @@ const Footer = () => {
         <div className="md:max-w-96">
           <NavLink to="/" className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
             <div className="flex items-center gap-2">
-              <img src={logo} alt="logo" className="w-11 h-11" />
-              <h1 className="text-2xl font-bold text-gray-300">KnowGeek</h1>
+              <img src={logo} alt="logo" className="w-10 h-10" />
+              <h1 className="text-[1.3rem] font-bold text-gray-300">KnowGeek</h1>
             </div>
           </NavLink>
           <p className="mt-6 text-sm">
