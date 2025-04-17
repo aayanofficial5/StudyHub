@@ -6,30 +6,17 @@ import { useSelector } from "react-redux";
 import { FaShoppingCart, FaPlusCircle } from "react-icons/fa";
 import ProfileDropDown from "./ProfileDropDown";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { Outlet } from "react-router-dom";
+import { NavbarLinks } from "../../data/Navbar-Link";
+
 const NavBar = () => {
   const token = useSelector((state) => state.auth.token);
   const { user } = useSelector((state) => state.profile);
   const { totalItems } = useSelector((state) => state.cart);
-  const navLinks = [
-    {
-      name: "Home",
-      path: "/",
-    },
-    {
-      name: "Courses",
-      path: "/course-list",
-    },
-    {
-      name: "About",
-      path: "/about",
-    },
-    {
-      name: "Contact",
-      path: "/contact",
-    },
-  ];
+  
 
   return (
+    <>
     <nav className="flex items-center justify-around px-6 py-4 shadow-md">
       {/* Hamburger Menu */}
       <GiHamburgerMenu className="text-2xl text-gray-300 md:hidden cursor-pointer" />
@@ -43,7 +30,7 @@ const NavBar = () => {
 
       {/* Navigation Links */}
       <div className="hidden md:flex gap-6 text-gray-500 font-medium">
-        {navLinks.map((link, index) => (
+        {NavbarLinks.map((link, index) => (
           <NavLink
             to={link.path}
             className={({ isActive }) => ` ${isActive ? "text-blue-600" : ""}`}
@@ -89,6 +76,8 @@ const NavBar = () => {
         {token && <ProfileDropDown />}
       </div>
     </nav>
+    <Outlet/>
+    </>
   );
 };
 

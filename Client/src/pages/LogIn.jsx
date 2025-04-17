@@ -2,7 +2,7 @@ import Template from "../components/Authentication/Template";
 import login from "../assets/login.jpg";
 import { useSelector } from "react-redux";
 export default function Login() {
-  const {loading} = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.auth);
   return (
     <div className={`text-white h-[80vh] ${loading ? "mt-2" : "mt-20"}`}>
       <Template

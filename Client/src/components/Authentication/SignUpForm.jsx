@@ -1,42 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import FLname from "./FLname";
 import Password from "./Password";
 import { ACCOUNT_TYPE } from "../../utils/constant";
-import { apiConnector } from "../../services/apiConnector";
 import { useDispatch } from "react-redux";
-import {setSignupData} from "../../slices/authSlice"
-import { auth } from "../../services/apiCollection";
-import { setLoading } from "../../slices/authSlice";
-
-export const sendOtp = async (email,dispatch) => {
-  
-  console.log(email);
-  try {
-    dispatch(setLoading(true));
-    const response = await apiConnector(
-      "POST",
-      auth.sendOTP,
-      {
-        email,
-      }
-    );
-    console.log("OTP Sent Response:", response.data);
-    if (response?.data?.success) {
-      toast.success(response?.data?.message);
-      return 1;
-    } else {
-      toast.error(response?.data?.message);
-      return 0;
-    }
-  } catch (error) {
-    console.error("Fetch error:", error);
-    const errMsg = error.response?.data?.message || "Something went wrong";
-    toast.error(errMsg);
-    return 0;
-  }
-};
+import {setSignupData} from "../../redux/slices/authSlice"
+import { sendOtp } from "../../services/operations/authapis";
 
 export default function SignUpForm() {
 
@@ -67,11 +37,7 @@ export default function SignUpForm() {
     }
     // console.log(loginFormData);
     dispatch(setSignupData(loginFormData));
-    const res = await sendOtp(loginFormData.email,dispatch);
-    if(res===1){
-      await navigate("/email-verification");
-    }
-    await dispatch(setLoading(false));
+    dispatch(sendOtp(loginFormData.email,navigate));
   }
 
   function handleAccountType(event) {

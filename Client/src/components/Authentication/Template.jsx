@@ -3,7 +3,7 @@ import LogInForm from "./LogInForm";
 import frameImage from "../../assets/frameImage.png";
 import logo from "../../assets/googleLogo.svg";
 import { useSelector } from "react-redux";
-import Loading from "../../pages/Components/Loading";
+import Loading from "../../components/Loading";
 
 export default function Template({ title, desc1, desc2, formType, image }) {
   const loading = useSelector((state) => state.auth.loading);

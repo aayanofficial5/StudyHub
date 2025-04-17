@@ -13,6 +13,8 @@ export const auth = {
   sendOTP: "/auth/otp",
   resetToken: "/auth/reset-token",
   resetPassword: "/auth/reset-password",
+  contactUsData: "/auth/contact-us",
+  getAllContactUsData: "/auth/contact-us",
 };
 
 export const profile = {

@@ -2,9 +2,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { useNavigate, NavLink } from "react-router-dom";
-import { apiConnector } from "../../services/apiConnector";
-import { auth } from "../../services/apiCollection";
+import { login } from "../../services/operations/authapis";
+import { useDispatch } from "react-redux";
 export default function LogInForm() {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [loginFormData, setLoginFormData] = useState({
@@ -12,32 +13,6 @@ export default function LogInForm() {
     password: "Aadi@op5",
   });
 
-  const login = async ({email, password}) => {
-    try {
-      const response = await apiConnector(
-        "POST",
-        auth.login,
-        {
-          email,
-          password,
-        }
-      );
-      // console.log("Login Response:", response.data);
-      if (response?.data?.success) {
-        toast.success(response?.data?.message);
-        return 1;
-      } else {
-        toast.error(response?.data?.message);
-        return 0;
-      }
-    } catch (error) {
-      console.error("Login Error:", error);
-      const errMsg = error.response?.data?.message || "Something went wrong";
-      toast.error(errMsg);
-      return 0;
-    }
-  };
-  
   function handleLoginData(event) {
     const { name, value } = event.target;
     setLoginFormData((pState) => ({ ...pState, [name]: value }));
@@ -46,11 +21,7 @@ export default function LogInForm() {
   async function handleSubmit(event) {
     event.preventDefault();
     // console.log(loginFormData);
-    const res = await login(loginFormData);
-    if(res===1){
-      navigate("/dashboard");
-      setIsLoggedIn(true);
-    }
+    dispatch(login(loginFormData,navigate));
   }
   function handlePassword() {
     setShowPassword((prev) => !prev);
@@ -58,7 +29,8 @@ export default function LogInForm() {
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="email">
-        Email Address<sup className="text-red-500 text-[16px] relative -top-1">*</sup>
+        Email Address
+        <sup className="text-red-500 text-[16px] relative -top-1">*</sup>
         <input
           className="w-full h-12 p-3 rounded-lg mt-1 mb-3 text-[15px] border-2 border-gray-900"
           onChange={handleLoginData}
@@ -72,7 +44,10 @@ export default function LogInForm() {
       </label>
       <br />
       <label htmlFor="password" className="relative">
-        Password<sup className="text-red-500 text-[16px] relative -top-1 -right-0.5">*</sup>
+        Password
+        <sup className="text-red-500 text-[16px] relative -top-1 -right-0.5">
+          *
+        </sup>
         <input
           className="w-full h-12 p-3 rounded-lg mt-1 text-[15px] border-2 border-gray-900"
           onChange={handleLoginData}

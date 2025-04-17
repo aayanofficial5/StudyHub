@@ -13,17 +13,17 @@ import adobe_logo from "../assets/adobe_logo.svg";
 import paypal_logo from "../assets/paypal_logo.svg";
 import CourseCard from "../components/Home/CourseCard";
 import Coding2 from "../assets/coding2.png";
-import TestimonialCard from "../components/Home/TestimonialCard";
-import { testimonials } from "../assets/api_data/Testimonials";
 import { apiConnector } from "../services/apiConnector";
 import { courses } from "../services/apiCollection";
+import HighlightBanner from "../components/Home/HighlightBanner";
 import { useEffect } from "react";
+import Testimonials from "../components/Common/Testimonials";
 const Home = () => {
   const [search, setSearch] = useState("");
   const [courseData, setCourseData] = useState([]);
   const fetchTopCourses = async () => {
     try {
-      const response = await apiConnector("GET",courses.getAllCourses);
+      const response = await apiConnector("GET", courses.getAllCourses);
       // console.log(response);
       setCourseData(response.data.allCourses);
     } catch (error) {
@@ -60,20 +60,12 @@ const Home = () => {
               </button>
             </div>
           </NavLink>
-
-          <div className="font-bold text-3xl mt-5 text-center">
-            Empower your future with the courses designed to
-            <HighlightedText
-              text="fit your choice"
-              color="yellow-300"
-            ></HighlightedText>
-          </div>
-          <div className="w-[70%] mt-5 text-lg opacity-70 text-center">
-            With our online coding courses, you can learn at your own pace, from
-            anywhere in the world, and get access to a wealth of resources,
-            including hands-on projects, quizzes, and personalized feedback from
-            instructors.
-          </div>
+          <HighlightBanner
+            title="Empower your future with the courses designed to"
+            highlightedText="fit your choice"
+            color="yellow-300"
+            paragraph="With our online coding courses, you can learn at your own pace, from anywhere in the world, and get access to a wealth of resources, including hands-on projects, quizzes, and personalized feedback from instructors."
+          />
           <div className="flex flex-row gap-4 mt-5">
             <NavLink to="/signup">
               <CTAButton
@@ -134,15 +126,13 @@ const Home = () => {
           <img src={adobe_logo} alt="Adobe" className="h-6" />
           <img src={paypal_logo} alt="PayPal" className="h-8" />
         </div>
-
-        <h2 className="text-3xl font-bold text-white mb-3">
-          Learn from the best
-        </h2>
-        <p className="text-gray-400 max-w-3xl mx-auto text-lg opacity-70">
-          Discover our top-rated courses across various categories. From coding
-          and design to business and wellness, our courses are crafted to
-          deliver results.
-        </p>
+        <div className="flex flex-col items-center">
+          <HighlightBanner
+            title="Learn from the best"
+            color="yellow-300"
+            paragraph="Discover our top-rated courses across various categories. From coding and design to business and wellness, our courses are crafted to deliver results."
+          />
+        </div>
         <div className="flex flex-col md:flex-row gap-2 my-7 px-30">
           {courseData.length > 0 &&
             courseData.map((course, index) => (
@@ -155,34 +145,15 @@ const Home = () => {
       </section>
       {/* Section4 */}
       <section>
-        <div className="py-10 text-center bg-black">
-          <h2 className="text-3xl font-bold text-white mb-2">Testimonials</h2>
-          <p className="text-gray-400 mb-10 max-w-3xl mx-auto">
-            Hear from our learners as they share their journeys of
-            transformation, success, and how our platform has made a difference
-            in their lives.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6">
-            {testimonials.map(({ name, title, rating, text, img }, idx) => (
-              <TestimonialCard
-                name={name}
-                title={title}
-                rating={rating}
-                text={text}
-                img={img}
-                key={idx}
-              />
-            ))}
-          </div>
-        </div>
+        <Testimonials />
         <div className="flex flex-col justify-center flex-wrap gap-3 items-center text-center">
-          <h2 className="text-3xl font-bold text-white mb-3">
-            Learn anything, anytime, anywhere
-          </h2>
-          <p className="text-gray-400 max-w-3xl mx-auto text-lg opacity-70">
-            "This section is dedicated to delivering meaningful insights with
-            integrity, purpose, and attention to user satisfaction."
-          </p>
+          <div className="flex flex-col items-center">
+            <HighlightBanner
+              title="Learn anything, anytime, anywhere"
+              paragraph='"This section is dedicated to delivering meaningful insights with
+            integrity, purpose, and attention to user satisfaction."'
+            />
+          </div>
           <div className="flex flex-row gap-4 text-white mt-5">
             <NavLink to="/course-list">
               <CTAButton active={true} arrow={false} text="Get Started" />
