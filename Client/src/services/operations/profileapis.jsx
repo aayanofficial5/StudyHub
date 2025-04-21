@@ -1,0 +1,144 @@
+import toast from "react-hot-toast";
+import { profile } from "../apiCollection";
+import { apiConnector } from "./../apiConnector";
+import { setUser } from "../../redux/slices/profileSlice";
+import { logout } from "./authapis";
+
+// profilePictureUpdate
+export const profilePictureUpdate = (profilePicture) => {
+  const formData = new FormData();
+  formData.append("profilePicture", profilePicture);
+
+  return async (dispatch, getState) => {
+    const toastId = toast.loading("Updating Profile Picture...");
+    try {
+      const response = await apiConnector(
+        "PUT",
+        profile.updateProfilePicture,
+        formData
+      );
+
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+
+      const user = getState().profile.user;
+
+      const updatedUser = {
+        ...user,
+        image: response.data.profilePicture,
+      };
+
+      dispatch(setUser(updatedUser));
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error("Profile Picture Update Error:", error);
+      const errMsg = error?.response?.data?.message || "Something went wrong";
+      toast.error(errMsg);
+    }
+    toast.dismiss(toastId);
+  };
+};
+
+// updatePassword
+export const updatePassword = (password) => {
+  return async (dispatch) => {
+    const toastId = toast.loading("Updating Password...");
+    try {
+      const response = await apiConnector(
+        "PUT",
+        profile.updatePassword,
+        password
+      );
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error("Update Password Error:", error);
+      const errMsg = error?.response?.data?.message || "Something went wrong";
+      toast.error(errMsg);
+    }
+    toast.dismiss(toastId);
+  };
+};
+
+// deleteAccount
+export const deleteAccount = (navigate) => {
+  return async (dispatch) => {
+    const toastId = toast.loading("Deleting Account...");
+    try {
+      const response = await apiConnector("DELETE", profile.deleteAccount);
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      toast.success(response.data.message);
+      navigate("/login");
+      localStorage.removeItem("user");
+    } catch (error) {
+      console.error("Delete Account Error:", error);
+      const errMsg = error?.response?.data?.message || "Something went wrong";
+      toast.error(errMsg);
+    }
+    toast.dismiss(toastId);
+  };
+};
+
+// updateProfile
+export const updateProfile = (updatedUser) => {
+  return async (dispatch, getState) => {
+    const toastId = toast.loading("Updating Profile...");
+    try {
+      const response = await apiConnector(
+        "PUT",
+        profile.updateProfile,
+        updatedUser
+      );
+
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+
+      const user = getState().profile.user;
+      const newUser = {
+        ...user,
+        ...updatedUser,
+      };
+
+      dispatch(setUser(newUser));
+      localStorage.setItem("user", JSON.stringify(newUser));
+      toast.success(response.data.message);
+      window.location.reload();
+    } catch (error) {
+      console.error("Update Profile Error:", error);
+      const errMsg = error?.response?.data?.message || "Something went wrong";
+      toast.error(errMsg);
+    }
+    toast.dismiss(toastId);
+  };
+};
+
+// getUserDetails
+export const getUserDetails = async () => {
+    const toastId = toast.loading("Fetching User Details...");
+    try {
+      const response = await apiConnector("GET", profile.getUserDetails);
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      const user = response.data.user;
+      const userDetails = {
+        ...user,
+        ...user.additionalDetails,
+      }
+      toast.dismiss(toastId);
+      return userDetails;
+    } catch (error) {
+      console.error("Get User Details Error:", error);
+      const errMsg = error?.response?.data?.message || "Something went wrong";
+      toast.error(errMsg);
+      toast.dismiss(toastId);
+      return null;
+    }
+};
