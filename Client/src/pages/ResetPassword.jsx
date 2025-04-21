@@ -4,32 +4,39 @@ import { resetPassword } from "../services/operations/authapis";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import Loading from "../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
+import Password from "../components/Authentication/Password";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading);
   const { token } = useParams();
   const navigate = useNavigate();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showP1, setShowP1] = useState(false);
+  const [showP2, setShowP2] = useState(false);
+  const [FormData, setFormData] = useState({
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+  const handleLoginData = (e) => {
+    setFormData({ ...FormData, [e.target.name]: e.target.value });
 
+  };
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    dispatch(resetPassword({ token, password, confirmPassword }, navigate));
+    console.log(FormData);
+    dispatch(resetPassword({ token, password: FormData.newPassword, confirmPassword: FormData.confirmNewPassword }, navigate));
   };
 
   return (
-    <div className="flex justify-center items-center text-white w-full h-[80vh] text-2xl">
+    <div className="flex justify-center items-center text-white w-full h-[89vh]">
       {loading ? (
-        <div class="flex justify-center items-center h-[70vh]">
+        <div className="flex justify-center items-center h-[70vh]">
           <Loading />
         </div>
       ) : (
         <div className="w-[50%] md:w-[30%] flex flex-col gap-4 justify-center items-center">
           <h2 className="text-yellow-400 font-semibold self-start text-4xl opacity-90">
-            Choose Your New Password
+            Reset Password
           </h2>
           <p className="text-gray-400 text-lg self-start w-full">
             Almost done! Please enter your new password below and you're all
@@ -39,42 +46,24 @@ const ResetPassword = () => {
             onSubmit={handleResetPassword}
             className="flex flex-col gap-4 w-full opacity-90"
           >
-            <label htmlFor="password" className="relative text-sm">
-              New Password<sup className="text-red-400">*</sup>
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="New Password"
-                className="bg-transparent text-xl border border-gray-300 rounded-lg p-1 text-white placeholder-gray-400/50 w-full"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <span className="absolute top-7 right-3 text-2xl cursor-pointer text-white">
-                {showPassword ? (
-                  <IoEyeOffOutline onClick={() => setShowPassword(false)} />
-                ) : (
-                  <IoEyeOutline onClick={() => setShowPassword(true)} />
-                )}
-              </span>
-            </label>
-            <label htmlFor="confirmPassword" className="relative text-sm">
-              Confirm New Password<sup className="text-red-400">*</sup>
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm New Password"
-                className="bg-transparent text-xl border border-gray-300 rounded-lg p-1 text-white placeholder-gray-400/50 w-full"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <span className="absolute top-7 right-3 text-2xl cursor-pointer text-white">
-                {showConfirmPassword ? (
-                  <IoEyeOffOutline
-                    onClick={() => setShowConfirmPassword(false)}
-                  />
-                ) : (
-                  <IoEyeOutline onClick={() => setShowConfirmPassword(true)} />
-                )}
-              </span>
-            </label>
+            <Password
+              passwordType="newPassword"
+              passwordName="New Password"
+              name="p1"
+              handleLoginData={handleLoginData}
+              showP={showP1}
+              setShowP={setShowP1}
+              loginFormData={FormData}
+            ></Password>
+            <Password
+              passwordType="confirmNewPassword"
+              passwordName="Confirm New Password"
+              name="p2"
+              handleLoginData={handleLoginData}
+              showP={showP2}
+              setShowP={setShowP2}
+              loginFormData={FormData}
+            ></Password>
             <p className="text-gray-400 text-sm self-start w-full">
               1. Password must be at least 8 characters long
               <sup className="text-red-400">*</sup>
@@ -85,7 +74,7 @@ const ResetPassword = () => {
             </p>
             <button
               type="submit"
-              className="w-full transition-all duration-200 ease-in hover:scale-95 py-1 cursor-pointer rounded-lg border-blue-500 border-3 font-semibold bg-blue-500"
+              className="w-full transition-all duration-200 ease-in hover:scale-95 py-1 cursor-pointer rounded-lg border-blue-500 border-3 font-semibold bg-blue-500 text-xl"
             >
               Reset Password
             </button>

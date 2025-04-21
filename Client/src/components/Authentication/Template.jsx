@@ -11,16 +11,17 @@ export default function Template({ title, desc1, desc2, formType, image }) {
   return (
     <div className="flex  gap-10 mx-auto  justify-around scale-85 -translate-5">
       {loading ? (
-        <div class="flex justify-center items-center h-[75vh]">
-        <Loading/>
-      </div>
-      
+        <div className="flex justify-center items-center h-[75vh]">
+          <Loading />
+        </div>
       ) : (
         <>
           <div className="sm:w-[320px] lg:w-[450px]">
             <h1 className="font-semibold text-2xl md:text-3xl mb-3">{title}</h1>
             <p>
-              <span className="text-gray-400 text-base md:text-lg">{desc1}</span>
+              <span className="text-gray-400 text-base md:text-lg">
+                {desc1}
+              </span>
               <br></br>
               <i className="text-blue-400 text-base md:text-lg">{desc2}</i>
             </p>

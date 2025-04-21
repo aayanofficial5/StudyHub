@@ -28,7 +28,7 @@ const Courses = () => {
   return (
     <div>
       {loading ? (
-        <div class="flex justify-center items-center h-[75vh]">
+        <div className="flex justify-center items-center h-[75vh]">
           <Loading />
         </div>
       ) : (

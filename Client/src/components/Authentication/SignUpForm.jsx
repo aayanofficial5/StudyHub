@@ -37,6 +37,7 @@ export default function SignUpForm() {
     }
     // console.log(loginFormData);
     dispatch(setSignupData(loginFormData));
+    console.log(loginFormData);
     dispatch(sendOtp(loginFormData.email,navigate));
   }
 
@@ -92,7 +93,7 @@ export default function SignUpForm() {
         <label htmlFor="email">
           Email Address<sup className="text-red-500 text-[16px] relative -top-1 -right-0.5">*</sup>
           <input
-            className="w-full h-12 p-3 rounded-lg mt-1 mb-3 text-[15px]"
+            className="w-full h-12 p-3 rounded-lg mt-1 mb-3 text-[15px] border-2 border-gray-700 focus:outline-none focus:border-blue-500"
             onChange={handleLoginData}
             required
             type="email"

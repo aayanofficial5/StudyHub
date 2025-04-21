@@ -1,9 +1,11 @@
+
 export const courses = {
   createCourse: "/course",
   getAllCourses: "/course",
   getCourseDetails: "/course",
   editCourse: "/course",
   deleteCourse: "/course",
+  getCourseCategories:"/course/categories",
 };
 
 export const auth = {
@@ -18,7 +20,9 @@ export const auth = {
 };
 
 export const profile = {
-  getProfile: "/profile",
-  editProfile: "/profile",
-  deleteProfile: "/profile",
+  getUserDetails: "/profile/me",
+  updateProfile: "/profile",
+  deleteAccount: "/profile",
+  updateProfilePicture: "/profile/picture",
+  updatePassword: "/profile/password",
 };

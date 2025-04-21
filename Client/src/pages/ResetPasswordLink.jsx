@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { resetPasswordLink } from "../services/operations/authapis";
-import { toast } from "react-hot-toast";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { setLoading } from "../redux/slices/authSlice";
 import Loading from "../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,17 +10,16 @@ const ResetPasswordLink = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading);
   const [email, setEmail] = useState("");
-  
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    dispatch(resetPasswordLink(email,navigate));
+    dispatch(resetPasswordLink(email, navigate));
   };
 
   return (
-    <div className="flex justify-center items-center text-white w-full h-[80vh] text-3xl">
+    <div className="flex justify-center items-center text-white w-full min-h-[89vh] text-3xl">
       {loading ? (
-        <div class="flex justify-center items-center h-[70vh]">
+        <div className="flex justify-center items-center h-[70vh]">
           <Loading />
         </div>
       ) : (

@@ -4,6 +4,7 @@ import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { useNavigate, NavLink } from "react-router-dom";
 import { login } from "../../services/operations/authapis";
 import { useDispatch } from "react-redux";
+import Password from "./Password";
 export default function LogInForm() {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +33,7 @@ export default function LogInForm() {
         Email Address
         <sup className="text-red-500 text-[16px] relative -top-1">*</sup>
         <input
-          className="w-full h-12 p-3 rounded-lg mt-1 mb-3 text-[15px] border-2 border-gray-900"
+          className="w-full h-12 p-3 rounded-lg mt-1 mb-3 text-[15px] border-2 border-gray-700 focus:outline-none focus:border-blue-500"
           onChange={handleLoginData}
           required
           type="email"
@@ -43,37 +44,18 @@ export default function LogInForm() {
         />
       </label>
       <br />
-      <label htmlFor="password" className="relative">
-        Password
-        <sup className="text-red-500 text-[16px] relative -top-1 -right-0.5">
-          *
-        </sup>
-        <input
-          className="w-full h-12 p-3 rounded-lg mt-1 text-[15px] border-2 border-gray-900"
-          onChange={handleLoginData}
-          required
-          type={showPassword ? "text" : "password"}
-          name="password"
-          id="password"
-          placeholder="Enter Password"
-          value={loginFormData.password}
-        />
-        <span className="absolute top-10 right-5 text-2xl cursor-pointer">
-          {showPassword ? (
-            <IoEyeOffOutline onClick={handlePassword} />
-          ) : (
-            <IoEyeOutline onClick={handlePassword} />
-          )}
-          <p
-            onClick={() => navigate("/reset-password-link")}
-            className="text-[12px] text-blue-400 absolute top-9 right-[-30px] w-25 cursor-pointer"
-          >
-            Forgot Password
-          </p>
-        </span>
-      </label>
+      <Password
+        passwordType="password"
+        passwordName="Password"
+        handleLoginData={handleLoginData}
+        name="password"
+        showP={showPassword}
+        setShowP={setShowPassword}
+        loginFormData={loginFormData}
+        forgot={true}
+      ></Password>
       <button
-        className={`flex flex-row gap-2 items-center w-min-fit w-full justify-center transition-all duration-200 ease-in hover:scale-95 mt-8 px-4 py-2 cursor-pointer rounded-lg border-blue-500 border-3 font-semibold bg-blue-500 text-lg`}
+        className={`flex flex-row gap-2 items-center w-min-fit w-full justify-center transition-all duration-200 ease-in hover:scale-95 mt-10 px-4 py-2 cursor-pointer rounded-lg border-blue-500 border-3 font-semibold bg-blue-500 text-lg`}
         type="submit"
       >
         Sign in

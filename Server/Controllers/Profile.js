@@ -9,22 +9,22 @@ const Course = require("../Models/Course");
 const CourseProgress = require("../Models/CourseProgress");
 const bcrypt = require("bcrypt");
 
-
 require("dotenv").config();
 // updateProfile handler function
 exports.updateProfile = async (req, res) => {
   try {
     // fetch data from request body
-    const { contactNumber, dateOfBirth = "", gender, about = "" } = req.body;
+    const {
+      firstName = "",
+      lastName = "",
+      dateOfBirth = "",
+      about = "",
+      contactNumber = "",
+      gender = "",
+    } = req.body;
     // fetch userId from request
     const userId = req.user.id;
-    // validation of data
-    if (!contactNumber || !gender) {
-      return res.status(400).json({
-        success: false,
-        message: "Missing Properties",
-      });
-    }
+
     // find user by id
     const user = await User.findById(userId);
     if (!user) {
@@ -33,23 +33,23 @@ exports.updateProfile = async (req, res) => {
         message: "User not found",
       });
     }
+    // if user found
+    user.firstName = firstName;
+    user.lastName = lastName;
+    await user.save();
+
     const profileId = user.additionalDetails;
     // find profile by id and update
-    const profile = await Profile.findByIdAndUpdate(
-      profileId,
-      {
-        contactNumber,
-        dateOfBirth,
-        gender,
-        about,
-      },
-      { new: true }
-    );
+    const profile = await Profile.findByIdAndUpdate(profileId, {
+      contactNumber,
+      dateOfBirth,
+      gender,
+      about,
+    });
     // return response
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      profile,
     });
   } catch (error) {
     console.log("Error occurred while updating profile:", error);

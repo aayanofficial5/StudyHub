@@ -29,7 +29,7 @@ const EmailVerification = () => {
   }, [timeLeft]);
 
   const resendOtpHandler = async () => {
-    dispatch(sendOtp(signupData.email,navigate));
+    dispatch(sendOtp(signupData.email, navigate));
     setIsDisabled(true);
     setTimeLeft(30);
   };
@@ -51,21 +51,26 @@ const EmailVerification = () => {
       confirmPassword,
       accountType,
     } = signupData;
-    dispatch(signup({
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword,
-      accountType,
-      otp,
-    },navigate));
+    dispatch(
+      signup(
+        {
+          firstName,
+          lastName,
+          email,
+          password,
+          confirmPassword,
+          accountType,
+          otp,
+        },
+        navigate
+      )
+    );
   };
 
   return (
     <div className="flex justify-center items-center text-white w-full h-[80vh] text-3xl">
       {loading ? (
-        <div class="flex justify-center items-center h-[70vh]">
+        <div className="flex justify-center items-center h-[70vh]">
           <Loading />
         </div>
       ) : (
