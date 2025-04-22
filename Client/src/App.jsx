@@ -58,7 +58,7 @@ const App = () => {
             }
           >
             <Route path="/dashboard/my-profile" element={<MyProfile />} />
-            {user.accountType == "Student" && (
+            {user?.accountType == "Student" && (
               <>
                 <Route
                   path="/dashboard/enrolled-courses"
@@ -67,7 +67,7 @@ const App = () => {
                 <Route path="/dashboard/cart" element={<Cart />} />
               </>
             )}
-            {user.accountType == "Instructor" && (
+            {user?.accountType == "Instructor" && (
               <>
                 <Route path="/dashboard/add-course" element={<AddCourse />} />
                 <Route path="/dashboard/my-courses" element={<MyCourses/>} />

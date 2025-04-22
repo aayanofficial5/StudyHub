@@ -1,30 +1,22 @@
 import React from "react";
-import { apiConnector } from "../services/apiConnector";
-import { courses } from "../services/apiCollection";
 import { useEffect, useState } from "react";
 import CourseCard from "../components/Home/CourseCard";
 import Loading from "../components/Loading";
-import { useSelector, useDispatch } from "react-redux";
-import { setLoading } from "../redux/slices/authSlice";
+import { useSelector } from "react-redux";
+import { getAllCourses } from "../services/operations/courseapis";
+
 const Courses = () => {
   const { loading } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
   const [courseData, setCourseData] = useState([]);
-  const fetchCourses = async () => {
-    try {
-      dispatch(setLoading(true));
-      const response = await apiConnector("GET", courses.getAllCourses);
-      // console.log(response);
-      setCourseData(response.data.allCourses);
-    } catch (error) {
-      console.log(error);
-    }
-    dispatch(setLoading(false));
-  };
+  const fetchTopCourses = async () => {
+      const data = await getAllCourses();
+      if(data.length>0)
+        setCourseData(data);
+    };
+    useEffect(() => {
+      fetchTopCourses();
+    }, []);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
   return (
     <div>
       {loading ? (

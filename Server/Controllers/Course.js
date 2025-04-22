@@ -19,7 +19,7 @@ exports.createCourse = async (req, res) => {
       tags,
       category,
     } = req.body;
-
+    console.log(req.body);
     // Parse tags if it's a JSON string
     const parsedTags = typeof tags === "string" ? JSON.parse(tags) : tags;
 
@@ -159,14 +159,14 @@ exports.getAllCourses = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      allCourses,
+      data:allCourses,
       message: "All Courses fetched successfully",
     });
   } catch (error) {
-    console.log("Error occured while fetching all Courses");
+    console.log("Error occured while fetching Courses");
     res.status(500).json({
       success: false,
-      message: "Error occured while fetching all Courses : " + error.message,
+      message: "Error occured while fetching Courses"
     });
   }
 };
@@ -175,7 +175,7 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourseDetails = async (req, res) => {
   try {
     // get courseId from request body
-    const courseId = req.params.id;
+    const {courseId} = req.body;
 
     // validate courseId
     if (!courseId) {
@@ -221,13 +221,13 @@ exports.getCourseDetails = async (req, res) => {
 // editCourseDetails
 exports.editCourseDetails = async (req, res) => {
   try {
-    const courseId = req.params.id;
+    const {courseId} = req.body;
     const {
-      courseName = 0,
-      courseDescription = 0,
-      whatYouWillLearn = 0,
-      price = 0,
-      thumbnail = 0,
+      courseName = "",
+      courseDescription = "",
+      whatYouWillLearn = "",
+      price = "",
+      thumbnail = "",
     } = req.body;
 
     // validate courseId
@@ -289,7 +289,7 @@ exports.editCourseDetails = async (req, res) => {
 // deleteCourse
 exports.deleteCourse = async (req, res) => {
   try {
-    const courseId = req.params.id;
+    const {courseId} = req.body;
 
     // validate courseId
     if (!courseId) {

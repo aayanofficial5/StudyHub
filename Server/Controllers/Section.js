@@ -6,7 +6,7 @@ exports.createSection = async (req, res) => {
   try {
     // fetch data from request body
     const { sectionName } = req.body;
-    const courseId  = req.params.id;
+    const { courseId } = req.body;
     // validation of data
     if (!sectionName || !courseId) {
       return res.status(400).json({
@@ -21,7 +21,7 @@ exports.createSection = async (req, res) => {
       courseId,
     });
     // updated course with section ObjectId
-    await Course.findByIdAndUpdate(
+    const updatedCourse = await Course.findByIdAndUpdate(
       courseId,
       {
         $push: { courseContent: newSection._id },
@@ -39,7 +39,7 @@ exports.createSection = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Section created successfully",
-      newSection,
+      data: updatedCourse,
     });
   } catch (error) {
     console.log("Error occured while creating section");
@@ -89,8 +89,8 @@ exports.updateSection = async (req, res) => {
 exports.deleteSection = async (req, res) => {
   try {
     // fetch data from request body
-    const sectionId = req.params.sectionId;
-    const courseId = req.params.id;
+    const sectionId = req.body.sectionId;
+    const courseId = req.body.id;
     // validation of data
     if (!sectionId) {
       return res.status(400).json({
@@ -106,7 +106,7 @@ exports.deleteSection = async (req, res) => {
         message: "Section not found",
       });
     }
-    
+
     //delete section Id from course
     await Course.findByIdAndUpdate(
       courseId,

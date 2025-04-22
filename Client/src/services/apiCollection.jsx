@@ -1,12 +1,18 @@
 
 export const courses = {
-  createCourse: "/course",
-  getAllCourses: "/course",
-  getCourseDetails: "/course",
-  editCourse: "/course",
-  deleteCourse: "/course",
-  getCourseCategories:"/course/categories",
+  createCourseApi: "/course",
+  getAllCoursesApi: "/course",
+  getCourseDetailsApi: "/course/details",
+  editCourseDetailsApi: "/course",
+  deleteCourseApi: "/course",
+  // category
+  getCourseCategoriesApi: "/course/categories",
+  // section
+  createSectionApi:"/course/section",
+  updateSectionApi:"/course/section",
+  deleteSectionApi: "/course/section",
 };
+
 
 export const auth = {
   login: "/auth/login",

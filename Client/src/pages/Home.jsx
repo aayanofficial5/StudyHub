@@ -18,17 +18,14 @@ import { courses } from "../services/apiCollection";
 import HighlightBanner from "../components/Home/HighlightBanner";
 import { useEffect } from "react";
 import Testimonials from "../components/Common/Testimonials";
+import { getAllCourses } from "../services/operations/courseapis";
 const Home = () => {
   const [search, setSearch] = useState("");
   const [courseData, setCourseData] = useState([]);
   const fetchTopCourses = async () => {
-    try {
-      const response = await apiConnector("GET", courses.getAllCourses);
-      // console.log(response);
-      setCourseData(response.data.allCourses);
-    } catch (error) {
-      console.log(error);
-    }
+    const data = await getAllCourses();
+    if(data.length>0)
+      setCourseData(data);
   };
   useEffect(() => {
     fetchTopCourses();

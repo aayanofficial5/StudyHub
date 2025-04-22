@@ -16,7 +16,7 @@ const { createSubSection, updateSubSection, deleteSubSection } = require("../Con
 
 // categories routes
 router.post("/categories", auth, isAdmin, createCategory);
-router.get("/categories", getAllCategories);
+router.get("/categories",getAllCategories);
 // router.get("/categories/:id", getCategoryPageDetails);
 
 // tags routes
@@ -26,18 +26,18 @@ router.get("/tags", getAllTags);
 // courses routes
 router.post("/", auth, isInstructor, createCourse);
 router.get("/", getAllCourses);
-router.get("/:id", getCourseDetails);
-router.put("/:id", auth, isInstructor, editCourseDetails);
-router.delete("/:id", auth, isInstructor, deleteCourse);
+router.get("/details", getCourseDetails);
+router.put("/", auth, isInstructor, editCourseDetails);
+router.delete("/", auth, isInstructor, deleteCourse);
 
 // sections routes
-router.post("/:id/sections", auth, isInstructor, createSection);
-router.put("/:id/sections/:sectionId", auth, isInstructor, updateSection);
-router.delete("/:id/sections/:sectionId", auth, isInstructor, deleteSection);
+router.post("/section", auth, isInstructor, createSection);
+router.put("/section", auth, isInstructor, updateSection);
+router.delete("/section", auth, isInstructor, deleteSection);
 
 // subSections routes
-router.post("/:id/sections/:sectionId/subsections", auth, isInstructor, createSubSection);
-router.put("/:id/sections/:sectionId/subsections/:subSectionId", auth, isInstructor, updateSubSection);
-router.delete("/:id/sections/:sectionId/subsections/:subSectionId", auth, isInstructor, deleteSubSection);
+router.post("/section/subsection/", auth, isInstructor, createSubSection);
+router.put("/section/subsection", auth, isInstructor, updateSubSection);
+router.delete("/section/subsection", auth, isInstructor, deleteSubSection);
 
 module.exports = router;
