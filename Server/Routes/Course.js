@@ -9,14 +9,29 @@ const { auth } = require("../Middlewares/Authentication/auth");
 const { isAdmin } = require("../Middlewares/Authorization/isAdmin");
 const { isInstructor } = require("../Middlewares/Authorization/isInstructor");
 const { createTag, getAllTags } = require("../Controllers/Tag");
-const { createCourse, getAllCourses , getCourseDetails , editCourseDetails , deleteCourse } = require("../Controllers/Course");
-const { createSection, updateSection, deleteSection } = require("../Controllers/Section");
-const { createSubSection, updateSubSection, deleteSubSection } = require("../Controllers/SubSection");
+const {
+  createCourse,
+  getAllCourses,
+  getCourseDetails,
+  editCourseDetails,
+  deleteCourse,
+  getInstructorCourses,
+} = require("../Controllers/Course");
+const {
+  createSection,
+  updateSection,
+  deleteSection,
+} = require("../Controllers/Section");
+const {
+  createSubSection,
+  updateSubSection,
+  deleteSubSection,
+} = require("../Controllers/SubSection");
 // routes
 
 // categories routes
 router.post("/categories", auth, isAdmin, createCategory);
-router.get("/categories",getAllCategories);
+router.get("/categories", getAllCategories);
 // router.get("/categories/:id", getCategoryPageDetails);
 
 // tags routes
@@ -29,6 +44,7 @@ router.get("/", getAllCourses);
 router.get("/details", getCourseDetails);
 router.put("/", auth, isInstructor, editCourseDetails);
 router.delete("/", auth, isInstructor, deleteCourse);
+router.get("/instructor", auth, isInstructor, getInstructorCourses);
 
 // sections routes
 router.post("/section", auth, isInstructor, createSection);
