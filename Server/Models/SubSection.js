@@ -11,11 +11,11 @@ const subSectionSchema = new mongoose.Schema({
   },
   timeDuration: {
     type: String,
-    required: true
+    // required: true
   },
   videoUrl: {
     type: String,
-    required: true
+    // required: true
   },
   sectionId: {
     type:mongoose.Schema.Types.ObjectId,

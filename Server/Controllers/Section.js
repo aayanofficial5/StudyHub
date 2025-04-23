@@ -1,13 +1,14 @@
 const Section = require("../Models/Section");
 const Course = require("../Models/Course");
-
+const SubSection = require("../Models/SubSection");
+const { fileDeleter } = require("../utils/fileDeleter");
 // createSection handler function
 exports.createSection = async (req, res) => {
   try {
     // fetch data from request body
-    const { sectionName } = req.body;
-    const { courseId } = req.body;
+    const { sectionName, courseId } = req.body;
     // validation of data
+    // console.log(req.body);
     if (!sectionName || !courseId) {
       return res.status(400).json({
         success: false,
@@ -27,14 +28,13 @@ exports.createSection = async (req, res) => {
         $push: { courseContent: newSection._id },
       },
       { new: true }
-    )
-      .populate({
-        path: "courseContent",
-        poplulate: {
-          path: "subSection",
-        },
-      })
-      .exec();
+    ).populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+      },
+    });
+
     // return response
     return res.status(200).json({
       success: true,
@@ -54,8 +54,7 @@ exports.createSection = async (req, res) => {
 exports.updateSection = async (req, res) => {
   try {
     // fetch data from request body
-    const { sectionName } = req.body;
-    const sectionId = req.params.sectionId;
+    const { sectionName, sectionId } = req.body;
     // validation of data
     if (!sectionId || !sectionName) {
       return res.status(400).json({
@@ -69,12 +68,13 @@ exports.updateSection = async (req, res) => {
       sectionId,
       { sectionName },
       { new: true }
-    );
+    ).populate("subSection");
+
     // return response
     return res.status(200).json({
       success: true,
       message: "Section updated successfully",
-      updatedSection,
+      data: updatedSection,
     });
   } catch (error) {
     console.log("Error occured while updating section");
@@ -88,17 +88,46 @@ exports.updateSection = async (req, res) => {
 // deleteSection handler function
 exports.deleteSection = async (req, res) => {
   try {
-    // fetch data from request body
-    const sectionId = req.body.sectionId;
-    const courseId = req.body.id;
-    // validation of data
-    if (!sectionId) {
+    // Fetch data from request body
+    const { sectionId, courseId } = req.body;
+
+    // Validate input data
+    if (!sectionId || !courseId) {
       return res.status(400).json({
         success: false,
         message: "Missing Properties",
       });
     }
-    // check if section exists & delete section
+
+    // Find all subsections of the section
+    const subSections = await SubSection.find({ sectionId });
+
+    // Delete all lecture videos from cloudinary concurrently
+    await Promise.all(
+      subSections.map(async (subSection) => {
+        if (subSection.videoUrl) {
+          console.log("Deleting video:", subSection.videoUrl);
+          await fileDeleter(subSection.videoUrl, "video");
+        }
+      })
+    );
+
+    // Delete all subsections
+    await SubSection.deleteMany({ sectionId });
+
+    // Remove section reference from course
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      { $pull: { courseContent: sectionId } },
+      { new: true }
+    ).populate({
+      path: "courseContent",
+      populate: {
+        path: "subSection",
+      },
+    });
+
+    // Delete the section itself
     const section = await Section.findByIdAndDelete(sectionId);
     if (!section) {
       return res.status(404).json({
@@ -107,23 +136,17 @@ exports.deleteSection = async (req, res) => {
       });
     }
 
-    //delete section Id from course
-    await Course.findByIdAndUpdate(
-      courseId,
-      { $pull: { courseContent: sectionId } },
-      { new: true }
-    );
-
-    // return response
+    // Respond with success
     return res.status(200).json({
       success: true,
       message: "Section deleted successfully",
+      data: updatedCourse,
     });
   } catch (error) {
-    console.log("Error occured while deleting section");
-    res.status(500).json({
+    console.log("Error occurred while deleting section:", error.message);
+    return res.status(500).json({
       success: false,
-      message: "Error occured while deleting section : " + error.message,
+      message: "Error occurred while deleting section",
     });
   }
 };
