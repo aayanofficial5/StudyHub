@@ -66,9 +66,9 @@ const NavBar = () => {
             )}
           </Link>
         )}
-        {/* Create Course */}
+        {/* Add Course */}
         {user && user?.accountType == "Instructor" && (
-          <Link to="/dashboard/create-course" className="hover:text-blue-500">
+          <Link to="/dashboard/add-course" className="hover:text-blue-500">
             <FaPlusCircle className="text-2xl text-blue-500" />
           </Link>
         )}
