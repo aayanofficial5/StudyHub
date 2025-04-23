@@ -1,6 +1,6 @@
 import { toast } from "react-hot-toast";
 import { apiConnector } from "./../apiConnector";
-import { courses } from "../apiCollection";
+import { course } from "../apiCollection";
 
 const {
   getCourseCategoriesApi,
@@ -10,7 +10,12 @@ const {
   createSectionApi,
   updateSectionApi,
   deleteSectionApi,
-} = courses;
+  createSubSectionApi,
+  updateSubSectionApi,
+  deleteSubSectionApi,
+  getInstructorCoursesApi,
+  deleteCourseApi,
+} = course;
 
 // category APIs
 
@@ -33,8 +38,9 @@ export const getCourseCategories = async () => {
   }
 };
 
-// course APIs
-
+/********************************************************************
+|                            course APIs                            |
+*********************************************************************/
 // create Course
 export const createCourse = async (data) => {
   let result = null;
@@ -60,10 +66,31 @@ export const createCourse = async (data) => {
   return result;
 };
 
+// delete Course
+export const deleteCourse = async (courseId) => {
+  const toastId = toast.loading("Deleting Course...");
+  let result=null;
+  try{
+  const response = await apiConnector("DELETE", deleteCourseApi, {courseId});
+  if (!response?.data?.success) {
+    throw new Error(response?.data?.message);
+  }
+  toast.success(response?.data?.message);
+  result =  response?.data?.data;
+}catch(error){
+  console.log("DELETE COURSE API ERROR............", error?.response?.data?.message);
+  toast.error(error?.response?.data?.message || "Failed to delete course.");
+}
+finally{
+  toast.dismiss(toastId);
+  return result;
+}
+};
+
 // edit the Course details
 export const editCourseDetails = async (data) => {
   let result = null;
-  const toastId = toast.loading("Loading...");
+  const toastId = toast.loading("Updating Course...");
   try {
     const response = await apiConnector("PUT", editCourseDetailsApi, data, {
       "Content-Type": "multipart/form-data",
@@ -102,17 +129,47 @@ export const getAllCourses = async () => {
   }
 };
 
-// create section
-export const createSection = async (sectionName,courseId) => {
-  const toastId = toast.loading("Creating section...");
-  let result=null;
+// get Instructor courses
+export const getInstructorCourses = async (instructorId) => {
+  const toastId = toast.loading("Loading Courses...");
+  let result = null;
   try {
-    const response = await apiConnector("POST",createSectionApi,{sectionName,courseId});
+    const response = await apiConnector(
+      "GET",
+      getInstructorCoursesApi,
+      instructorId
+    );
+    // console.log("Instructor Courses Response: ",response);
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    result = response?.data?.data;
+  } catch (error) {
+    console.log("Error during fetching instructor courses: ", error.message);
+    toast.error(error?.response?.data?.message || "Failed to load courses.");
+  } finally {
+    toast.dismiss(toastId);
+    return result;
+  }
+};
+
+/********************************************************************
+|                           section APIs                            |
+*********************************************************************/
+// create section
+export const createSection = async ({ sectionName, courseId }) => {
+  const toastId = toast.loading("Creating section...");
+  let result = null;
+  try {
+    const response = await apiConnector("POST", createSectionApi, {
+      sectionName,
+      courseId,
+    });
     if (!response?.data?.success) {
       throw new Error(response?.data?.message);
     }
     toast.success(response?.data?.message);
-    result = response?.data?.data
+    result = response?.data?.data;
   } catch (error) {
     console.log("Error during section creation: ", error.message);
     toast.error(error?.response?.data?.message || "Failed to create section.");
@@ -122,20 +179,23 @@ export const createSection = async (sectionName,courseId) => {
   }
 };
 
-// edit Section
-export const updateSection = async ({sectionId, sectionName}) => {
-  const toastId = toast.loading("Editing section...");
-  let result=null;
+// update Section
+export const updateSection = async ({ sectionId, sectionName }) => {
+  const toastId = toast.loading("Updating section...");
+  let result = null;
   try {
-    const response = await apiConnector("PUT", editSectionApi, sectionName);
+    const response = await apiConnector("PUT", updateSectionApi, {
+      sectionId,
+      sectionName,
+    });
     if (!response?.data?.success) {
       throw new Error(response?.data?.message);
     }
     toast.success(response?.data?.message);
     result = response?.data?.data;
   } catch (error) {
-    console.log("Error during section editing: ", error.message);
-    toast.error(error?.response?.data?.message || "Failed to edit section.");
+    console.log("Error during section updating: ", error.message);
+    toast.error(error?.response?.data?.message || "Failed to update section.");
   } finally {
     toast.dismiss(toastId);
     return result;
@@ -143,3 +203,101 @@ export const updateSection = async ({sectionId, sectionName}) => {
 };
 
 // delete Section
+export const deleteSection = async ({ sectionId, courseId }) => {
+  const toastId = toast.loading("Deleting section...");
+  let result = null;
+  try {
+    const response = await apiConnector("DELETE", deleteSectionApi, {
+      sectionId,
+      courseId,
+    });
+    // console.log("section deleted successfully response :", response);
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    toast.success(response?.data?.message);
+    result = response?.data?.data;
+  } catch (error) {
+    console.log("Error during section deletion: ", error.message);
+    toast.error(error?.response?.data?.message || "Failed to delete section.");
+  } finally {
+    toast.dismiss(toastId);
+    // console.log(result);
+    return result;
+  }
+};
+
+/********************************************************************
+|                        subSection APIs                            |
+*********************************************************************/
+
+// create subSection
+export const createSubSection = async (formData) => {
+  const toastId = toast.loading("Creating Lecture...");
+  let result = null;
+  try {
+    const response = await apiConnector("POST", createSubSectionApi, formData, {
+      "Content-Type": "multipart/form-data",
+    });
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    toast.success(response?.data?.message);
+    result = response?.data?.data;
+  } catch (error) {
+    console.log("Error during subSection creation: ", error.message);
+    toast.error(
+      error?.response?.data?.message || "Failed to create subSection."
+    );
+  } finally {
+    toast.dismiss(toastId);
+    // console.log(result);
+    return result;
+  }
+};
+
+// update subSection
+export const updateSubSection = async (formData) => {
+  const toastId = toast.loading("Updating Lecture...");
+  let result = null;
+  try {
+    const response = await apiConnector("PUT", updateSubSectionApi, formData, {
+      "Content-Type": "multipart/form-data",
+    });
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    toast.success(response?.data?.message);
+    result = response?.data?.data;
+  } catch (error) {
+    console.log("Error during subSection editing: ", error.message);
+    toast.error(error?.response?.data?.message || "Failed to edit subSection.");
+  } finally {
+    toast.dismiss(toastId);
+    return result;
+  }
+};
+
+// delete subSection
+export const deleteSubSection = async (subSectionId) => {
+  const toastId = toast.loading("Deleting Lecture...");
+  let result = null;
+  try {
+    const response = await apiConnector("DELETE", deleteSubSectionApi, {
+      subSectionId,
+    });
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    toast.success(response?.data?.message);
+    result = response?.data?.data;
+  } catch (error) {
+    console.log("Error during subSection deletion: ", error.message);
+    toast.error(
+      error?.response?.data?.message || "Failed to delete subSection."
+    );
+  } finally {
+    toast.dismiss(toastId);
+    return result;
+  }
+};

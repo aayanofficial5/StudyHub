@@ -2,7 +2,6 @@ import toast from "react-hot-toast";
 import { profile } from "../apiCollection";
 import { apiConnector } from "./../apiConnector";
 import { setUser } from "../../redux/slices/profileSlice";
-import { logout } from "./authapis";
 
 // profilePictureUpdate
 export const profilePictureUpdate = (profilePicture) => {

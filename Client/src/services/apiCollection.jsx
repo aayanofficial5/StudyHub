@@ -1,16 +1,22 @@
 
-export const courses = {
+export const course = {
+  // course
   createCourseApi: "/course",
   getAllCoursesApi: "/course",
   getCourseDetailsApi: "/course/details",
   editCourseDetailsApi: "/course",
   deleteCourseApi: "/course",
+  getInstructorCoursesApi:"/course/instructor",
   // category
   getCourseCategoriesApi: "/course/categories",
   // section
   createSectionApi:"/course/section",
   updateSectionApi:"/course/section",
   deleteSectionApi: "/course/section",
+  //subSection
+  createSubSectionApi: "/course/section/subsection",
+  updateSubSectionApi: "/course/section/subsection",
+  deleteSubSectionApi: "/course/section/subsection",
 };
 
 
