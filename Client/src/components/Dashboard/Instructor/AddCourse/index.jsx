@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RenderSteps from "./RenderSteps";
+import { useDispatch } from "react-redux";
+import { setEditCourse } from "../../../../redux/slices/courseSlice";
 
 const AddCourse = () => {
+  const dispatch = useDispatch();
   return (
     <div className="flex flex-row w-full gap-20 opacity-80">
       <div className="w-full lg:w-6/9 flex flex-col">
@@ -12,8 +15,7 @@ const AddCourse = () => {
       </div>
       <div className="hidden lg:flex flex-col bg-gray-900 text-white p-6 rounded-xl shadow-md mx-auto border border-gray-700 w-3/9 max-h-fit">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          {"\u26a1"}Course Upload
-          Tips
+          {"\u26a1"}Course Upload Tips
         </h2>
         <ul className="list-disc list-inside space-y-3 text-gray-300 text-sm">
           <li>Set the Course Price option or make it free.</li>

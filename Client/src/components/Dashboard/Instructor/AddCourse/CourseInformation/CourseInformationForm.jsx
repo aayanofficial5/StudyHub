@@ -30,20 +30,19 @@ const CourseInformationForm = () => {
 
   async function fetchCategories() {
     const categories = await getCourseCategories();
-    if (categories.length > 0) {
+    if (categories?.length > 0) {
       setCourseCategories(categories);
     }
   }
 
   useEffect(() => {
     if (editCourse) {
-      setValue("courseTitle", course.courseName);
-      setValue("courseShortDesc", course.courseDescription);
-      setValue("coursePrice", course.price);
-      setValue("courseTags", course.tag);
-      setValue("courseBenefits", course.whatYouWillLearn);
-      setValue("courseCategory", course.category);
-      setValue("courseImage", course.thumbnail);
+      setValue("courseTitle", course?.courseName);
+      setValue("courseShortDesc", course?.courseDescription);
+      setValue("coursePrice", course?.price);
+      setValue("courseBenefits", course?.whatYouWillLearn);
+      setValue("courseCategory", course?.category);
+      setValue("courseImage", course?.thumbnail);
     }
     fetchCategories();
   }, []);
@@ -52,13 +51,13 @@ const CourseInformationForm = () => {
     const currentValues = getValues();
 
     if (
-      currentValues.courseTitle !== course.courseName ||
-      currentValues.courseShortDesc !== course.courseDescription ||
-      currentValues.coursePrice !== course.price ||
-      currentValues.courseTags.toString() !== course.tag.toString() ||
-      currentValues.courseBenefits !== course.whatYouWillLearn ||
-      currentValues.courseCategory._id !== course.category._id ||
-      currentValues.courseImage !== course.thumbnail
+      currentValues.courseTitle !== course?.courseName ||
+      currentValues.courseShortDesc !== course?.courseDescription ||
+      currentValues.coursePrice !== course?.price ||
+      currentValues.courseTags.toString() !== course?.tag?.map((tag)=>tag.name).toString() ||
+      currentValues.courseBenefits !== course?.whatYouWillLearn ||
+      currentValues.courseCategory._id !== course?.category._id ||
+      currentValues.courseImage !== course?.thumbnail
     ) {
       return true;
     }
@@ -82,8 +81,8 @@ const CourseInformationForm = () => {
         if (currentValues.coursePrice !== course.price) {
           formData.append("price", data.coursePrice);
         }
-        if (currentValues.courseTags.toString() !== course.tag.toString()) {
-          formData.append("tags", JSON.stringify(data.courseTags));
+        if (currentValues.courseTags.toString() !== course?.tag?.map((tag)=>tag.name).toString()) {
+          formData.append("tag", JSON.stringify(data.courseTags));
         }
         if (currentValues.courseBenefits !== course.whatYouWillLearn) {
           formData.append("whatYouWillLearn", data.courseBenefits);
@@ -109,7 +108,7 @@ const CourseInformationForm = () => {
       formData.append("courseName", data.courseTitle);
       formData.append("courseDescription", data.courseShortDesc);
       formData.append("price", data.coursePrice);
-      formData.append("tags", JSON.stringify(data.courseTags));
+      formData.append("tag", JSON.stringify(data.courseTags));
       formData.append("whatYouWillLearn", data.courseBenefits);
       formData.append("category", data.courseCategory);
       formData.append("status", COURSE_STATUS.DRAFT);

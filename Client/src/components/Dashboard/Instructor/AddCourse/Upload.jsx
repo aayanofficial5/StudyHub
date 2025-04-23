@@ -73,7 +73,10 @@ export default function Upload({
         >
           <input {...getInputProps()} />
           {previewSource ? (
-            <div className="flex w-full flex-col p-6">
+            <div
+              className="flex w-full flex-col p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
               {!video ? (
                 <img
                   src={previewSource}

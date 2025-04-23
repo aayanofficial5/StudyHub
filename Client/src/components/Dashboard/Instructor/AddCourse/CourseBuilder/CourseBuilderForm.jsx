@@ -17,8 +17,8 @@ const CourseBuilderForm = () => {
   } = useForm();
 
   const dispatch = useDispatch();
-  const [sectionName, setSectionName] = useState("");
-  const { course, editCourse } = useSelector((state) => state.course);
+
+  const { course } = useSelector((state) => state.course);
 
   const [editSectionName,setEditSectionName] = useState(null);
 
@@ -43,22 +43,28 @@ const CourseBuilderForm = () => {
     dispatch(setStep(3));
   }
   const onSubmit = async (data) => {
-
+    let result=null;
     if (!editSectionName) {
+      console.log(data);
       result = await createSection({ sectionName: data.sectionName , 
-        courseId: course._id
+        courseId: course?._id
       });
+      if(result){
+        dispatch(setCourse(result));
+        handleCancelEdit();
+      }
     }else{
       result = await updateSection({sectionId:editSectionName,sectionName:data.sectionName});
-    }
-
-    if(result){
-      dispatch(setCourse(result));
-      handleCancelEdit();
+      if(result){
+        const updatedCourseContent = course?.courseContent.map((section)=>section?._id==result?._id?result:section);
+        const updatedCourse = {...course,courseContent:updatedCourseContent};
+        dispatch(setCourse(updatedCourse));
+        handleCancelEdit();
+      }
     }
   };
 
-  const handleChangeByEditSectionName = ({sectionId:_id, sectionName}) => {
+  const handleChangeByEditSectionName = (sectionId, sectionName) => {
     setEditSectionName(sectionId);
     setValue("sectionName",sectionName);
   }
@@ -101,7 +107,7 @@ const CourseBuilderForm = () => {
       </form>
       
       {/* Created Sections */}
-      {course?.courseContent.length > 0 && <NestedView handleChangeByEditSectionName={handleChangeByEditSectionName} />}
+      {course?.courseContent?.length > 0 && <NestedView handleChangeByEditSectionName={handleChangeByEditSectionName} />}
 
       {/* Navigation Buttons */}
       <div className="flex justify-end gap-x-3">

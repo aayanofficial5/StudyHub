@@ -6,6 +6,7 @@ import { MdAdd, MdDelete, MdOndemandVideo } from "react-icons/md";
 import Modal from "./../../../Common/Modal";
 import SubSectionModal from "./SubSectionModal";
 import { setCourse } from "../../../../../redux/slices/courseSlice";
+import { deleteSection, deleteSubSection } from "../../../../../services/operations/courseapis";
 const NestedView = ({ handleChangeByEditSectionName }) => {
   const { course } = useSelector((state) => state.course);
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const NestedView = ({ handleChangeByEditSectionName }) => {
 
   const handleDeleteSection = async(sectionId) => {
     const result = await deleteSection({sectionId,courseId:course._id});
-
+    // console.log(result);
     if(result){
       dispatch(setCourse(result))
     }
@@ -27,16 +28,18 @@ const NestedView = ({ handleChangeByEditSectionName }) => {
   };
 
   const handleDeleteSubSection = async(subSectionId) => {
-    const result = await deleteSubsection({subSectionId});
-
+    const result = await deleteSubSection(subSectionId);
+    console.log(result);
     if(result){
-      dispatch(setCourse(result))
+      const updatedCourseContent = course.courseContent.map((section)=>section._id==result._id?result:section);
+      const updatedCourse = {...course,courseContent:updatedCourseContent};
+      dispatch(setCourse(updatedCourse));
     }
     setConfirmationModal(null);
   };
 
   return (
-    <div>
+    <>
       <div className="text-[18px]">
         {/*Display Section*/}
         {course?.courseContent?.map((section, index) => (
@@ -57,9 +60,9 @@ const NestedView = ({ handleChangeByEditSectionName }) => {
                   )}
                   <span className="font-semibold">{section?.sectionName}</span>
                 </div>
-                <div className="flex items-center gap-2 justify-center">
+                <div className="flex items-center gap-2 justify-center" onClick={(e)=>e.stopPropagation()}>
                   <button
-                    onClick={() => handleChangeByEditSectionName(section)}
+                    onClick={() => handleChangeByEditSectionName(section._id,section.sectionName)}
                     className="text-gray-400 hover:text-white cursor-pointer"
                   >
                     <FaEdit />
@@ -85,7 +88,7 @@ const NestedView = ({ handleChangeByEditSectionName }) => {
             </summary>
             <div className="mx-7">
               {/* Add SubSections */}
-              {section?.subSections?.map((subSection, subIndex) => (
+              {section?.subSection?.map((subSection, subIndex) => (
                 <div
                   key={subSection?._id || subIndex}
                   onClick={() => setViewSubSection(subSection)}
@@ -97,7 +100,7 @@ const NestedView = ({ handleChangeByEditSectionName }) => {
                       {subSection?.subSectionName}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 justify-center">
+                  <div className="flex items-center gap-2 justify-center" onClick={(e)=>e.stopPropagation()}>
                     <button
                       onClick={() => setEditSubSection(subSection)}
                       className="text-gray-400 hover:text-white cursor-pointer"
@@ -135,7 +138,7 @@ const NestedView = ({ handleChangeByEditSectionName }) => {
           </details>
         ))}
       </div>
-
+        
       {addSubSection ? (
         <SubSectionModal 
         modalData={addSubSection}
@@ -163,7 +166,7 @@ const NestedView = ({ handleChangeByEditSectionName }) => {
           action2={confirmationModal.action2}
         />
       )}
-    </div>
+    </>
   );
 };
 

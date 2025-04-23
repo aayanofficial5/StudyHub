@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
-import HighlightedText from "../components/Home/HighlightedText";
 import CTAButton from "../components/Home/CTAButton";
 import { useState } from "react";
 import Banner from "../assets/banner.png";
@@ -13,8 +12,6 @@ import adobe_logo from "../assets/adobe_logo.svg";
 import paypal_logo from "../assets/paypal_logo.svg";
 import CourseCard from "../components/Home/CourseCard";
 import Coding2 from "../assets/coding2.png";
-import { apiConnector } from "../services/apiConnector";
-import { courses } from "../services/apiCollection";
 import HighlightBanner from "../components/Home/HighlightBanner";
 import { useEffect } from "react";
 import Testimonials from "../components/Common/Testimonials";
