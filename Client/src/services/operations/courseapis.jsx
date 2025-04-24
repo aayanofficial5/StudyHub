@@ -1,6 +1,7 @@
 import { toast } from "react-hot-toast";
 import { apiConnector } from "./../apiConnector";
 import { course } from "../apiCollection";
+import { setCourses, setLoading } from "../../redux/slices/courseSlice";
 
 const {
   getCourseCategoriesApi,
@@ -69,22 +70,26 @@ export const createCourse = async (data) => {
 // delete Course
 export const deleteCourse = async (courseId) => {
   const toastId = toast.loading("Deleting Course...");
-  let result=null;
-  try{
-  const response = await apiConnector("DELETE", deleteCourseApi, {courseId});
-  if (!response?.data?.success) {
-    throw new Error(response?.data?.message);
+  let result = null;
+  try {
+    const response = await apiConnector("DELETE", deleteCourseApi, {
+      courseId,
+    });
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    toast.success(response?.data?.message);
+    result = response?.data?.data;
+  } catch (error) {
+    console.log(
+      "DELETE COURSE API ERROR............",
+      error?.response?.data?.message
+    );
+    toast.error(error?.response?.data?.message || "Failed to delete course.");
+  } finally {
+    toast.dismiss(toastId);
+    return result;
   }
-  toast.success(response?.data?.message);
-  result =  response?.data?.data;
-}catch(error){
-  console.log("DELETE COURSE API ERROR............", error?.response?.data?.message);
-  toast.error(error?.response?.data?.message || "Failed to delete course.");
-}
-finally{
-  toast.dismiss(toastId);
-  return result;
-}
 };
 
 // edit the Course details
@@ -130,27 +135,31 @@ export const getAllCourses = async () => {
 };
 
 // get Instructor courses
-export const getInstructorCourses = async (instructorId) => {
-  const toastId = toast.loading("Loading Courses...");
-  let result = null;
-  try {
-    const response = await apiConnector(
-      "GET",
-      getInstructorCoursesApi,
-      instructorId
-    );
-    // console.log("Instructor Courses Response: ",response);
-    if (!response?.data?.success) {
-      throw new Error(response?.data?.message);
+export const getInstructorCourses = (instructorId) => {
+  return async (dispatch) => {
+    let result = null;
+    dispatch(setLoading(true));
+    try {
+      const response = await apiConnector(
+        "GET",
+        getInstructorCoursesApi,
+        instructorId
+      );
+      // console.log("Instructor Courses Response: ",response);
+      if (!response?.data?.success) {
+        throw new Error(response?.data?.message);
+      }
+      result = response?.data?.data;
+    } catch (error) {
+      console.log("Error during fetching instructor courses: ", error.message);
+      toast.error(error?.response?.data?.message || "Failed to load courses.");
+    } finally {
+      dispatch(setLoading(false));
+      if (result) {
+        dispatch(setCourses(result));
+      }
     }
-    result = response?.data?.data;
-  } catch (error) {
-    console.log("Error during fetching instructor courses: ", error.message);
-    toast.error(error?.response?.data?.message || "Failed to load courses.");
-  } finally {
-    toast.dismiss(toastId);
-    return result;
-  }
+  };
 };
 
 /********************************************************************

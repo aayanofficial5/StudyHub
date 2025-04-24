@@ -8,12 +8,13 @@ import {
 } from "../../../../../redux/slices/courseSlice";
 import { COURSE_STATUS } from "../../../../../utils/constant";
 import { editCourseDetails } from "../../../../../services/operations/courseapis";
+import { useNavigate } from "react-router-dom";
 
 const PublishingCourseForm = () => {
   const { register, handleSubmit, setValue, getValues } = useForm();
   const { course, editCourse } = useSelector((state) => state.course);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (course?.status === COURSE_STATUS.PUBLISHED) {
       setValue("public", true);

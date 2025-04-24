@@ -1,6 +1,4 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { useNavigate, NavLink } from "react-router-dom";
 import { login } from "../../services/operations/authapis";
 import { useDispatch } from "react-redux";
@@ -23,9 +21,6 @@ export default function LogInForm() {
     event.preventDefault();
     // console.log(loginFormData);
     dispatch(login(loginFormData,navigate));
-  }
-  function handlePassword() {
-    setShowPassword((prev) => !prev);
   }
   return (
     <form onSubmit={handleSubmit}>

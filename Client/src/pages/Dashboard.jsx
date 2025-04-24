@@ -11,7 +11,8 @@ import { deleteAccount } from "../services/operations/profileapis";
 const Dashboard = () => {
   const { loading: profileLoading } = useSelector((state) => state.profile);
   const { loading: authLoading } = useSelector((state) => state.auth);
-  const loading = profileLoading || authLoading;
+  const { loading: courseLoading } = useSelector((state) => state.course);
+  const loading = courseLoading||profileLoading || authLoading;
   const [logoutModal, setLogoutModal] = useState(false);
   const [deletionModal, setDeletionModal] = useState(false);
   const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const Dashboard = () => {
       )}
       {deletionModal && (
         <Modal
-          title="Logout"
+          title="Delete"
           paragraph="Are you sure you want to Delete your account?"
           button1="Yes"
           button2="No"
