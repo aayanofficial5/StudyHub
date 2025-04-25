@@ -8,7 +8,6 @@ const {
 const { auth } = require("../Middlewares/Authentication/auth");
 const { isAdmin } = require("../Middlewares/Authorization/isAdmin");
 const { isInstructor } = require("../Middlewares/Authorization/isInstructor");
-const { createTag, getAllTags } = require("../Controllers/Tag");
 const {
   createCourse,
   getAllCourses,
@@ -27,6 +26,7 @@ const {
   updateSubSection,
   deleteSubSection,
 } = require("../Controllers/SubSection");
+
 // routes
 
 // categories routes
@@ -34,9 +34,6 @@ router.post("/categories", auth, isAdmin, createCategory);
 router.get("/categories", getAllCategories);
 // router.get("/categories/:id", getCategoryPageDetails);
 
-// tags routes
-router.post("/tags", auth, isAdmin, createTag);
-router.get("/tags", getAllTags);
 
 // courses routes
 router.post("/", auth, isInstructor, createCourse);

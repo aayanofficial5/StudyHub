@@ -1,7 +1,6 @@
 const Course = require("../Models/Course");
 const Section = require("../Models/Section");
 const SubSection = require("../Models/SubSection");
-const Tag = require("../Models/Tag");
 const User = require("../Models/User");
 const { fileUploader } = require("../utils/fileUploader");
 const Category = require("../Models/Category");
@@ -22,8 +21,9 @@ exports.createCourse = async (req, res) => {
     // console.log(req.body);
 
     // Parse tags if it's a JSON string
-    const parsedTags = typeof tag === "string" ? JSON.parse(tag) : tag;
-
+    const parsedTags = JSON.parse(tag).map((tag) =>
+      tag.toLowerCase().split(" ").join("")
+    );
     // fetch user from request
     const user = req.user;
     // fetch image from req.files
@@ -62,28 +62,6 @@ exports.createCourse = async (req, res) => {
       });
     }
 
-    // check given tag is valid or not
-    const existingTags = await Tag.find({ name: { $in: parsedTags } });
-    let allTags = [];
-    if (existingTags.length != parsedTags.length) {
-      // find existing tags name
-      const existingTagsName = existingTags.map((tag) => tag.name);
-      // find missing tags
-      const missingTags = parsedTags.filter(
-        (tag) => !existingTagsName.includes(tag)
-      );
-      // insert all missing tags
-      const newTags = await Tag.insertMany(
-        missingTags.map((tag) => ({ name: tag }))
-      );
-      // merge existing and new tags
-      allTags = [...existingTags, ...newTags];
-    } else {
-      allTags = existingTags;
-    }
-
-    const allTagsId = allTags.map((tag) => tag._id);
-
     // upload thumbnail to cloud
     let thumbnailImage;
     try {
@@ -104,7 +82,7 @@ exports.createCourse = async (req, res) => {
       instructor: instructorDetails._id,
       whatYouWillLearn,
       price,
-      tag: allTagsId,
+      tag: parsedTags,
       category: categoryDetails._id,
       thumbnail: thumbnailImage.secure_url,
     });
@@ -113,12 +91,6 @@ exports.createCourse = async (req, res) => {
     await User.findByIdAndUpdate(instructorDetails._id, {
       $push: { course: newCourse._id },
     });
-
-    // update the tag schema
-    await Tag.updateMany(
-      { _id: { $in: allTagsId } },
-      { $push: { course: newCourse._id } }
-    );
 
     // update the category schema
     await Category.findByIdAndUpdate(categoryDetails._id, {
@@ -135,6 +107,112 @@ exports.createCourse = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to create course!",
+    });
+  }
+};
+
+// editCourseDetails
+exports.editCourseDetails = async (req, res) => {
+  try {
+    const { courseId } = req.body;
+    const updateData = { ...req.body };
+    delete updateData.courseId;
+
+    // console.log(updateData);
+    const thumbnail = req.files?.thumbnail;
+
+    // Validate courseId
+    if (!courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "Course ID is required",
+      });
+    }
+
+    // Fetch course details
+    const courseDetails = await Course.findById(courseId).populate("category");
+    if (!courseDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    // --- TAG LOGIC ---
+    if (updateData.tag) {
+      updateData.tag = JSON.parse(updateData.tag).map((tag) =>
+        tag.toLowerCase().split(" ").join("")
+      );
+    }
+
+    // --- THUMBNAIL LOGIC ---
+    if (thumbnail) {
+      try {
+        const thumbnailImage = await fileUploader(
+          thumbnail,
+          process.env.FOLDER_NAME
+        );
+        updateData.thumbnail = thumbnailImage?.secure_url;
+        // console.log(thumbnailImage);
+        // console.log(updateData);
+      } catch (error) {
+        console.log("Error uploading thumbnail:", error.message);
+        return res.status(500).json({
+          success: false,
+          message: "Error uploading thumbnail",
+        });
+      }
+    }
+
+    // --- CATEGORY LOGIC ---
+    if (updateData.category) {
+      const categoryDetails = await Category.findOne({
+        name: updateData.category,
+      });
+      if (!categoryDetails) {
+        return res.status(400).json({
+          success: false,
+          message: "Category not found",
+        });
+      }
+
+      const oldCategoryId = courseDetails.category?._id?.toString();
+      const newCategoryId = categoryDetails._id.toString();
+
+      if (oldCategoryId && oldCategoryId !== newCategoryId) {
+        await Category.findByIdAndUpdate(oldCategoryId, {
+          $pull: { course: courseDetails._id },
+        });
+
+        await Category.findByIdAndUpdate(newCategoryId, {
+          $push: { course: courseDetails._id },
+        });
+      }
+
+      // Assign only the ObjectId
+      updateData.category = categoryDetails._id;
+    }
+
+    // --- UPDATE COURSE ---
+    const updatedCourse = await Course.findByIdAndUpdate(courseId, updateData, {
+      new: true,
+    })
+      .populate({ path: "instructor", populate: { path: "additionalDetails" } })
+      .populate("category")
+      .populate({ path: "courseContent", populate: { path: "subSection" } })
+      .populate("tag");
+
+    // --- RESPONSE ---
+    return res.status(200).json({
+      success: true,
+      message: "Course details updated successfully",
+      data: updatedCourse,
+    });
+  } catch (error) {
+    console.log("Error occurred while editing course details:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while editing course details",
     });
   }
 };
@@ -218,166 +296,6 @@ exports.getCourseDetails = async (req, res) => {
   }
 };
 
-// editCourseDetails
-exports.editCourseDetails = async (req, res) => {
-  try {
-    const { courseId, tag = "" } = req.body;
-    const updateData = { ...req.body };
-    delete updateData.courseId;
-    // console.log(updateData);
-    const thumbnail = req.files?.thumbnail;
-
-    // Validate courseId
-    if (!courseId) {
-      return res.status(400).json({
-        success: false,
-        message: "Course ID is required",
-      });
-    }
-
-    // Fetch course details
-    const courseDetails = await Course.findById(courseId).populate("category");
-    if (!courseDetails) {
-      return res.status(404).json({
-        success: false,
-        message: "Course not found",
-      });
-    }
-
-    // --- TAG LOGIC ---
-    let allTagsId = null;
-    if (tag) {
-      let parsedTags = [];
-      try {
-        parsedTags = typeof tag === "string" ? JSON.parse(tag) : tag;
-      } catch (error) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid tag format",
-        });
-      }
-
-      // Check existing tags
-      const existingTags = await Tag.find({ name: { $in: parsedTags } });
-      let allTags = [];
-
-      if (existingTags.length !== parsedTags.length) {
-        const existingTagsName = existingTags.map((t) => t.name);
-        const missingTags = parsedTags.filter(
-          (t) => !existingTagsName.includes(t)
-        );
-        const newTags = await Tag.insertMany(
-          missingTags.map((name) => ({ name }))
-        );
-        allTags = [...existingTags, ...newTags];
-      } else {
-        allTags = existingTags;
-      }
-
-      // Only push ObjectIds into updateData
-      allTagsId = allTags.map((tag) => tag._id);
-      updateData.tag = allTagsId;
-
-      const oldTagIds = courseDetails.tag.map((id) => id.toString());
-      const newTagIds = allTagsId.map((id) => id.toString());
-
-      const tagsToAdd = newTagIds.filter((id) => !oldTagIds.includes(id));
-      const tagsToRemove = oldTagIds.filter((id) => !newTagIds.includes(id));
-      try {
-        if (tagsToRemove.length > 0) {
-          await Tag.updateMany(
-            { _id: { $in: tagsToRemove } },
-            { $pull: { course: courseDetails._id } }
-          );
-        }
-
-        if (tagsToAdd.length > 0) {
-          await Tag.updateMany(
-            { _id: { $in: tagsToAdd } },
-            { $push: { course: courseDetails._id } }
-          );
-        }
-      } catch (error) {
-        console.log("Error updating tags:", error.message);
-        return res.status(500).json({
-          success: false,
-          message: "Error updating tags",
-        });
-      }
-    }
-
-    // --- THUMBNAIL LOGIC ---
-    if (thumbnail) {
-      try {
-        const thumbnailImage = await fileUploader(
-          thumbnail,
-          process.env.FOLDER_NAME
-        );
-        updateData.thumbnail = thumbnailImage?.secure_url;
-        // console.log(thumbnailImage);
-        // console.log(updateData);
-      } catch (error) {
-        console.log("Error uploading thumbnail:", error.message);
-        return res.status(500).json({
-          success: false,
-          message: "Error uploading thumbnail",
-        });
-      }
-    }
-
-    // --- CATEGORY LOGIC ---
-    if (updateData.category) {
-      const categoryDetails = await Category.findOne({
-        name: updateData.category,
-      });
-      if (!categoryDetails) {
-        return res.status(400).json({
-          success: false,
-          message: "Category not found",
-        });
-      }
-
-      const oldCategoryId = courseDetails.category?._id?.toString();
-      const newCategoryId = categoryDetails._id.toString();
-
-      if (oldCategoryId && oldCategoryId !== newCategoryId) {
-        await Category.findByIdAndUpdate(oldCategoryId, {
-          $pull: { course: courseDetails._id },
-        });
-
-        await Category.findByIdAndUpdate(newCategoryId, {
-          $push: { course: courseDetails._id },
-        });
-      }
-
-      // Assign only the ObjectId
-      updateData.category = categoryDetails._id;
-    }
-
-    // --- UPDATE COURSE ---
-    const updatedCourse = await Course.findByIdAndUpdate(courseId, updateData, {
-      new: true,
-    })
-      .populate({ path: "instructor", populate: { path: "additionalDetails" } })
-      .populate("category")
-      .populate({ path: "courseContent", populate: { path: "subSection" } })
-      .populate("tag");
-
-    // --- RESPONSE ---
-    return res.status(200).json({
-      success: true,
-      message: "Course details updated successfully",
-      data: updatedCourse,
-    });
-  } catch (error) {
-    console.log("Error occurred while editing course details:", error.message);
-    return res.status(500).json({
-      success: false,
-      message: "An error occurred while editing course details",
-    });
-  }
-};
-
 // deleteCourse
 exports.deleteCourse = async (req, res) => {
   try {
@@ -426,7 +344,6 @@ exports.deleteCourse = async (req, res) => {
 
     //Remove course from other collections
     await User.updateMany({}, { $pull: { course: courseId } });
-    await Tag.updateMany({}, { $pull: { course: courseId } });
     await Category.updateMany({}, { $pull: { course: courseId } });
 
     // Delete the course
