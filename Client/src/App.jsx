@@ -22,14 +22,15 @@ import NotFound from "./pages/NotFound";
 import PrivateRoute from "./components/Authentication/PrivateRoute";
 import { useSelector } from "react-redux";
 import AddCourse from "./components/Dashboard/Instructor/AddCourse/index.jsx";
-import Settings from './components/Dashboard/Common/Settings/index';
-import MyCourses from './components/Dashboard/Instructor/MyCourses';
+import Settings from "./components/Dashboard/Common/Settings/index";
+import MyCourses from "./components/Dashboard/Instructor/MyCourses";
 import Reports from "./components/Dashboard/Instructor/Reports.jsx";
+import Catalog from "./pages/Catalog.jsx";
 
 const App = () => {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0); // Don't return it
+    window.scrollTo(0, 0);
   }, [pathname]);
 
   const user = useSelector((state) => state.profile.user);
@@ -43,13 +44,16 @@ const App = () => {
         <Route path="/" element={<Navbar />}>
           <Route index element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/course-list" element={<Courses />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/email-verification" element={<EmailVerification />} />
           <Route path="/reset-password-link" element={<ResetPasswordLink />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          {/* Course Routes */}
+          <Route path="/course-list" element={<Courses />}></Route>
+          <Route path="/catalog/:catalogName" element={<Catalog />} />
+          {/* Dashboard Routes */}
           <Route
             element={
               <PrivateRoute>
@@ -70,8 +74,8 @@ const App = () => {
             {user?.accountType == "Instructor" && (
               <>
                 <Route path="/dashboard/add-course" element={<AddCourse />} />
-                <Route path="/dashboard/my-courses" element={<MyCourses/>} />
-                <Route path="/dashboard/reports" element={<Reports/>} />
+                <Route path="/dashboard/my-courses" element={<MyCourses />} />
+                <Route path="/dashboard/reports" element={<Reports />} />
               </>
             )}
             <Route path="/dashboard/settings" element={<Settings />} />

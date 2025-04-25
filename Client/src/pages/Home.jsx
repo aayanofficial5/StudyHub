@@ -10,15 +10,17 @@ import microsoft_logo from "../assets/microsoft_logo.svg";
 import walmart_logo from "../assets/walmart_logo.svg";
 import adobe_logo from "../assets/adobe_logo.svg";
 import paypal_logo from "../assets/paypal_logo.svg";
-import CourseCard from "../components/Home/CourseCard";
 import Coding2 from "../assets/coding2.png";
 import HighlightBanner from "../components/Home/HighlightBanner";
 import { useEffect } from "react";
 import Testimonials from "../components/Common/Testimonials";
 import { getAllCourses } from "../services/operations/courseapis";
+import { useSelector } from "react-redux";
+import CourseCard from './../components/Common/CourseCard';
 const Home = () => {
   const [search, setSearch] = useState("");
   const [courseData, setCourseData] = useState([]);
+  const {user} = useSelector((state)=>state.profile);
   const fetchTopCourses = async () => {
     const data = await getAllCourses();
     if(data.length>0)
@@ -46,14 +48,14 @@ const Home = () => {
               <CTAButton active={true} text="Submit" />
             </div>
           </form>
-          <NavLink to="/signup">
+          {!user&&<NavLink to="/signup">
             <div className="group mx-auto rounded-full bg-gray-700 font-bold text-gray-200 transition-all duration-200 hover:scale-97 border-3 border-black hover:border-blue-400 mt-5">
               <button className="flex flex-row items-center gap-2 rounded-full px-10 py-2 group-hover:bg-black cursor-pointer">
                 <p>Become an Instructor</p>
                 <FaArrowRightLong />
               </button>
             </div>
-          </NavLink>
+          </NavLink>}
           <HighlightBanner
             title="Empower your future with the courses designed to"
             highlightedText="fit your choice"

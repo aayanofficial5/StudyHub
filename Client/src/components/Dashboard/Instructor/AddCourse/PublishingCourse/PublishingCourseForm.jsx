@@ -75,8 +75,7 @@ const PublishingCourseForm = () => {
           {/* Submit Button */}
           <CTAButton
             active={true}
-            text={!editCourse ? "Save" : "Save Changes"}
-            arrow={!editCourse && true}
+            text={editCourse ? "Save Changes" : "Save"}
           />
         </div>
       </form>

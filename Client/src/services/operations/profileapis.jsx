@@ -1,7 +1,15 @@
 import toast from "react-hot-toast";
-import { profile } from "../apiCollection";
+import {  settingsEndpoints } from "../apiCollection";
 import { apiConnector } from "./../apiConnector";
 import { setUser } from "../../redux/slices/profileSlice";
+
+const {
+  updateProfilePictureApi,
+  updatePasswordApi,
+  deleteAccountApi,
+  updateProfileApi,
+  getUserDetailsApi
+} = settingsEndpoints;
 
 // profilePictureUpdate
 export const profilePictureUpdate = (profilePicture) => {
@@ -13,7 +21,7 @@ export const profilePictureUpdate = (profilePicture) => {
     try {
       const response = await apiConnector(
         "PUT",
-        profile.updateProfilePicture,
+        updateProfilePictureApi,
         formData
       );
 
@@ -47,7 +55,7 @@ export const updatePassword = (password) => {
     try {
       const response = await apiConnector(
         "PUT",
-        profile.updatePassword,
+        updatePasswordApi,
         password
       );
       if (!response.data.success) {
@@ -68,7 +76,7 @@ export const deleteAccount = (navigate) => {
   return async (dispatch) => {
     const toastId = toast.loading("Deleting Account...");
     try {
-      const response = await apiConnector("DELETE", profile.deleteAccount);
+      const response = await apiConnector("DELETE", deleteAccountApi);
       if (!response.data.success) {
         throw new Error(response.data.message);
       }
@@ -91,7 +99,7 @@ export const updateProfile = (updatedUser) => {
     try {
       const response = await apiConnector(
         "PUT",
-        profile.updateProfile,
+        updateProfileApi,
         updatedUser
       );
 
@@ -122,7 +130,7 @@ export const updateProfile = (updatedUser) => {
 export const getUserDetails = async () => {
     const toastId = toast.loading("Fetching User Details...");
     try {
-      const response = await apiConnector("GET", profile.getUserDetails);
+      const response = await apiConnector("GET", getUserDetailsApi);
       if (!response.data.success) {
         throw new Error(response.data.message);
       }

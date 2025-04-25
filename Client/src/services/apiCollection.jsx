@@ -1,5 +1,5 @@
 
-export const course = {
+export const courseEndpoints = {
   // course
   createCourseApi: "/course",
   getAllCoursesApi: "/course",
@@ -20,21 +20,27 @@ export const course = {
 };
 
 
-export const auth = {
-  login: "/auth/login",
-  signup: "/auth/signup",
-  logout: "/auth/logout",
-  sendOTP: "/auth/otp",
-  resetToken: "/auth/reset-token",
-  resetPassword: "/auth/reset-password",
-  contactUsData: "/auth/contact-us",
-  getAllContactUsData: "/auth/contact-us",
+export const authEndpoints = {
+  loginApi: "/auth/login",
+  signupApi: "/auth/signup",
+  sendOTPApi: "/auth/otp",
+  resetTokenApi: "/auth/reset-token",
+  resetPasswordApi: "/auth/reset-password",
+  };
+
+export const settingsEndpoints = {
+  getUserDetailsApi: "/profile/me",
+  updateProfileApi: "/profile",
+  deleteAccountApi: "/profile",
+  updateProfilePictureApi: "/profile/picture",
+  updatePasswordApi: "/profile/password",
 };
 
-export const profile = {
-  getUserDetails: "/profile/me",
-  updateProfile: "/profile",
-  deleteAccount: "/profile",
-  updateProfilePicture: "/profile/picture",
-  updatePassword: "/profile/password",
-};
+export const contactUsEndpoints = {
+  contactUsDataApi: "/auth/contact-us",
+  getAllContactUsDataApi: "/auth/contact-us",
+}
+
+export const catalogPageDataEndpoints = {
+  getCatalogPageDataApi:"/course/getCategoryPageDetails",
+}

@@ -20,3 +20,12 @@
   }
 }
 
+.custom-swiper .swiper-pagination-bullet {
+  background-color: #ffffff;
+}
+.custom-swiper .swiper-pagination-bullet-active {
+  background-color: #1500ff;
+}
+
+
+

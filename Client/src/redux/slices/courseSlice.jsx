@@ -2,10 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   step: 1,
-  course: null,
-  courses: [],
+  course: null ,
   editCourse: false,
-  loading: false,
   paymentLoading: false,
 };
 
@@ -19,14 +17,8 @@ const courseSlice = createSlice({
     setCourse: (state, action) => {
       state.course = action.payload;
     },
-    setCourses: (state, action) => {
-      state.course = action.payload;
-    },
     setEditCourse: (state, action) => {
       state.editCourse = action.payload;
-    },
-    setLoading(state, action) {
-      state.loading = action.payload;
     },
     setPaymentLoading: (state, action) => {
       state.paymentLoading = action.payload;
@@ -43,8 +35,6 @@ export const {
   setStep,
   setCourse,
   setEditCourse,
-  setLoading,
-  setCourses,
   setPaymentLoading,
   resetCourseState,
 } = courseSlice.actions;

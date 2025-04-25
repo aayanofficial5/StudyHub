@@ -54,7 +54,7 @@ const CourseInformationForm = () => {
       currentValues.courseTitle !== course?.courseName ||
       currentValues.courseShortDesc !== course?.courseDescription ||
       currentValues.coursePrice !== course?.price ||
-      currentValues.courseTags.toString() !== course?.tag?.map((tag)=>tag.name).toString() ||
+      currentValues.courseTags.toString() !== course?.tag?.toString() ||
       currentValues.courseBenefits !== course?.whatYouWillLearn ||
       currentValues.courseCategory._id !== course?.category._id ||
       currentValues.courseImage !== course?.thumbnail
@@ -81,7 +81,7 @@ const CourseInformationForm = () => {
         if (currentValues.coursePrice !== course.price) {
           formData.append("price", data.coursePrice);
         }
-        if (currentValues.courseTags.toString() !== course?.tag?.map((tag)=>tag.name).toString()) {
+        if (currentValues.courseTags.toString() !== course?.tag?.toString()) {
           formData.append("tag", JSON.stringify(data.courseTags));
         }
         if (currentValues.courseBenefits !== course.whatYouWillLearn) {

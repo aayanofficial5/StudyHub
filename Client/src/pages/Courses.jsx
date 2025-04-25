@@ -1,9 +1,9 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import CourseCard from "../components/Home/CourseCard";
 import Loading from "../components/Loading";
 import { useSelector } from "react-redux";
 import { getAllCourses } from "../services/operations/courseapis";
+import CourseCard from './../components/Common/CourseCard';
 
 const Courses = () => {
   const { loading } = useSelector((state) => state.auth);

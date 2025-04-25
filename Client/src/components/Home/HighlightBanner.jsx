@@ -1,9 +1,10 @@
 import React from 'react'
 import HighlightedText from './HighlightedText'
-const HighlightBanner = ({highlightedText="", color="yellow-400", paragraph, textAlign="text-center"}) => {
+const HighlightBanner = ({title, highlightedText="", color="yellow-400", paragraph, textAlign="text-center"}) => {
   return (
     <>
     <div className={`font-bold text-3xl mt-5 ${textAlign}`}>
+            {title}
             <HighlightedText
               text={highlightedText}
               color={color}

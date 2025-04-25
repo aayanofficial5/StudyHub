@@ -38,7 +38,7 @@ const Contact = () => {
             <div className="w-[80%]">
               <HighlightBanner
                 title="Got a Idea? We've got the skills. Let's team up"
-                paragraph="Tell us more about yourself and what you're got in mind."
+                paragraph="Tell us more about yourself and what you got in mind."
                 textAlign="text-left"
               />
             </div>

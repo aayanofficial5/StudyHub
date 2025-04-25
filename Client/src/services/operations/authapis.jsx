@@ -2,9 +2,18 @@ import { toast } from "react-hot-toast";
 
 import { setLoading, setToken } from "../../redux/slices/authSlice";
 import { apiConnector } from "../apiConnector";
-import { auth } from "../apiCollection";
+import { authEndpoints, contactUsEndpoints } from "../apiCollection";
 import { setUser } from "../../redux/slices/profileSlice";
 import { resetCart } from "../../redux/slices/cartSlice";
+
+const { contactUsDataApi, getAllContactUsDataApi } = contactUsEndpoints;
+
+const { sendOTPApi, signupApi, loginApi, resetTokenApi, resetPasswordApi } =
+  authEndpoints;
+
+/********************************************************************
+|                              auth APIs                            |
+*********************************************************************/
 
 // sendOtp
 export const sendOtp = (email, navigate) => {
@@ -12,7 +21,7 @@ export const sendOtp = (email, navigate) => {
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector("POST", auth.sendOTP, {
+      const response = await apiConnector("POST", sendOTPApi, {
         email,
       });
       console.log("OTP Sent Response:", response.data);
@@ -40,7 +49,7 @@ export const signup = (
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector("POST", auth.signup, {
+      const response = await apiConnector("POST", signupApi, {
         firstName,
         lastName,
         email,
@@ -73,7 +82,7 @@ export const login = ({ email, password }, navigate) => {
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector("POST", auth.login, {
+      const response = await apiConnector("POST", loginApi, {
         email,
         password,
       });
@@ -104,13 +113,26 @@ export const login = ({ email, password }, navigate) => {
   };
 };
 
+// logout
+export const logout = (navigate) => {
+  return (dispatch) => {
+    dispatch(setToken(null));
+    dispatch(setUser(null));
+    dispatch(resetCart());
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    toast.success("Logged Out Sucessfully");
+    navigate("/login");
+  };
+};
+
 // resetPasswordLink
 export const resetPasswordLink = (email, navigate) => {
   return async (dispatch) => {
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector("POST", auth.resetToken, {
+      const response = await apiConnector("POST", resetTokenApi, {
         email,
       });
       // console.log("Reset Password Link Response:", response.data);
@@ -138,7 +160,7 @@ export const resetPassword = (
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector("POST", auth.resetPassword, {
+      const response = await apiConnector("POST", resetPasswordApi, {
         token,
         password,
         confirmPassword,
@@ -158,23 +180,14 @@ export const resetPassword = (
   };
 };
 
-// logout
-export const logout = (navigate) => {
-  return (dispatch) => {
-    dispatch(setToken(null));
-    dispatch(setUser(null));
-    dispatch(resetCart());
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    toast.success("Logged Out Sucessfully");
-    navigate("/login");
-  };
-};
+/********************************************************************
+|                         contactUs APIs                            |
+*********************************************************************/
 
 // Contact Us Data
 export const contactUsData = async (data) => {
   try {
-    const response = await apiConnector("POST", auth.contactUsData, data);
+    const response = await apiConnector("POST", contactUsDataApi, data);
     // console.log("Contact Us Data Response:", response.data);
     return response.data;
   } catch (error) {
@@ -187,7 +200,7 @@ export const contactUsData = async (data) => {
 // Get All Contact Us Data : Admin
 export const getAllContactUsData = async () => {
   try {
-    const response = await apiConnector("GET", auth.getAllContactUsData);
+    const response = await apiConnector("GET", getAllContactUsDataApi);
     // console.log("Get All Contact Us Data Response:", response.data);
     return response.data;
   } catch (error) {

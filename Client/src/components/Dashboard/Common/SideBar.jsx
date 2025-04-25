@@ -1,21 +1,14 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
-import { FaBookOpen } from "react-icons/fa";
-import { FaShoppingCart } from "react-icons/fa";
-import { FaCog } from "react-icons/fa";
+import React from "react";
 import { FiLogOut } from "react-icons/fi";
 import sideBarLinks from "../../../data/sideBarLinks";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import SideBarLink from "./SideBarLink";
-import { useNavigate } from "react-router-dom";
-const SideBar = ({ setLogoutModal, setDeletionModal }) => {
+
+const SideBar = ({ setLogoutModal }) => {
   const { user } = useSelector((state) => state.profile);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   return (
-    <div className="hidden lg:flex flex-col bg-gray-900/80  min-h-[89vh] min-w-fit gap-3">
-      <div className="flex flex-col mt-8">
+    <div className="hidden lg:flex flex-col bg-gray-900/80  min-h-[89vh] w-[270px] gap-3 border-r-1 border-gray-700">
+      <div className="flex flex-col mt-10">
         {sideBarLinks.map((link) => {
           if (link.type && link.type !== user?.accountType) return null;
           return <SideBarLink key={link.id} link={link} icon={link.icon} />;

@@ -14,9 +14,8 @@ export default function ChipInput({
   const [chips, setChips] = useState([]);
 
   useEffect(() => {
-    const tags = course?.tag?.map((tag)=>tag.name);
     if (editCourse && course?.tag) {
-      setChips(tags);;
+      setChips(course.tag);
     }
     register(name, { required: true, validate: (value) => value.length > 0 });
   }, [editCourse, course, register, name]);

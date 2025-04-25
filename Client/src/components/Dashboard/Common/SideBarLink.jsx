@@ -13,7 +13,7 @@ const SideBarLink = ({link,icon}) => {
       key={link.id}
       to={link.path}
       className={({ isActive }) =>
-        isActive ? "border-l-2 border-blue-500 text-blue-500 bg-gray-800" : "border-l-2 border-transparent"
+        isActive ? "border-l-4 border-blue-500 text-blue-500 bg-gray-800" : "border-l-4 border-transparent"
       }
     >
       <div className="flex items-center gap-2 px-8 py-2" onClick={()=>{
