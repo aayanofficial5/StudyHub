@@ -32,7 +32,7 @@ export const sendOtp = (email, navigate) => {
       navigate("/email-verification");
     } catch (error) {
       console.error("Send OTP error:", error);
-      const errMsg = error.response?.data?.message || "Something went wrong";
+      const errMsg = error?.message || "Something went wrong";
       toast.error(errMsg);
     }finally{
       dispatch(setLoading(false));
@@ -60,15 +60,15 @@ export const signup = (
         otp,
       });
       // console.log("Account Creation Response:", response.data);
-      if (!response.data?.success) {
-        throw new Error(response.data?.message);
+      if (!response?.data?.success) {
+        throw new Error(response?.data?.message);
       }
       toast.success(response?.data?.message);
       navigate("/login");
       console.log("navigate to login");
     } catch (error) {
       console.error("Account Creation Error:", error);
-      const errMsg = error.response?.data?.message || "Something went wrong";
+      const errMsg = error?.message || "Something went wrong";
       toast.error(errMsg);
       navigate("/signup");
     }
@@ -90,10 +90,10 @@ export const login = ({ email, password }, navigate) => {
         password,
       });
       console.log("Login Response:", response.data);
-      if (!response.data?.success) {
-        throw new Error(response.data?.message);
+      if (!response?.data?.success) {
+        throw new Error(response?.data?.message);
       }
-      toast.success(response.data?.message);
+      toast.success(response?.data?.message);
       dispatch(setToken(response.data?.user?.token));
       const user = response.data?.user;
       user.gender = response.data?.user?.additionalDetails?.gender;
@@ -108,7 +108,7 @@ export const login = ({ email, password }, navigate) => {
       navigate("/dashboard/my-profile");
     } catch (error) {
       console.error("Login Error:", error);
-      const errMsg = error.response.data?.message || "Something went wrong";
+      const errMsg = error.message || "Something went wrong";
       toast.error(errMsg);
     }
     finally{
@@ -148,7 +148,7 @@ export const resetPasswordLink = (email, navigate) => {
       navigate("/reset-password");
     } catch (error) {
       console.error("Reset Password Link Error:", error);
-      const errMsg = error.response?.data?.message || "Something went wrong";
+      const errMsg = error?.message || "Something went wrong";
       toast.error(errMsg);
     }
     finally{
@@ -179,8 +179,8 @@ export const resetPassword = (
       toast.success(response?.data?.message);
       navigate("/login");
     } catch (err) {
-      console.log(err?.response?.data?.message || "Something went wrong");
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      console.log(err?.message || "Something went wrong");
+      toast.error(err?.message || "Something went wrong");
     }
     finally{
       dispatch(setLoading(false));

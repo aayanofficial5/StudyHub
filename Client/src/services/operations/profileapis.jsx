@@ -132,7 +132,7 @@ export const updateProfile = (updatedUser) => {
 
 // getUserDetails
 export const getUserDetails = async () => {
-    const result = null;
+    let result = null;
     const toastId = toast.loading("Fetching User Details...");
     try {
       const response = await apiConnector("GET", getUserDetailsApi);

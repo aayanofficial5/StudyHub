@@ -117,6 +117,7 @@ export const editCourseDetails = async (data) => {
 // get all courses
 export const getAllCourses = async () => {
   const toastId = toast.loading("Loading...");
+  let result = null;
   try {
     const response = await apiConnector("GET", getAllCoursesApi);
     // console.log("Fetching All Course Response: ",response);
@@ -124,13 +125,13 @@ export const getAllCourses = async () => {
       throw new Error(response?.data?.message);
     }    
     // console.log(response.data.data);
-    return response?.data?.data;
+    result =  response?.data?.data;
   } catch (error) {
     console.log("Error during fetching all Courses" + error.message);
     toast.error(error.message || "Failed to load courses.");
-    return [];
   }finally{
     toast.dismiss(toastId);
+    return result;
   }
 };
 
