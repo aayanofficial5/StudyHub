@@ -28,13 +28,17 @@ In the following sections, we will cover the technical details of the platform, 
 StudyHub follows a client-server architecture, consisting of the following components:
 
 ### Front-end
-The front end of the platform is built using React.js, providing a dynamic and responsive user interface. It communicates with the back end via RESTful APIs to handle user actions such as course browsing and enrollment.
+The platform's frontend is built using React.js, providing a dynamic and responsive user interface. It communicates with the back end via RESTful APIs to handle user actions such as course browsing and enrollment.
 
 ### Back-end
 Built with Node.js and Express.js, the back end serves APIs for functionalities such as user authentication, course management, and content delivery. The server logic handles the processing and storing of course data and user information.
 
 ### Database
-MongoDB is used to store unstructured and semi-structured data, including course content (videos, PDFs, images) and user data. MongoDB's flexibility allows for easy scalability and efficient management of dynamic content.
+MongoDB stores unstructured and semi-structured data, including course content (videos, PDFs, images) and user data. Its flexibility allows for easy scalability and efficient management of dynamic content.
+
+### Architecture Diagram
+Here is a high-level diagram that illustrates the architecture of the StudyHub ed-tech platform:
+![Architecture Diagram](https://res.cloudinary.com/dvpulu3cc/image/upload/v1699036870/Screenshot_2023-11-04_000952_argzj8.jpg)
 
 ---
 
