@@ -13,11 +13,15 @@
 
 ## 🖼️ Screenshots
 
-> *(Add actual screenshots in the `/screenshots` folder and update the paths below)*
-
-- ![Home Page](./screenshots/home.png)
-- ![Instructor Dashboard](./screenshots/instructor-dashboard.png)
-- ![Course View](./screenshots/course-page.png)
+- ![Home Page](./Screenshots/common/home.png)
+- ![Catalog Filter Page](./Screenshots/common/catalog-filter.png)
+- ![About Page](./Screenshots/common/about.png)
+- ![Contact Page](./Screenshots/common/contact.png)
+- ![Login Page](./Screenshots/common/login.png)
+- ![Signup Page](./Screenshots/common/signup.png)
+- ![Dashboard](./Screenshots/common/dashboard.png)
+- ![Instructor Courses View](./Screenshots/instructor/instructor-courses.png)
+- ![Add Course View](./Screenshots/instructor/instructor-add-course.png)
 
 ---
 
@@ -59,7 +63,7 @@
 ## 📁 Folder Structure
 
 ```
-KnowGeek/
+StudyHub/
 ├── client/               # Frontend React app
 ├── server/               # Backend Express app
 ├── screenshots/          # Screenshots for documentation
@@ -74,8 +78,8 @@ KnowGeek/
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/aayanofficial5/KnowGeek.git
-cd KnowGeek
+git clone https://github.com/aayanofficial5/StudyHub.git
+cd StudyHub
 ```
 
 ---
@@ -88,7 +92,7 @@ cd client
 npm install
 
 # For backend
-cd ../server
+cd server
 npm install
 ```
 
@@ -114,7 +118,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 ```bash
 # Start backend
 cd server
-npm run dev
+npm start
 
 # Start frontend
 cd ../client
@@ -142,8 +146,8 @@ Feel free to check the [issues page](https://github.com/aayanofficial5/KnowGeek/
 
 ## 📧 Contact
 
-Developed with ❤️ by [**Aayan**](https://github.com/aayanofficial5)  
-📬 Email: *your-email@example.com*
+Developed with ❤️ by [**Aayan Patel**](https://github.com/aayanofficial5)  
+📬 Email: *aayanofficial5@gmail.com*
 
 ---
 
