@@ -8,8 +8,8 @@ export default function LogInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [loginFormData, setLoginFormData] = useState({
-    email: "aayanofficial5@gmail.com",
-    password: "Aadi@op5",
+    email: "",
+    password: "",
   });
 
   function handleLoginData(event) {

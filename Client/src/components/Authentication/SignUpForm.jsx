@@ -5,24 +5,22 @@ import FLname from "./FLname";
 import Password from "./Password";
 import { ACCOUNT_TYPE } from "../../utils/constant";
 import { useDispatch } from "react-redux";
-import {setSignupData} from "../../redux/slices/authSlice"
+import { setSignupData } from "../../redux/slices/authSlice";
 import { sendOtp } from "../../services/operations/authapis";
 
 export default function SignUpForm() {
-
   const dispatch = useDispatch();
   const [showP1, setShowP1] = useState(false);
   const [showP2, setShowP2] = useState(false);
   const navigate = useNavigate();
   const [loginFormData, setLoginFormData] = useState({
     accountType: ACCOUNT_TYPE.STUDENT,
-    firstName: "Aadi",
-    lastName: "Patel",
-    email: "aayanofficial5@gmail.com",
-    password: "Aadi@op5",
-    confirmPassword: "Aadi@op5",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-  
 
   function handleLoginData(event) {
     const { name, value } = event.target;
@@ -31,14 +29,14 @@ export default function SignUpForm() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if(loginFormData.password !== loginFormData.confirmPassword){
+    if (loginFormData.password !== loginFormData.confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
     // console.log(loginFormData);
     dispatch(setSignupData(loginFormData));
     console.log(loginFormData);
-    dispatch(sendOtp(loginFormData.email,navigate));
+    dispatch(sendOtp(loginFormData.email, navigate));
   }
 
   function handleAccountType(event) {
@@ -91,7 +89,10 @@ export default function SignUpForm() {
         </div>
         <br />
         <label htmlFor="email">
-          Email Address<sup className="text-red-500 text-[16px] relative -top-1 -right-0.5">*</sup>
+          Email Address
+          <sup className="text-red-500 text-[16px] relative -top-1 -right-0.5">
+            *
+          </sup>
           <input
             className="w-full h-12 p-3 rounded-lg mt-1 mb-3 text-[15px] border-2 border-gray-700 focus:outline-none focus:border-blue-500"
             onChange={handleLoginData}
@@ -125,10 +126,11 @@ export default function SignUpForm() {
           ></Password>
         </div>
         <button
-      className={`flex flex-row gap-2 items-center w-min-fit w-full justify-center transition-all duration-200 ease-in hover:scale-95 mt-8 px-4 py-2 cursor-pointer rounded-lg border-blue-500 border-3 font-semibold bg-blue-500 text-lg`}
-      type="submit"
-      >Create Account
-    </button>
+          className={`flex flex-row gap-2 items-center w-min-fit w-full justify-center transition-all duration-200 ease-in hover:scale-95 mt-8 px-4 py-2 cursor-pointer rounded-lg border-blue-500 border-3 font-semibold bg-blue-500 text-lg`}
+          type="submit"
+        >
+          Create Account
+        </button>
       </form>
     </div>
   );
