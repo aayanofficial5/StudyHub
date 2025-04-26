@@ -34,9 +34,10 @@ export const sendOtp = (email, navigate) => {
       console.error("Send OTP error:", error);
       const errMsg = error.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
+    }finally{
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
     }
-    dispatch(setLoading(false));
-    toast.dismiss(toastId);
   };
 };
 
@@ -71,8 +72,10 @@ export const signup = (
       toast.error(errMsg);
       navigate("/signup");
     }
-    dispatch(setLoading(false));
-    toast.dismiss(toastId);
+    finally{
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+    }
   };
 };
 
@@ -108,8 +111,10 @@ export const login = ({ email, password }, navigate) => {
       const errMsg = error.response.data?.message || "Something went wrong";
       toast.error(errMsg);
     }
-    dispatch(setLoading(false));
-    toast.dismiss(toastId);
+    finally{
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+    }
   };
 };
 
@@ -146,8 +151,10 @@ export const resetPasswordLink = (email, navigate) => {
       const errMsg = error.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
     }
-    dispatch(setLoading(false));
-    toast.dismiss(toastId);
+    finally{
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+    }
   };
 };
 
@@ -175,8 +182,10 @@ export const resetPassword = (
       console.log(err?.response?.data?.message || "Something went wrong");
       toast.error(err?.response?.data?.message || "Something went wrong");
     }
-    dispatch(setLoading(false));
-    toast.dismiss(toastId);
+    finally{
+      dispatch(setLoading(false));
+      toast.dismiss(toastId);
+    }
   };
 };
 
@@ -186,6 +195,7 @@ export const resetPassword = (
 
 // Contact Us Data
 export const contactUsData = async (data) => {
+  const toastId = toast.loading("Loading...");
   try {
     const response = await apiConnector("POST", contactUsDataApi, data);
     // console.log("Contact Us Data Response:", response.data);
@@ -194,11 +204,14 @@ export const contactUsData = async (data) => {
     console.error("Contact Us Data Error:", error);
     const errMsg = error.response?.data?.message || "Something went wrong";
     toast.error(errMsg);
+  }finally{
+    toast.dismiss(toastId);
   }
 };
 
 // Get All Contact Us Data : Admin
 export const getAllContactUsData = async () => {
+  const toastId = toast.loading("Loading...");
   try {
     const response = await apiConnector("GET", getAllContactUsDataApi);
     // console.log("Get All Contact Us Data Response:", response.data);
@@ -207,5 +220,7 @@ export const getAllContactUsData = async () => {
     console.error("Get All Contact Us Data Error:", error);
     const errMsg = error.response?.data?.message || "Something went wrong";
     toast.error(errMsg);
+  }finally{
+    toast.dismiss(toastId);
   }
 };

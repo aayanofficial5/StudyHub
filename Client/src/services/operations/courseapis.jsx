@@ -122,14 +122,15 @@ export const getAllCourses = async () => {
     // console.log("Fetching All Course Response: ",response);
     if (!response?.data?.success) {
       throw new Error(response?.data?.message);
-    }
-    toast.dismiss(toastId);
+    }    
     // console.log(response.data.data);
     return response?.data?.data;
   } catch (error) {
     console.log("Error during fetching all Courses" + error.message);
     toast.error(error.message || "Failed to load courses.");
     return [];
+  }finally{
+    toast.dismiss(toastId);
   }
 };
 

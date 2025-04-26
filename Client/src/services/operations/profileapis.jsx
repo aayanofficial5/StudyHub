@@ -43,8 +43,9 @@ export const profilePictureUpdate = (profilePicture) => {
       console.error("Profile Picture Update Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
-    }
+    }finally{
     toast.dismiss(toastId);
+    }
   };
 };
 
@@ -66,8 +67,9 @@ export const updatePassword = (password) => {
       console.error("Update Password Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
-    }
-    toast.dismiss(toastId);
+    }finally{
+      toast.dismiss(toastId);
+      }
   };
 };
 
@@ -87,8 +89,9 @@ export const deleteAccount = (navigate) => {
       console.error("Delete Account Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
+    }finally{
+      toast.dismiss(toastId);
     }
-    toast.dismiss(toastId);
   };
 };
 
@@ -121,13 +124,15 @@ export const updateProfile = (updatedUser) => {
       console.error("Update Profile Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
+    }finally{
+      toast.dismiss(toastId);
     }
-    toast.dismiss(toastId);
   };
 };
 
 // getUserDetails
 export const getUserDetails = async () => {
+    const result = null;
     const toastId = toast.loading("Fetching User Details...");
     try {
       const response = await apiConnector("GET", getUserDetailsApi);
@@ -139,13 +144,13 @@ export const getUserDetails = async () => {
         ...user,
         ...user.additionalDetails,
       }
-      toast.dismiss(toastId);
-      return userDetails;
+      result= userDetails;
     } catch (error) {
       console.error("Get User Details Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
+    }finally{
       toast.dismiss(toastId);
-      return null;
+      return result;
     }
 };
