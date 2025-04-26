@@ -14,7 +14,7 @@ const Contact = () => {
             Chat on us <AiFillMessage className="text-2xl" />
           </h1>
           <p>Our friendly team is here to help.</p>
-          <p>knowgeek@gmail.com</p>
+          <p>studyhub5@gmail.com</p>
           <h1 className="text-2xl font-bold mt-10 flex flex-row items-center gap-2">
             Visit us <HiOfficeBuilding className="text-2xl" />
           </h1>
