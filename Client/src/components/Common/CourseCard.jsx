@@ -13,7 +13,7 @@ const CourseCard = ({ course, height = 380, width = 350 }) => {
 
   return (
     <div
-      className={`flex flex-col rounded-xl overflow-hidden border border-gray-500/40 shadow-lg bg-gray-800 text-white transition-transform duration-300  hover:scale-105 cursor-pointer`}
+      className={`flex flex-col rounded-xl overflow-hidden border border-gray-500/40 shadow-lg bg-gray-800 text-white transition-transform duration-300  scale-90 hover:scale-100 cursor-pointer`}
       style={{ height, width }}
     >
       {/* Image takes 50% height */}
