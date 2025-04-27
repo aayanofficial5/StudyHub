@@ -14,7 +14,7 @@ const CourseSlider = ({ courses }) => {
   return (
     <>
   {courses.length > 0 ? (
-    <div className="swiper-container">
+    <div className="px-30 swiper-container">
       <Swiper
         modules={[FreeMode, Navigation, Pagination, Autoplay]}
         breakpoints={{
@@ -22,7 +22,7 @@ const CourseSlider = ({ courses }) => {
           768: { slidesPerView: 2 },
           1024: { slidesPerView: 3 },
         }}
-        spaceBetween={0}
+        spaceBetween={-30}
         navigation
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
@@ -31,7 +31,7 @@ const CourseSlider = ({ courses }) => {
       >
         {courses.map((course, index) => (
           <SwiperSlide key={index}>
-            <div className="py-15 px-2">
+            <div className="py-5  px-[21px]">
               <CourseCard course={course} height={400} width={400} />
             </div>
           </SwiperSlide>
