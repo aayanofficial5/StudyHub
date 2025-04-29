@@ -38,7 +38,7 @@ router.get("/categories", getAllCategories);
 // courses routes
 router.post("/", auth, isInstructor, createCourse);
 router.get("/", getAllCourses);
-router.get("/details", getCourseDetails);
+router.get("/:courseId", getCourseDetails);
 router.put("/", auth, isInstructor, editCourseDetails);
 router.delete("/", auth, isInstructor, deleteCourse);
 router.get("/instructor", auth, isInstructor, getInstructorCourses);

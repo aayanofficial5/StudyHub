@@ -254,8 +254,7 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourseDetails = async (req, res) => {
   try {
     // get courseId from request body
-    const { courseId } = req.body;
-
+    const { courseId } = req.params;
     // validate courseId
     if (!courseId) {
       return res.status(400).json({
@@ -269,8 +268,10 @@ exports.getCourseDetails = async (req, res) => {
       .populate({ path: "instructor", populate: { path: "additionalDetails" } })
       .populate("category")
       .populate({ path: "courseContent", populate: { path: "subSection" } })
-      .populate("tag");
-
+      .populate("tag")
+      .populate("ratingAndReviews")
+      .populate("studentsEnrolled");
+      
     // validate courseDetails
     if (!courseDetails) {
       return res.status(400).json({
@@ -278,11 +279,10 @@ exports.getCourseDetails = async (req, res) => {
         message: "Course Details not found",
       });
     }
-
     // return response
     return res.status(200).json({
       success: true,
-      courseDetails,
+      data: courseDetails,
       message: "Course Details fetched successfully",
     });
   } catch (error) {
