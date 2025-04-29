@@ -26,6 +26,7 @@ import Settings from "./components/Dashboard/Common/Settings/index";
 import MyCourses from "./components/Dashboard/Instructor/MyCourses";
 import Reports from "./components/Dashboard/Instructor/Reports.jsx";
 import Catalog from "./pages/Catalog.jsx";
+import CourseDetails from "./pages/CourseDetails.jsx";
 
 const App = () => {
   const { pathname } = useLocation();
@@ -51,6 +52,7 @@ const App = () => {
           <Route path="/reset-password-link" element={<ResetPasswordLink />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           {/* Course Routes */}
+          <Route path="course/:courseId" element={<CourseDetails/>} />
           <Route path="/course-list" element={<Courses />}></Route>
           <Route path="/catalog/:catalogName" element={<Catalog />} />
           {/* Dashboard Routes */}
