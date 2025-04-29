@@ -39,6 +39,69 @@ export const catalogData = {
         sold: 453,
       },
       {
+        _id:"680a619b94ad0f11ad43a228",
+        courseName: "Backend Development for Beginners",
+        courseDescription:
+          "Learn the fundamentals of backend development, including database management, server-side programming, and APIs. This course will cover key backend technologies like Node.js, Express.js, and SQL.",
+          instructor: "user1",
+        whatYouWillLearn:
+          "Master backend fundamentals like databases, server-side programming, and RESTful APIs.\r\nLearn to work with databases and write SQL queries.\r\nBuild your first server with Node.js and Express.js.\r\nUnderstand the importance of authentication, middleware, and error handling.",
+        ratingAndReviews: [{ rating: 3 }, { rating: 4 }, { rating: 5 }],
+        price: 49,
+        thumbnail:
+          "https://res.cloudinary.com/djpjyg8my/image/upload/v1745510812/knowgeek/asqkauj42rpetnbo09uz.jpg",
+        tag: [
+          "api",
+          "restful",
+          "restapi",
+          "backend",
+          "node",
+          "express",
+          "javascript",
+          "databases",
+          "mongodb",
+          "mongoose",
+        ],
+        studentsEnrolled: [],
+        createdAt: "2025-04-24T16:06:51.762Z",
+      },
+      {
+        _id: "680a5ac8a5e519775f981dba",
+        courseName: "Web Development",
+        courseDescription:
+          "A comprehensive course on building modern web applications using HTML, CSS, JavaScript, and React. Learn the fundamentals and advanced techniques for creating dynamic and interactive websites.",
+          instructor: "user1",
+        whatYouWillLearn:
+          "Learn the fundamentals of HTML, CSS, and JavaScript.\r\nGain hands-on experience in building responsive websites.\r\nUnderstand how to use modern JavaScript frameworks like React.js.\r\nLearn debugging techniques and how to optimize web applications.",
+        courseContent: [
+          {
+            $oid: "680a5aeca5e519775f981dbe",
+          },
+          {
+            $oid: "680a5bb8a5e519775f981dc6",
+          },
+        ],
+        ratingAndReviews: [{ rating: 3 }, { rating: 4 }, { rating: 5 }],
+        price: 99,
+        thumbnail:
+          "https://res.cloudinary.com/djpjyg8my/image/upload/v1745509065/knowgeek/disx4maacxjhs4xo0eep.jpg",
+        tag: [
+          "webdevelopment",
+          "javascript",
+          "html",
+          "css",
+          "express.js",
+          "react.js",
+          "node.js",
+          "backend",
+          "frontend",
+        ],
+        studentsEnrolled: [],
+        createdAt: "2025-04-24T15:37:44.846Z",
+        __v: 0,
+        status: "Published",
+      },
+      {
         _id: "course2",
         courseName: "Introduction to Backend with Express",
         courseDescription:

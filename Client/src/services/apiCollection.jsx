@@ -3,7 +3,7 @@ export const courseEndpoints = {
   // course
   createCourseApi: "/course",
   getAllCoursesApi: "/course",
-  getCourseDetailsApi: "/course/details",
+  getCourseDetailsApi: "/course",
   editCourseDetailsApi: "/course",
   deleteCourseApi: "/course",
   getInstructorCoursesApi:"/course/instructor",

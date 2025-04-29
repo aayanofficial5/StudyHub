@@ -6,6 +6,7 @@ const {
   getCourseCategoriesApi,
   editCourseDetailsApi,
   createCourseApi,
+  getCourseDetailsApi,
   getAllCoursesApi,
   createSectionApi,
   updateSectionApi,
@@ -130,6 +131,26 @@ export const getAllCourses = async () => {
     console.log("Error during fetching all Courses" + error.message);
     toast.error(error.message || "Failed to load courses.");
   }finally{
+    toast.dismiss(toastId);
+    return result;
+  }
+};
+
+// get course details
+export const getCourseDetails = async (courseId) => {
+  const toastId = toast.loading("Loading Course Details...");
+  let result = null;
+  try {
+    const response = await apiConnector("GET", `${getCourseDetailsApi}/${courseId}`);
+    // console.log("Fetching Course Details Response: ",response);
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    result = response?.data?.data;
+  } catch (error) {
+    console.log("Error during fetching course details: ", error.message);
+    toast.error(error?.response?.data?.message || "Failed to load course details.");
+  } finally {
     toast.dismiss(toastId);
     return result;
   }

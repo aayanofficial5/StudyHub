@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RatingStars from "./RatingStars";
 import getAvgRating from "../../utils/getAvgRating";
+import { useNavigate } from "react-router-dom";
 
 const CourseCard = ({ course, height = 380, width = 350 }) => {
   const { courseName, instructor, price, studentsEnrolled, thumbnail } = course;
@@ -10,11 +11,13 @@ const CourseCard = ({ course, height = 380, width = 350 }) => {
     const count = getAvgRating(course.ratingAndReviews);
     setAvgReviewCount(count);
   }, [course]);
+  const navigate = useNavigate();
 
   return (
     <div
       className={`flex flex-col rounded-xl overflow-hidden border border-gray-500/40 shadow-lg bg-gray-800 text-white transition-transform duration-300  scale-90 hover:scale-100 cursor-pointer`}
       style={{ height, width }}
+      onClick={() => {navigate(`/course/${course._id}`)}}
     >
       {/* Image takes 50% height */}
       <div className="h-[55%] w-full">
