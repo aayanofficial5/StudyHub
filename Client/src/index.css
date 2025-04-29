@@ -4,6 +4,22 @@
 
 @import "tailwindcss";
 @plugin "daisyui";
+html,
+body {
+  overflow-x: hidden;
+}
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #afb2bf;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 3px;
+}
+
 *{
   font-family: 'Outfit','Space Grotesk', sans-serif;
 }
