@@ -57,7 +57,10 @@ Here are some key screens from the project showcasing various pages and features
   ![Home Page](./Screenshots/common/home.png)
 
 - **Catalog Filter Page**  
-  ![Catalog Filter Page (Coming Soon)](./Screenshots/common/catalog-filter.png)
+  ![Catalog Filter Page](./Screenshots/common/catalog-filter.png)
+
+- **Course Details Page**  
+  ![Catalog Filter Page](./Screenshots/common/course-details.png)
 
 - **About Page**  
   ![About Page](./Screenshots/common/about.png)
