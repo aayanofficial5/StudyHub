@@ -36,7 +36,7 @@ export const getCourseCategories = async (home=true) => {
     return response?.data?.data;
   } catch (error) {
     console.log("Error during fetching Categories" + error.message);
-    toast.error(error.message || "Failed to load categories.");
+    toast.error(error?.response?.data?.message || "Failed to load categories.");
     return [];
   } finally{
     home&&toast.dismiss(toastId);
@@ -128,8 +128,8 @@ export const getAllCourses = async () => {
     // console.log(response.data.data);
     result =  response?.data?.data;
   } catch (error) {
-    console.log("Error during fetching all Courses" + error.message);
-    toast.error(error.message || "Failed to load courses.");
+    console.log("Error during fetching all Courses" + error);
+    toast.error(error?.response?.data?.message|| "Failed to load courses.");
   }finally{
     toast.dismiss(toastId);
     return result;
@@ -148,7 +148,7 @@ export const getCourseDetails = async (courseId) => {
     }
     result = response?.data?.data;
   } catch (error) {
-    console.log("Error during fetching course details: ", error.message);
+    console.log("Error during fetching course details: ", error);
     toast.error(error?.response?.data?.message || "Failed to load course details.");
   } finally {
     toast.dismiss(toastId);
@@ -197,7 +197,7 @@ export const createSection = async ({ sectionName, courseId }) => {
     toast.success(response?.data?.message);
     result = response?.data?.data;
   } catch (error) {
-    console.log("Error during section creation: ", error.message);
+    console.log("Error during section creation: ", error);
     toast.error(error?.response?.data?.message || "Failed to create section.");
   } finally {
     toast.dismiss(toastId);
@@ -220,7 +220,7 @@ export const updateSection = async ({ sectionId, sectionName }) => {
     toast.success(response?.data?.message);
     result = response?.data?.data;
   } catch (error) {
-    console.log("Error during section updating: ", error.message);
+    console.log("Error during section updating: ", error);
     toast.error(error?.response?.data?.message || "Failed to update section.");
   } finally {
     toast.dismiss(toastId);
@@ -244,7 +244,7 @@ export const deleteSection = async ({ sectionId, courseId }) => {
     toast.success(response?.data?.message);
     result = response?.data?.data;
   } catch (error) {
-    console.log("Error during section deletion: ", error.message);
+    console.log("Error during section deletion: ", error);
     toast.error(error?.response?.data?.message || "Failed to delete section.");
   } finally {
     toast.dismiss(toastId);
@@ -271,7 +271,7 @@ export const createSubSection = async (formData) => {
     toast.success(response?.data?.message);
     result = response?.data?.data;
   } catch (error) {
-    console.log("Error during subSection creation: ", error.message);
+    console.log("Error during subSection creation: ", error);
     toast.error(
       error?.response?.data?.message || "Failed to create subSection."
     );
@@ -296,7 +296,7 @@ export const updateSubSection = async (formData) => {
     toast.success(response?.data?.message);
     result = response?.data?.data;
   } catch (error) {
-    console.log("Error during subSection editing: ", error.message);
+    console.log("Error during subSection editing: ", error);
     toast.error(error?.response?.data?.message || "Failed to edit subSection.");
   } finally {
     toast.dismiss(toastId);
@@ -318,7 +318,7 @@ export const deleteSubSection = async (subSectionId) => {
     toast.success(response?.data?.message);
     result = response?.data?.data;
   } catch (error) {
-    console.log("Error during subSection deletion: ", error.message);
+    console.log("Error during subSection deletion: ", error);
     toast.error(
       error?.response?.data?.message || "Failed to delete subSection."
     );

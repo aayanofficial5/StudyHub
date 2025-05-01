@@ -32,9 +32,9 @@ export const sendOtp = (email, navigate) => {
       navigate("/email-verification");
     } catch (error) {
       console.error("Send OTP error:", error);
-      const errMsg = error?.message || "Something went wrong";
+      const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
-    }finally{
+    } finally {
       dispatch(setLoading(false));
       toast.dismiss(toastId);
     }
@@ -68,11 +68,10 @@ export const signup = (
       console.log("navigate to login");
     } catch (error) {
       console.error("Account Creation Error:", error);
-      const errMsg = error?.message || "Something went wrong";
+      const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
       navigate("/signup");
-    }
-    finally{
+    } finally {
       dispatch(setLoading(false));
       toast.dismiss(toastId);
     }
@@ -89,29 +88,36 @@ export const login = ({ email, password }, navigate) => {
         email,
         password,
       });
-      console.log("Login Response:", response.data);
+
+      console.log("Login Response:", response?.data);
+
       if (!response?.data?.success) {
         throw new Error(response?.data?.message);
       }
-      toast.success(response?.data?.message);
-      dispatch(setToken(response.data?.user?.token));
-      const user = response.data?.user;
-      user.gender = response.data?.user?.additionalDetails?.gender;
-      user.dateOfBirth = response.data?.user?.additionalDetails?.dateOfBirth;
-      user.contactNumber =
-        response.data?.user?.additionalDetails?.contactNumber;
-      user.about = response.data?.user?.additionalDetails?.about;
-      user.additionalDetails = undefined;
+
+      toast.success(response.data.message);
+
+      const rawUser = response.data.user;
+      const token = rawUser.token;
+
+      const user = {
+        ...rawUser,
+        gender: rawUser.additionalDetails?.gender,
+        dateOfBirth: rawUser.additionalDetails?.dateOfBirth,
+        contactNumber: rawUser.additionalDetails?.contactNumber,
+        about: rawUser.additionalDetails?.about,
+      };
+
+      dispatch(setToken(token));
       dispatch(setUser(user));
-      localStorage.setItem("token", response.data?.user?.token);
+      localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+
       navigate("/dashboard/my-profile");
     } catch (error) {
-      console.error("Login Error:", error);
-      const errMsg = error.message || "Something went wrong";
-      toast.error(errMsg);
-    }
-    finally{
+      // console.log("Login Error:", error);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
       dispatch(setLoading(false));
       toast.dismiss(toastId);
     }
@@ -148,10 +154,9 @@ export const resetPasswordLink = (email, navigate) => {
       navigate("/reset-password");
     } catch (error) {
       console.error("Reset Password Link Error:", error);
-      const errMsg = error?.message || "Something went wrong";
+      const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
-    }
-    finally{
+    } finally {
       dispatch(setLoading(false));
       toast.dismiss(toastId);
     }
@@ -178,11 +183,10 @@ export const resetPassword = (
       }
       toast.success(response?.data?.message);
       navigate("/login");
-    } catch (err) {
-      console.log(err?.message || "Something went wrong");
-      toast.error(err?.message || "Something went wrong");
-    }
-    finally{
+    } catch (error) {
+      console.log(error?.response?.data?.message || "Something went wrong");
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    } finally {
       dispatch(setLoading(false));
       toast.dismiss(toastId);
     }
@@ -204,7 +208,7 @@ export const contactUsData = async (data) => {
     console.error("Contact Us Data Error:", error);
     const errMsg = error.response?.data?.message || "Something went wrong";
     toast.error(errMsg);
-  }finally{
+  } finally {
     toast.dismiss(toastId);
   }
 };
@@ -220,7 +224,7 @@ export const getAllContactUsData = async () => {
     console.error("Get All Contact Us Data Error:", error);
     const errMsg = error.response?.data?.message || "Something went wrong";
     toast.error(errMsg);
-  }finally{
+  } finally {
     toast.dismiss(toastId);
   }
 };

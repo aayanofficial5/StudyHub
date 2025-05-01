@@ -26,7 +26,7 @@ export const authEndpoints = {
   sendOTPApi: "/auth/otp",
   resetTokenApi: "/auth/reset-token",
   resetPasswordApi: "/auth/reset-password",
-  };
+};
 
 export const settingsEndpoints = {
   getUserDetailsApi: "/profile/me",
