@@ -64,17 +64,17 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
           <button
             className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded transition-all duration-200"
             onClick={
-              user && course?.studentsEnroled.includes(user?._id)
+              user && course?.studentsEnrolled.includes(user?._id)
                 ? () => navigate("/dashboard/enrolled-courses")
                 : handleBuyCourse
             }
           >
-            {user && course?.studentsEnroled.includes(user?._id)
+            {user && course?.studentsEnrolled.includes(user?._id)
               ? "Go To Course"
               : "Buy Now"}
           </button>
 
-          {(!user || !course?.studentsEnroled.includes(user?._id)) && (
+          {(!user || !course?.studentsEnrolled.includes(user?._id)) && (
             <button
               onClick={handleAddToCart}
               className="bg-gray-900 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded transition-all duration-200"

@@ -170,7 +170,7 @@ const CourseDetails = () => {
   
           {/* Desktop Course Card */}
           
-          <div className="right-[7rem] top-[60px] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:-translate-y-8 lg:absolute lg:block">
+          <div className="top-[60px] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:-translate-y-8 md:translate-x-220 lg:absolute lg:block">
             <CourseDetailsCard
               course={response}
               setConfirmationModal={setConfirmationModal}
