@@ -174,34 +174,36 @@ exports.signup = async (req, res) => {
 // login
 exports.login = async (req, res) => {
   try {
-    // get data from request body
+    // Get data from request body
     const { email, password } = req.body;
-    // validate data
+
+    // Validate input
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required, please try again",
+        message: "All fields are required. Please try again.",
       });
     }
-    // check if user exists or not
+
+    // Check if user exists
     let user = await User.findOne({ email }).populate("additionalDetails");
     if (!user) {
       return res.status(404).json({
-        sucess: false,
-        message: "User is not registered, please signup first",
+        success: false,
+        message: "User is not registered. Please sign up first.",
       });
     }
-    // compare password with stored hashedPassword
-    const match = await bcrypt.compare(password, user.password);
 
-    if (!match) {
+    // Compare entered password with stored hashed password
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
       return res.status(403).json({
         success: false,
-        message: "Password is incorrect,please try again",
+        message: "Password is incorrect. Please try again.",
       });
     }
 
-    // sign(generate) a token for user login
+    // Create payload for token
     const payload = {
       id: user._id,
       firstName: user.firstName,
@@ -209,27 +211,33 @@ exports.login = async (req, res) => {
       accountType: user.accountType,
     };
 
+    // Generate JWT token
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "10d",
     });
-    user = user.toObject(); // findOne() return a document 'user' which is then converted to object to add token to it
+
+    // Prepare user object for response
+    user = user.toObject();
     user.token = token;
     user.password = undefined;
-    // console.log(user.token);
-    // console.log(user.password);
+
+    // Cookie options
     const options = {
-      expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+      httpOnly: true, // prevents client-side JS from accessing the cookie
+      expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
     };
+
+    // Set token in cookie and return response
     return res.cookie("token", token, options).status(200).json({
       success: true,
+      message: "Logged in successfully.",
       user,
-      message: "Logged in successfully",
     });
   } catch (error) {
-    console.log("Login failure, please try again : " + error);
-    res.status(500).json({
+    console.error("Login failure:", error);
+    return res.status(500).json({
       success: false,
-      message: "Login failure, please try again",
+      message: "Login failed. Please try again later.",
     });
   }
 };
