@@ -1,5 +1,5 @@
 const express = require("express");
-const { sendOTP, login, signup } = require("../Controllers/Auth");
+const { sendOTP, login, signup, googleLogin } = require("../Controllers/Auth");
 const { resetPassword, resetToken } = require("../Controllers/ResetPassword");
 const { contactUsData, getAllContactUsData } = require("../Controllers/ContactUsData");
 const router = express.Router();
@@ -14,14 +14,6 @@ router.post("/contact-us", contactUsData);
 router.get("/contact-us", getAllContactUsData);
 // router.post("/logout", logout);
 
-// Google Auth Routes
-// router.get("/google", passport.authenticate("google", {
-//   scope: ["profile", "email"],
-// }));
-
-// router.get("/google/callback", passport.authenticate("google", {
-//   failureRedirect: "${process.env.FRONTEND_URL}/login",
-//   successRedirect: `${process.env.FRONTEND_URL}/dashboard/my-profile`, // or send token from here
-// }));
+router.post("/google", googleLogin);
 
 module.exports = router;

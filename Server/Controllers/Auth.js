@@ -4,7 +4,10 @@ const Profile = require("../Models/Profile");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 require("dotenv").config();
 
 // sendOTP
@@ -238,6 +241,89 @@ exports.login = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Login failed. Please try again later.",
+    });
+  }
+};
+
+// googleLogin
+exports.googleLogin = async (req, res) => {
+  try {
+    const { access_token, accountType } = req.body;
+    // console.log("Google Login Access Token:", access_token);
+    // console.log("Account Type:", accountType);
+    if (!access_token) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Access token is missing." });
+    }
+
+    const googleRes = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`
+    );
+
+    const { id: googleId, email, name, picture } = googleRes.data;
+    // console.log(picture);
+    let user = await User.findOne({ email }).populate("additionalDetails");
+    // console.log("User found:", user);
+    if (!user) {
+      const profileDetails = await Profile.create({
+        gender: null,
+        dateOfBirth: null,
+        about: null,
+        contactNumber: null,
+      });
+      const [firstName, lastName] = name.split(" ");
+      user = await User.create({
+        firstName,
+        lastName,
+        email,
+        password: "GOOGLE_OAUTH_NO_PASSWORD", // Ensure your schema allows this
+        accountType: accountType,
+        additionalDetails: profileDetails._id,
+        image:
+          picture ||
+          `https://ui-avatars.com/api/?name=${firstName}+${lastName}`,
+        googleId,
+      });
+    }
+
+    const jwtPayload = {
+      id: user._id,
+      firstName: user.firstName,
+      email: user.email,
+      accountType: user.accountType,
+    };
+
+    const jwtToken = jwt.sign(jwtPayload, process.env.JWT_SECRET, {
+      expiresIn: "10d",
+    });
+
+    user = user.toObject();
+    user.token = jwtToken;
+    user.password = undefined;
+
+    const options = {
+      httpOnly: true,
+      expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+    };
+
+    return res.cookie("token", jwtToken, options).status(200).json({
+      success: true,
+      message: "Google sign-in successful",
+      user,
+    });
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      console.error(
+        "Axios error during Google login:",
+        err.response?.data || err.message
+      );
+    } else {
+      console.error("Google Login Error:", err);
+    }
+    return res.status(500).json({
+      success: false,
+      message: "Google sign-in failed. Please try again later.",
     });
   }
 };
