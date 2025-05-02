@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { setSignupData } from "../../redux/slices/authSlice";
 import { sendOtp } from "../../services/operations/authapis";
 
-export default function SignUpForm() {
+export default function SignUpForm({ setAccountType }) {
   const dispatch = useDispatch();
   const [showP1, setShowP1] = useState(false);
   const [showP2, setShowP2] = useState(false);
@@ -44,6 +44,8 @@ export default function SignUpForm() {
       ...pState,
       accountType: event.target.name,
     }));
+    setAccountType(event.target.name);
+    // console.log(event.target.name);
   }
 
   return (
