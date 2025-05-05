@@ -7,6 +7,7 @@ const initialState = {
   totalNoOfLectures: 0,
 }
 
+
 const viewCourseSlice = createSlice({
   name: "viewCourse",
   initialState,
