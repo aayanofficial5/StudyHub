@@ -16,6 +16,7 @@ const {
   deleteSubSectionApi,
   getInstructorCoursesApi,
   deleteCourseApi,
+  createCourseCategoriesApi,
 } = courseEndpoints;
 
 /********************************************************************
@@ -23,9 +24,9 @@ const {
 *********************************************************************/
 
 // getCourseCategories
-export const getCourseCategories = async (home=true) => {
+export const getCourseCategories = async (home = true) => {
   let toastId = null;
-  home&&(toastId = toast.loading("Loading..."));
+  home && (toastId = toast.loading("Loading..."));
   try {
     const response = await apiConnector("GET", getCourseCategoriesApi);
     // console.log("Fetching Course Categories Response: ",response);
@@ -38,9 +39,36 @@ export const getCourseCategories = async (home=true) => {
     console.log("Error during fetching Categories" + error.message);
     toast.error(error?.response?.data?.message || "Failed to load categories.");
     return [];
-  } finally{
-    home&&toast.dismiss(toastId);
+  } finally {
+    home && toast.dismiss(toastId);
   }
+};
+
+// createCategory
+export const createCategory = async (data) => {
+  let result = null;
+  const toastId = toast.loading("Loading...");
+  try {
+    const response = await apiConnector(
+      "POST",
+      createCourseCategoriesApi,
+      data
+    );
+    console.log("CREATE CATEGORY API RESPONSE............", response);
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    toast.success(response?.data?.message);
+    result = response?.data?.data;
+  } catch (error) {
+    console.log(
+      "CREATE CATEGORY API ERROR............",
+      error?.response?.data?.message
+    );
+    toast.error(error?.response?.data?.message);
+  }
+  toast.dismiss(toastId);
+  return result;
 };
 
 /********************************************************************
@@ -74,22 +102,26 @@ export const createCourse = async (data) => {
 // delete Course
 export const deleteCourse = async (courseId) => {
   const toastId = toast.loading("Deleting Course...");
-  let result=null;
-  try{
-  const response = await apiConnector("DELETE", deleteCourseApi, {courseId});
-  if (!response?.data?.success) {
-    throw new Error(response?.data?.message);
+  let result = null;
+  try {
+    const response = await apiConnector("DELETE", deleteCourseApi, {
+      courseId,
+    });
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    toast.success(response?.data?.message);
+    result = response?.data?.data;
+  } catch (error) {
+    console.log(
+      "DELETE COURSE API ERROR............",
+      error?.response?.data?.message
+    );
+    toast.error(error?.response?.data?.message || "Failed to delete course.");
+  } finally {
+    toast.dismiss(toastId);
+    return result;
   }
-  toast.success(response?.data?.message);
-  result =  response?.data?.data;
-}catch(error){
-  console.log("DELETE COURSE API ERROR............", error?.response?.data?.message);
-  toast.error(error?.response?.data?.message || "Failed to delete course.");
-}
-finally{
-  toast.dismiss(toastId);
-  return result;
-}
 };
 
 // edit the Course details
@@ -124,13 +156,13 @@ export const getAllCourses = async () => {
     // console.log("Fetching All Course Response: ",response);
     if (!response?.data?.success) {
       throw new Error(response?.data?.message);
-    }    
+    }
     // console.log(response.data.data);
-    result =  response?.data?.data;
+    result = response?.data?.data;
   } catch (error) {
     console.log("Error during fetching all Courses" + error);
-    toast.error(error?.response?.data?.message|| "Failed to load courses.");
-  }finally{
+    toast.error(error?.response?.data?.message || "Failed to load courses.");
+  } finally {
     toast.dismiss(toastId);
     return result;
   }
@@ -141,7 +173,10 @@ export const getCourseDetails = async (courseId) => {
   const toastId = toast.loading("Loading Course Details...");
   let result = null;
   try {
-    const response = await apiConnector("GET", `${getCourseDetailsApi}/${courseId}`);
+    const response = await apiConnector(
+      "GET",
+      `${getCourseDetailsApi}/${courseId}`
+    );
     // console.log("Fetching Course Details Response: ",response);
     if (!response?.data?.success) {
       throw new Error(response?.data?.message);
@@ -149,7 +184,9 @@ export const getCourseDetails = async (courseId) => {
     result = response?.data?.data;
   } catch (error) {
     console.log("Error during fetching course details: ", error);
-    toast.error(error?.response?.data?.message || "Failed to load course details.");
+    toast.error(
+      error?.response?.data?.message || "Failed to load course details."
+    );
   } finally {
     toast.dismiss(toastId);
     return result;
@@ -161,17 +198,17 @@ export const getInstructorCourses = async () => {
   const toastId = toast.loading("Loading Courses...");
   let result = null;
   try {
-    const response = await apiConnector(
-      "GET",
-      getInstructorCoursesApi
-    );
-    // console.log("Instructor Courses Response: ",response);
+    const response = await apiConnector("GET", getInstructorCoursesApi);
+    console.log("Instructor Courses Response: ",response);
     if (!response?.data?.success) {
       throw new Error(response?.data?.message);
     }
     result = response?.data?.data;
   } catch (error) {
-    console.log("Error during fetching instructor courses: ", error.message);
+    console.log(
+      "Error during fetching instructor courses: ",
+      error.response?.data?.message
+    );
     toast.error(error?.response?.data?.message || "Failed to load courses.");
   } finally {
     toast.dismiss(toastId);

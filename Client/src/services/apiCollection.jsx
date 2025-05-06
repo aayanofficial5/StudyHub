@@ -1,4 +1,3 @@
-
 export const courseEndpoints = {
   // course
   createCourseApi: "/course",
@@ -6,19 +5,20 @@ export const courseEndpoints = {
   getCourseDetailsApi: "/course",
   editCourseDetailsApi: "/course",
   deleteCourseApi: "/course",
-  getInstructorCoursesApi:"/course/instructor",
+  getInstructorCoursesApi: "/course/instructor",
   // category
   getCourseCategoriesApi: "/course/categories",
+  createCategoryApi: "/course/categories",
+
   // section
-  createSectionApi:"/course/section",
-  updateSectionApi:"/course/section",
+  createSectionApi: "/course/section",
+  updateSectionApi: "/course/section",
   deleteSectionApi: "/course/section",
   //subSection
   createSubSectionApi: "/course/section/subsection",
   updateSubSectionApi: "/course/section/subsection",
   deleteSubSectionApi: "/course/section/subsection",
 };
-
 
 export const authEndpoints = {
   loginApi: "/auth/login",
@@ -39,8 +39,8 @@ export const settingsEndpoints = {
 export const contactUsEndpoints = {
   contactUsDataApi: "/auth/contact-us",
   getAllContactUsDataApi: "/auth/contact-us",
-}
+};
 
 export const catalogPageDataEndpoints = {
-  getCatalogPageDataApi:"/course/getCategoryPageDetails",
-}
+  getCatalogPageDataApi: "/course/category-page",
+};
