@@ -367,7 +367,7 @@ exports.deleteCourse = async (req, res) => {
 exports.getInstructorCourses = async (req, res) => {
   try {
     const instructorId = req.user.id;
-    console.log("Instructor ID:", instructorId);
+    // console.log("Instructor ID:", instructorId);
     if (!instructorId) {
       return res.status(400).json({
         success: false,
