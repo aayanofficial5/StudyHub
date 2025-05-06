@@ -77,7 +77,7 @@ exports.getCategoryPageDetails = async (req, res) => {
       ?.split("-")
       ?.map((str) => str[0]?.toUpperCase() + str?.slice(1).toLowerCase())
       .join(" ");
-    console.log(categoryName);
+    // console.log(categoryName);
     const selectedCategory = await Category.findOne({ name: categoryName })
       .populate({
         path: "course",
@@ -104,16 +104,16 @@ exports.getCategoryPageDetails = async (req, res) => {
 
     const categoriesExceptSelected = await Category.find({
       _id: { $ne: categoryId },
-    });
-    let differentCategory = await Category.findOne(
-      categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]
-        ._id
-    )
+    })
       .populate({
         path: "course",
         match: { status: "Published" },
       })
       .exec();
+
+    let differentCategory = categoriesExceptSelected.flatMap(
+      (category) => category.course
+    );
 
     const allCategories = await Category.find()
       .populate({
