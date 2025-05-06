@@ -16,9 +16,14 @@ exports.createCategory = async (req, res) => {
         message: "All fields are required",
       });
     }
+    // check if name is valid
+    const correctName = name
+      .split(" ")
+      .map((str) => str[0].toUpperCase + str.slice(1).toLowerCase)
+      .join(" ");
 
     // check if category already exists
-    const existingCategory = await Category.findOne({ name });
+    const existingCategory = await Category.findOne({ correctName });
     if (existingCategory) {
       return res.status(400).json({
         success: false,
@@ -56,20 +61,23 @@ exports.getAllCategories = async (req, res) => {
       message: "All Categories fetched successfully",
     });
   } catch (error) {
-    console.log("Error occured while fetching all categories");
+    console.log("Error occured while fetching categories");
     res.status(500).json({
       success: false,
-      message: "Error occured while fetching all categories : " + error.message,
+      message: "Error occured while fetching categories",
     });
   }
 };
 
 // getCategoryPageDetails handler function
-exports.categoryPageDetails = async (req, res) => {
+exports.getCategoryPageDetails = async (req, res) => {
   try {
-    const { categoryName } = req.body;
-    l̥;
-
+    let categoryName = req.params.name;
+    categoryName = categoryName
+      ?.split("-")
+      ?.map((str) => str[0]?.toUpperCase() + str?.slice(1).toLowerCase())
+      .join(" ");
+    console.log(categoryName);
     const selectedCategory = await Category.findOne({ name: categoryName })
       .populate({
         path: "course",
@@ -128,10 +136,10 @@ exports.categoryPageDetails = async (req, res) => {
       },
     });
   } catch (error) {
+    console.log("Error occured while fetching catalog page details", error);
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
-      error: error.message,
+      message: "Error occured while fetching catalog page details",
     });
   }
 };
