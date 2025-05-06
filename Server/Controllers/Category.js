@@ -45,7 +45,6 @@ exports.createCategory = async (req, res) => {
 };
 
 // getAllCategories handler function
-
 exports.getAllCategories = async (req, res) => {
   try {
     // fetch all tags from DB
@@ -65,59 +64,13 @@ exports.getAllCategories = async (req, res) => {
   }
 };
 
-// //PENDING:getCategoryCoursesDetails handler function
-// exports.getCategoryPageDetails = async (req, res) => {
-//   try {
-//     // fetch categoryId from request body
-//     const { categoryId } = req.body;
-
-//     // validate categoryId
-//     if (!categoryId) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Category ID is required",
-//       });
-//     }
-//     // get category details
-//     const categoryDetails = await Category.findById(categoryId).populate(
-//       "courses"
-//     );
-//     if (!categoryDetails) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Category not found",
-//       });
-//     }
-
-//     // get courses under the category
-//     const courses = await Course.find({ category: { $in: [categoryId] } })
-//       .populate("ratingAndReviews")
-//       .populate("studentsEnrolled");
-
-//     // get all courses
-//     const allCourses = await Course.find({});
-
-//     // get all categories
-//     const allCategories = await Category.find({});
-//   } catch (error) {
-//     console.log(
-//       "Error occured while fetching category page details : " + error.message
-//     );
-//     return res.status(500).json({
-//       success: false,
-//       message: "Error occured while fetching category page details",
-//     });
-//   }
-// };
-
-
 // getCategoryPageDetails handler function
-
 exports.categoryPageDetails = async (req, res) => {
   try {
     const { categoryName } = req.body;
+    l̥;
 
-    const selectedCategory = await Category.findById({name:categoryName})
+    const selectedCategory = await Category.findOne({ name: categoryName })
       .populate({
         path: "course",
         match: { status: "Published" },
@@ -133,7 +86,6 @@ exports.categoryPageDetails = async (req, res) => {
     }
 
     const categoryId = selectedCategory._id;
-
     if (selectedCategory.course.length === 0) {
       console.log("No courses found for the selected category.");
       return res.status(200).json({
@@ -154,7 +106,6 @@ exports.categoryPageDetails = async (req, res) => {
         match: { status: "Published" },
       })
       .exec();
-    console.log();
 
     const allCategories = await Category.find()
       .populate({
@@ -162,9 +113,10 @@ exports.categoryPageDetails = async (req, res) => {
         match: { status: "Published" },
       })
       .exec();
+
     const allCourses = allCategories.flatMap((category) => category.course);
     const mostSellingCourses = allCourses
-      .sort((a, b) => b.sold - a.sold)
+      .sort((a, b) => b.studentsEnrolled.length - a.studentsEnrolled.length)
       .slice(0, 10);
 
     res.status(200).json({

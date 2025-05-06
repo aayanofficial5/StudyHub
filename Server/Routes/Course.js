@@ -32,7 +32,7 @@ const {
 // categories routes
 router.post("/categories", auth, isAdmin, createCategory);
 router.get("/categories", getAllCategories);
-// router.get("/categories/:id", getCategoryPageDetails);
+router.get("/categories/:id", getCategoryPageDetails);
 
 
 // courses routes
