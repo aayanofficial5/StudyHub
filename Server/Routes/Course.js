@@ -32,16 +32,15 @@ const {
 // categories routes
 router.post("/categories", auth, isAdmin, createCategory);
 router.get("/categories", getAllCategories);
-router.get("/categories/:id", getCategoryPageDetails);
-
+router.get("/category-page/:name", getCategoryPageDetails);
 
 // courses routes
 router.post("/", auth, isInstructor, createCourse);
 router.get("/", getAllCourses);
-router.get("/:courseId", getCourseDetails);
 router.put("/", auth, isInstructor, editCourseDetails);
 router.delete("/", auth, isInstructor, deleteCourse);
 router.get("/instructor", auth, isInstructor, getInstructorCourses);
+router.get("/:courseId", getCourseDetails);
 
 // sections routes
 router.post("/section", auth, isInstructor, createSection);

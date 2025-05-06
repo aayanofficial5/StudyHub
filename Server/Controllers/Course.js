@@ -271,7 +271,7 @@ exports.getCourseDetails = async (req, res) => {
       .populate("tag")
       .populate("ratingAndReviews")
       .populate("studentsEnrolled");
-      
+
     // validate courseDetails
     if (!courseDetails) {
       return res.status(400).json({
@@ -365,27 +365,35 @@ exports.deleteCourse = async (req, res) => {
 
 // getInstructorCourses
 exports.getInstructorCourses = async (req, res) => {
-  const instructorId = req.user.id;
+  try {
+    const instructorId = req.user.id;
+    console.log("Instructor ID:", instructorId);
+    if (!instructorId) {
+      return res.status(400).json({
+        success: false,
+        message: "Instructor ID is required",
+      });
+    }
 
-  if (!instructorId) {
-    return res.status(400).json({
+    // Retrieve courses taught by the instructor
+    const courses = await Course.find({
+      instructor: instructorId,
+    })
+      .sort({ createdAt: -1 })
+      .populate("category")
+      .populate({ path: "courseContent", populate: { path: "subSection" } })
+      .populate("tag");
+
+    return res.status(200).json({
+      success: true,
+      message: "Courses retrieved successfully",
+      data: courses,
+    });
+  } catch (error) {
+    console.error("Error while fetching instructor courses:", error.message);
+    return res.status(500).json({
       success: false,
-      message: "Instructor ID is required",
+      message: "Server error while fetching instructor courses",
     });
   }
-
-  // Retrieve courses taught by the instructor
-  const courses = await Course.find({
-    instructor: instructorId,
-  })
-    .sort({ createdAt: -1 })
-    .populate("category")
-    .populate({ path: "courseContent", populate: { path: "subSection" } })
-    .populate("tag");
-
-  return res.status(200).json({
-    success: true,
-    message: "Courses retrieved successfully",
-    data: courses,
-  });
 };
