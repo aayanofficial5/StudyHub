@@ -92,19 +92,21 @@ const MyCourses = () => {
               </div>
             </div>
           )}
-          
+
           {courses.length > 0 &&
             courses.map((course, index) => (
               // Instructor course card
               <div
                 key={index}
                 className="bg-gray-900/80 p-4 rounded-2xl shadow-md flex flex-col md:flex-row gap-6"
-                onClick={() => {navigate(`/course/${course._id}`)}}
               >
                 <img
                   src={course.thumbnail}
                   alt={course.courseName}
-                  className="w-full md:w-64 h-40 object-cover rounded-xl"
+                  className="w-full md:w-64 h-40 object-cover rounded-xl cursor-pointer"
+                  onClick={() => {
+                    navigate(`/course/${course._id}`);
+                  }}
                 />
                 <div className="flex-1">
                   <h2 className="text-xl font-semibold mb-3">

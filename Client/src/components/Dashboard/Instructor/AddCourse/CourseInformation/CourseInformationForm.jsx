@@ -65,7 +65,7 @@ const CourseInformationForm = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("Form Data:", data);
+    // console.log("Form Data:", data);
     if (editCourse) {
       if (isFormUpdated()) {
         const currentValues = getValues();
