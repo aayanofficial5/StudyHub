@@ -11,7 +11,7 @@ const Catalog = () => {
   const { catalogName } = useParams();
   const { loading } = useSelector((state) => state.profile);
   const [active, setActive] = useState(1);
-  const [catalogPageData, setCatalogPageData] = useState(catalogData);
+  const [catalogPageData, setCatalogPageData] = useState({});
 
   // fetch all categories
   useEffect(() => {
@@ -71,12 +71,14 @@ const Catalog = () => {
               </h1>
               <div className="border-b-1 flex-1"></div>
             </div>
-            <CourseSlider courses={catalogPageData?.data?.mostSellingCourses} />
+            <CourseSlider
+              courses={catalogPageData?.data?.selectedCategory.course}
+            />
           </section>
 
           {/* Section 2 */}
           <section className="mb-12 w-full max-w-screen-xl text-white">
-            <h1 className="text-2xl font-bold mb-4">Top Courses</h1>
+            <h1 className="text-2xl font-bold mb-4">Most Selling Courses</h1>
             <CourseSlider courses={catalogPageData?.data?.mostSellingCourses} />
           </section>
 
@@ -85,16 +87,16 @@ const Catalog = () => {
             <h1 className="text-2xl font-bold mb-6">
               Frequently Bought Together
             </h1>
-
-            {catalogPageData?.data?.mostSellingCourses > 0 ? (
+            {catalogPageData?.data?.differentCategory.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2">
-                {catalogPageData?.data?.mostSellingCourses
+                {catalogPageData?.data?.differentCategory
                   .slice(0, 4)
                   .map((course, index) => (
                     <div
                       key={index}
                       className="flex justify-center items-center"
                     >
+                      
                       <CourseCard course={course} width={700} height={500} />
                     </div>
                   ))}
