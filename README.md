@@ -240,7 +240,6 @@ npm start
 
 - Payment Integration (Razorpay/Stripe)
 - Certificate generation for course completion
-- Search and filtering of courses
 - Chat or forum feature for learners
 - Admin dashboard for platform management
 
