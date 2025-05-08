@@ -7,9 +7,9 @@ const dbConnect = async () => {
     console.log("Connected to MongoDB");
   } catch (err) {
     console.log("Connection to MongoDB failed...");
-    setTimeout(() => {
-      dbConnect();
-    }, 60 * 1000);
+    // setTimeout(() => {
+    //   dbConnect();
+    // }, 60 * 1000);
   }
 };
 
