@@ -156,15 +156,15 @@ const CourseDetails = () => {
               <p className="pb-4 text-center text-3xl font-semibold text-white">
                 Rs. {price}
               </p>
-              <button
+              {user&&<button
                 className="bg-yellow-400 text-black py-2 px-4 rounded uppercase tracking-wider"
                 onClick={handleBuyCourse}
               >
                 Buy Now
               </button>
-              <button className="bg-black text-white py-2 px-4 rounded uppercase tracking-wider">
+              }{user&&<button className="bg-black text-white py-2 px-4 rounded uppercase tracking-wider">
                 Add to Cart
-              </button>
+              </button>}
             </div>
           </div>
   
