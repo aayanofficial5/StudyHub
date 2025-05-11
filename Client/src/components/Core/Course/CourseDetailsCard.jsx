@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { addToCart } from "../../../redux/slices/cartSlice"
 import { ACCOUNT_TYPE } from "../../../utils/constant"
+import CTAButton from './../../Home/CTAButton';
 
 function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
   const { user } = useSelector((state) => state.profile)
@@ -26,10 +27,6 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
   }
 
   const handleAddToCart = () => {
-    if (user && user?.accountType === ACCOUNT_TYPE.INSTRUCTOR) {
-      toast.error("You are an Instructor. You can't buy a course.")
-      return
-    }
     if (token) {
       dispatch(addToCart(course))
       return
@@ -45,7 +42,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-md bg-gray-800 p-4 text-white shadow-md">
+    <div className="flex flex-col gap-4 rounded-md bg-gray-800/80 p-4 text-white shadow-md">
       {/* Course Thumbnail */}
       <img
         src={ThumbnailImage}
@@ -60,29 +57,19 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-4">
-          <button
-            className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded transition-all duration-200"
-            onClick={
-              user && course?.studentsEnrolled.includes(user?._id)
-                ? () => navigate("/dashboard/enrolled-courses")
-                : handleBuyCourse
-            }
-          >
-            {user && course?.studentsEnrolled.includes(user?._id)
+        {user&&user.accountType==ACCOUNT_TYPE.STUDENT?(<div className="flex flex-col gap-4">
+          <CTAButton active={true} text={user && course?.studentsEnrolled.includes(user?._id)
               ? "Go To Course"
-              : "Buy Now"}
-          </button>
+              : "Buy Now"} action={user && course?.studentsEnrolled.includes(user?._id)
+                ? () => navigate("/dashboard/enrolled-courses")
+                : handleBuyCourse}/>
 
           {(!user || !course?.studentsEnrolled.includes(user?._id)) && (
-            <button
-              onClick={handleAddToCart}
-              className="bg-gray-900 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded transition-all duration-200"
-            >
-              Add to Cart
-            </button>
+            <CTAButton active={false} text="Add to Cart" action={handleAddToCart}/>
           )}
-        </div>
+        </div>):(
+          <CTAButton active={true} text="LOGIN TO BUY COURSE" action={()=>navigate("/login")}/>
+        )}  
 
         {/* Refund Policy */}
         <p className="pt-6 pb-3 text-center text-sm text-gray-400">
