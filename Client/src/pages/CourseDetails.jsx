@@ -32,7 +32,7 @@ const CourseDetails = () => {
   useEffect(() => {
     (async () => {
       const res = await getCourseDetails(courseId);
-      console.log(res);
+      // console.log(res);
       if (res) setResponse(res);
     })();
   }, [courseId]);
