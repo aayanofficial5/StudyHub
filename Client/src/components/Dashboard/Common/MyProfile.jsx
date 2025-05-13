@@ -20,7 +20,7 @@ const MyProfile = () => {
   
   return (
     <div className="flex flex-col w-full gap-6 opacity-80">
-      <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+      <h1 className="text-3xl font-bold mb-0">My Profile</h1>
       <div className="flex flex-row justify-between items-center w-full bg-gray-800/80 p-4 rounded-lg">
         <div className="flex flex-row gap-2 justify-center items-center">
           <img
