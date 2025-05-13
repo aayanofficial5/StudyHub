@@ -118,12 +118,9 @@ const NavBar = () => {
           {/* Cart */}
           {user && user?.accountType != "Instructor" && (
             <Link to="/dashboard/cart" className="relative">
-              <FaShoppingCart className="text-2xl text-blue-500" />
-              {totalItems > 0 && (
-                <span className="text-sm absolute bottom-6 -right-0.5 bg-white text-black rounded-full px-2">
-                  {totalItems}
-                </span>
-              )}
+              <div className="relative"><FaShoppingCart className=" hover:text-blue-400 text-2xl" />
+        {totalItems.length>0&&(<span className="bg-blue-500 rounded-full absolute -top-2 -right-2 h-5 w-5 text-xs flex justify-center items-center animate-bounce">{totalItems.length}</span>)}
+      </div>
             </Link>
           )}
           {/* Add Course */}
