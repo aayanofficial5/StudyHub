@@ -11,14 +11,17 @@ const app = express();
 require("dotenv").config();
 const cors = require("cors");
 const { auth } = require("./Middlewares/Authentication/auth");
+const { isStudent } = require("./Middlewares/Authorization/isStudent");
 const port = process.env.PORT || 4000; // Use PORT for the server
 
 // MIDDLEWARES
 // cors
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 // request body json data parser
 app.use(express.json());
 // cookie data parser
@@ -34,7 +37,7 @@ app.use(
 // mapping of routes with app
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/course", courseRoutes);
-app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/payment", auth,isStudent, paymentRoutes);
 app.use("/api/v1/profile", auth, profileRoutes);
 
 // default route
