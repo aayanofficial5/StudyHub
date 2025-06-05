@@ -25,6 +25,7 @@ const CourseCard = ({ course, height = 380, width = 350 }) => {
           src={thumbnail}
           alt="course"
           className="w-full h-full object-cover opacity-90"
+          loading="lazy"
         />
       </div>
 

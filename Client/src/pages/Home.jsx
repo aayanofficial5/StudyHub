@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import CTAButton from "../components/Home/CTAButton";
@@ -21,6 +21,7 @@ const Home = () => {
   const [search, setSearch] = useState("");
   const [courseData, setCourseData] = useState([]);
   const {user} = useSelector((state)=>state.profile);
+  const navigate = useNavigate();
   const fetchTopCourses = async () => {
     const data = await getAllCourses();
     if(data.length>0)
@@ -30,22 +31,33 @@ const Home = () => {
     fetchTopCourses();
   }, []);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (search.trim() !== "") {
+      // setSearch("");
+      navigate(`/search/${search}`);
+    }
+  }
+
   return (
     <div>
       {/* Section1 */}
       <section>
         <div className="relative mx-auto flex flex-col w-11/12 items-center text-white top-10 justify-between">
-          <form className="flex items-center gap-4 max-w-md w-full mt-5">
-            <div className="flex items-center w-full border pl-3 gap-4 bg-white border-gray-500/30 h-[54px] rounded-md overflow-hidden px-1">
-              <IoMdSearch className="text-gray-500 text-2xl" />
+          <form className="flex items-center gap-4 max-w-md w-full mt-5" onSubmit={(e)=>handleSubmit(e)}>
+            <div className="flex items-center w-full  h-[50px] rounded-md overflow-hidden  bg-gray-300 text-gray-900">
+              <IoMdSearch className="mx-5" size={35} />
               <input
                 type="text"
                 placeholder="Search for courses"
                 onChange={(e) => setSearch(e.target.value)}
                 value={search}
-                className="w-full h-full outline-none text-gray-500 placeholder-gray-500 text-base"
+                className="w-full h-full outline-none  placeholder-gray-500 text-base px-3"
               />
-              <CTAButton active={true} text="Submit" />
+            
+              <button className="bg-blue-500 hover:bg-blue-400 h-full px-7 font-semibold text-white">
+                Submit
+              </button>
             </div>
           </form>
           {!user&&<NavLink to="/signup">
@@ -131,11 +143,11 @@ const Home = () => {
         </div>
         <div className="flex flex-col md:flex-row gap-2 my-7 px-30">
           {courseData.length > 0 &&
-            courseData.map((course, index) => (
+            courseData.slice(0,4).map((course, index) => (
               <CourseCard key={index} course={course} />
             ))}
         </div>
-        <NavLink to="/course-list">
+        <NavLink to="/search/all-courses">
           <CTAButton active={true} arrow={true} text="View All Courses" />
         </NavLink>
       </section>

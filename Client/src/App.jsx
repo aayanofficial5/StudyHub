@@ -53,7 +53,7 @@ const App = () => {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           {/* Course Routes */}
           <Route path="course/:courseId" element={<CourseDetails/>} />
-          <Route path="/course-list" element={<Courses />}></Route>
+          <Route path="/search/:searchTerm" element={<Courses />}></Route>
           <Route path="/catalog/:catalogName" element={<Catalog />} />
           {/* Dashboard Routes */}
           <Route

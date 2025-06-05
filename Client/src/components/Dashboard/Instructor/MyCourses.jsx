@@ -60,6 +60,7 @@ const MyCourses = () => {
       <div className="min-h-screen bg-black opacity-80 w-full">
         <div className="flex justify-between items-center mb-8 w-full">
           <h1 className="text-3xl font-bold">My Courses</h1>
+          <div className="text-xl">
           <CTAButton
             active={true}
             text="Add Course"
@@ -70,7 +71,7 @@ const MyCourses = () => {
           >
             <FaPlus />
           </CTAButton>
-        </div>
+        </div></div>
         <div className="bg-gray-900/80 text-xl font-semibold text-gray-400/80 rounded-2xl shadow-md hidden md:flex lg:flex flex-row mb-5 justify-between py-4 px-5">
           <div>Courses</div>
           <div className="flex gap-15">

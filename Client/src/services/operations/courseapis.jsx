@@ -17,6 +17,8 @@ const {
   getInstructorCoursesApi,
   deleteCourseApi,
   createCourseCategoriesApi,
+  getStudentCoursesApi,
+  getCoursesBySearchApi,
 } = courseEndpoints;
 
 /********************************************************************
@@ -199,7 +201,7 @@ export const getInstructorCourses = async () => {
   let result = null;
   try {
     const response = await apiConnector("GET", getInstructorCoursesApi);
-    console.log("Instructor Courses Response: ",response);
+    console.log("Instructor Courses Response: ", response);
     if (!response?.data?.success) {
       throw new Error(response?.data?.message);
     }
@@ -213,6 +215,47 @@ export const getInstructorCourses = async () => {
   } finally {
     toast.dismiss(toastId);
     return result;
+  }
+};
+
+// get Student courses
+export const getStudentCourses = async () => {
+  const toastId = toast.loading("Loading Courses...");
+  let result = null;
+  try {
+    const response = await apiConnector("GET", getStudentCoursesApi);
+    // console.log("Student Courses Response: ",response);
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    result = response?.data?.data;
+  } catch (error) {
+    console.log(
+      "Error during fetching student courses: ",
+      error.response?.data?.message
+    );
+    toast.error(error?.response?.data?.message || "Failed to load courses.");
+  } finally {
+    toast.dismiss(toastId);
+    return result;
+  }
+};
+
+// getCourseBySearch courses
+export const getCoursesBySearch = async (searchTerm) => {
+  try {
+    console.log(getCoursesBySearchApi + searchTerm);
+    const response = await apiConnector(
+      "GET",
+      getCoursesBySearchApi + searchTerm
+    );
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+    return response.data.data;
+  } catch (err) {
+    console.log("Error in fetching courses by search:", err);
+    return null;
   }
 };
 
