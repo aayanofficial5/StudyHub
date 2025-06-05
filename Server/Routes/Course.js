@@ -8,6 +8,7 @@ const {
 const { auth } = require("../Middlewares/Authentication/auth");
 const { isAdmin } = require("../Middlewares/Authorization/isAdmin");
 const { isInstructor } = require("../Middlewares/Authorization/isInstructor");
+const { isStudent } = require("../Middlewares/Authorization/isStudent");
 const {
   createCourse,
   getAllCourses,
@@ -15,6 +16,8 @@ const {
   editCourseDetails,
   deleteCourse,
   getInstructorCourses,
+  getStudentCourses,
+  getCoursesBySearch,
 } = require("../Controllers/Course");
 const {
   createSection,
@@ -40,7 +43,9 @@ router.get("/", getAllCourses);
 router.put("/", auth, isInstructor, editCourseDetails);
 router.delete("/", auth, isInstructor, deleteCourse);
 router.get("/instructor", auth, isInstructor, getInstructorCourses);
+router.get("/student", auth, isStudent, getStudentCourses);
 router.get("/:courseId", getCourseDetails);
+router.get("/search/:searchTerm", getCoursesBySearch);
 
 // sections routes
 router.post("/section", auth, isInstructor, createSection);

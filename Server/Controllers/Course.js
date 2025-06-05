@@ -1,9 +1,9 @@
-const Course = require("../Models/Course");
 const Section = require("../Models/Section");
 const SubSection = require("../Models/SubSection");
-const User = require("../Models/User");
 const { fileUploader } = require("../utils/fileUploader");
 const Category = require("../Models/Category");
+const User = require("../models/User");
+const Course = require("../models/Course");
 require("dotenv").config();
 
 // createCourse Handler Function
@@ -397,3 +397,83 @@ exports.getInstructorCourses = async (req, res) => {
     });
   }
 };
+
+// getStudentCourses
+exports.getStudentCourses = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    // console.log("Student ID:", studentId);
+    if (!studentId) {
+      return res.status(400).json({
+        success: false,
+        message: "Student ID is required",
+      });
+    }
+
+    // Retrieve courses enrolled by the student
+    const courses = await Course.find({
+      studentsEnrolled: studentId,
+    })
+      .sort({ createdAt: -1 })
+      .populate("category")
+      .populate({ path: "courseContent", populate: { path: "subSection" } })
+      .populate("tag");
+
+    const data = courses.map((course) => ({
+      id: course._id,
+      thumbnail: course.thumbnail,
+      title: course.courseName,
+      description: course.courseDescription,
+      duration: course.courseContent.reduce((sum, section) => {
+        return (
+          sum +
+          section.subSection.reduce((subSum, subSec) => {
+            return subSum + (parseFloat(subSec.timeDuration) || 0);
+          }, 0)
+        );
+      }, 0),
+      progress: course.studentsEnrolled.includes(studentId) ? 50 : 100,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      message: "Courses retrieved successfully",
+      data: data,
+    });
+  } catch (error) {
+    console.error("Error while fetching student courses:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while fetching student courses",
+    });
+  }
+};
+
+// getCoursesByTag handler function
+exports.getCoursesBySearch = async (req, res) => {
+  try {
+    const search = req.params.searchTerm; // or req.query.searchTerm if using query param
+    console.log(search);
+    const courses = await Course.find({
+      $or: [
+        { tag: { $regex: search, $options: "i" } },
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ],
+    });
+
+    if (!courses || courses.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No courses found matching the search.",
+      });
+    }
+
+    return res.status(200).json({ success: true, data: courses });
+  } catch (error) {
+    console.error("Error fetching courses by search:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error." });
+  }
+}
