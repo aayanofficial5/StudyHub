@@ -7,7 +7,9 @@ const { coursePaymentApi, verifyPaymentApi, sendPaymentSuccessEmailApi } =
   paymentEndpoints;
 
 export async function buyCourse(courses, user, navigate, dispatch) {
-  const toastId = toast.loading("Loading...");
+  const toastId = toast.loading(
+    "Redirecting to Razorpay for payment, please wait..."
+  );
   try {
     const res = await loadScript(
       "https://checkout.razorpay.com/v1/checkout.js"
@@ -41,8 +43,14 @@ export async function buyCourse(courses, user, navigate, dispatch) {
         email: user.email,
       },
       handler: async (response) => {
-        await verifyPayment({ ...response, courses }, navigate, dispatch);
-        await sendPaymentSuccessEmail(response, orderResponse);
+        const verified = await verifyPayment(
+          { ...response, courses },
+          navigate,
+          dispatch
+        );
+        if (verified) {
+          await sendPaymentSuccessEmail(response, orderResponse);
+        }
       },
 
       notes: {
@@ -78,19 +86,27 @@ function loadScript(src) {
 
 async function verifyPayment(paymentData, navigate, dispatch) {
   const toastId = toast.loading("Verifying payment...");
+  let result = null;
   try {
     const response = await apiConnector("POST", verifyPaymentApi, paymentData);
     if (!response.data.success) {
       throw new Error(response.data.message || "Payment verification failed");
     }
-    toast.success("Payment verified successfully!");
-    navigate("/dashboard/enrolled-courses");
+    console.log("Payment verified Response:", response);
+    toast.success(response?.data?.message);
     dispatch(resetCart());
+    localStorage.setItem("totalItems", JSON.stringify(0));
+    navigate("/dashboard/enrolled-courses");
+    result = response;
   } catch (error) {
     console.error("Error in verifyPayment:", error);
-    toast.error("Could not verify payment, please try again later.");
+    const errMsg =
+      error?.response?.data?.message ||
+      "Could not verify payment, please try again later.";
+    toast.error(errMsg);
   } finally {
     toast.dismiss(toastId);
+    return result;
   }
 }
 

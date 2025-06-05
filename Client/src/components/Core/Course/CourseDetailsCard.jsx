@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import copy from "copy-to-clipboard";
 import { toast } from "react-hot-toast";
-import { BsFillCaretRightFill } from "react-icons/bs";
 import { FaShareSquare } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addToCart, setTotalItems } from "../../../redux/slices/cartSlice";
+import { setTotalItems } from "../../../redux/slices/cartSlice";
 import { ACCOUNT_TYPE } from "../../../utils/constant";
 import CTAButton from "./../../Home/CTAButton";
 
-function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
+function CourseDetailsCard({ course, handleBuyCourse ,isUserEnrolled}) {
   const { user } = useSelector((state) => state.profile);
   const { token } = useSelector((state) => state.auth);
   const { totalItems } = useSelector((state) => state.cart);
@@ -27,19 +26,14 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
     toast.success("Link copied to Clipboard");
   };
 
-
   const handleAddToCart = () => {
     if (token) {
-      // Get existing cart items from localStorage
       const existingItems =
         JSON.parse(localStorage.getItem("totalItems")) || [];
-      // Add the new course
       const updatedItems = [...existingItems, course];
-      // Save the updated list back to localStorage
       localStorage.setItem("totalItems", JSON.stringify(updatedItems));
       dispatch(setTotalItems(updatedItems));
       toast.success("Added to Cart");
-      return;
     }
   };
 
@@ -54,41 +48,39 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
 
       <div className="px-4 opacity-80">
         {/* Price */}
-        <div className="text-3xl font-semibold text-white pb-4">
+        {!isUserEnrolled &&<div className="text-3xl font-semibold text-white pb-4">
           ₹ {CurrentPrice}
-        </div>
+        </div>}
 
         {/* Action Buttons */}
         {user ? (
-          user.accountType == ACCOUNT_TYPE.STUDENT && (
+          user.accountType === ACCOUNT_TYPE.STUDENT && (
             <div className="flex flex-col gap-4">
               <CTAButton
                 active={true}
-                text={
-                  user && course?.studentsEnrolled.includes(user?._id)
-                    ? "Go To Course"
-                    : "Buy Now"
-                }
+                text={isUserEnrolled ? "Go To Course" : "Buy Now"}
                 action={
-                  user && course?.studentsEnrolled.includes(user?._id)
+                  isUserEnrolled
                     ? () => navigate("/dashboard/enrolled-courses")
                     : handleBuyCourse
                 }
               />
 
-              {!course?.studentsEnrolled.includes(user?._id) &&
-              !totalItems.some((item) => item._id === course._id)? (
+              {!isUserEnrolled &&
+              !totalItems.some((item) => item._id === course._id) ? (
                 <CTAButton
                   active={false}
                   text="Add to Cart"
                   action={handleAddToCart}
                 />
               ) : (
-                <CTAButton
-                  active={false}
-                  text="Go to Cart"
-                  action={() => navigate("/dashboard/cart")}
-                />
+                !isUserEnrolled && (
+                  <CTAButton
+                    active={false}
+                    text="Go to Cart"
+                    action={() => navigate("/dashboard/cart")}
+                  />
+                )
               )}
             </div>
           )
@@ -105,7 +97,7 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
           30-Day Money-Back Guarantee
         </p>
 
-        {/* Pre-requisite */}
+        {/* Tags */}
         <div>
           <p className="my-2 text-xl font-semibold">Tags :</p>
           <div className="flex flex-row flex-wrap gap-3 text-sm text-blue-200 underline">

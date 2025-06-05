@@ -6,6 +6,8 @@ export const courseEndpoints = {
   editCourseDetailsApi: "/course",
   deleteCourseApi: "/course",
   getInstructorCoursesApi: "/course/instructor",
+  getStudentCoursesApi: "/course/student",
+  getCoursesBySearchApi: "/course/search/",
   // category
   getCourseCategoriesApi: "/course/categories",
   createCategoryApi: "/course/categories",
@@ -43,4 +45,10 @@ export const contactUsEndpoints = {
 
 export const catalogPageDataEndpoints = {
   getCatalogPageDataApi: "/course/category-page",
+};
+
+export const paymentEndpoints = {
+  coursePaymentApi: "/payment/capture",
+  verifyPaymentApi: "/payment/verify",
+  sendPaymentSuccessEmailApi: "/payment/success-email",
 };

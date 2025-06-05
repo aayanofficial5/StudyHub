@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../components/Home/Footer";
-import Modal from "../components/Dashboard/Common/Modal";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCourseDetails } from "../services/operations/courseapis";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +11,7 @@ import getAvgRating from "../utils/getAvgRating";
 import formatDate from "../services/formatDate";
 import CourseContentBar from "../components/Core/Course/CourseContentBar";
 import CourseDetailsCard from "../components/Core/Course/CourseDetailsCard";
+import { buyCourse } from "../services/operations/studentFeaturesApi";
 
 const CourseDetails = () => {
   const { user } = useSelector((state) => state.profile);
@@ -20,29 +20,23 @@ const CourseDetails = () => {
   const { paymentLoading } = useSelector((state) => state.course);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { courseId } = useParams();
 
   const [response, setResponse] = useState(null);
-  const [confirmationModal, setConfirmationModal] = useState(null);
-
   const [avgReviewCount, setAvgReviewCount] = useState(0);
   const [totalNoOfLectures, setTotalNoOfLectures] = useState(0);
+  const [isActive, setIsActive] = useState(Array(0));
 
   useEffect(() => {
     (async () => {
       const res = await getCourseDetails(courseId);
-      // console.log(res);
       if (res) setResponse(res);
     })();
   }, [courseId]);
 
   useEffect(() => {
-    // set average rating
     const count = getAvgRating(response?.ratingAndReviews);
     setAvgReviewCount(count);
-
-    // set no. of lectures
     let lectures = 0;
     response?.courseContent?.forEach((sec) => {
       lectures += sec.subSection?.length || 0;
@@ -50,21 +44,23 @@ const CourseDetails = () => {
     setTotalNoOfLectures(lectures);
   }, [response]);
 
-  const [isActive, setIsActive] = useState(Array(0));
   const handleActive = (id) => {
     setIsActive(
       !isActive.includes(id)
         ? isActive.concat([id])
-        : isActive.filter((e) => e != id)
+        : isActive.filter((e) => e !== id)
     );
+  };
+
+  const handleBuyCourse = async () => {
+    if (token) {
+      await buyCourse([courseId], user, navigate, dispatch);
+    }
   };
 
   if (loading || !response) {
     return <Loading />;
   }
-  // if (!response.success) {
-  //   return <Error />
-  // }
 
   const {
     _id: course_id,
@@ -80,29 +76,15 @@ const CourseDetails = () => {
     createdAt,
   } = response;
 
-  const handleBuyCourse = () => {
-    // if (token) {
-    //   BuyCourse(token, [courseId], user, navigate, dispatch)
-    //   return
-    // }
-    // setConfirmationModal({
-    //   text1: "You are not logged in!",
-    //   text2: "Please login to Purchase Course.",
-    //   btn1Text: "Login",
-    //   btn2Text: "Cancel",
-    //   btn1Handler: () => navigate("/login"),
-    //   btn2Handler: () => setConfirmationModal(null),
-    // })
-  };
-
-  // if (paymentLoading) {
-
-  //   return (
-  //     <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
-  //       <div className="spinner"></div>
-  //     </div>
-  //   )
-  // }
+  const isUserEnrolled = studentsEnrolled.some((e) => e._id === user?._id);
+  // console.log(user?._id, studentsEnrolled, isUserEnrolled);
+  if (paymentLoading) {
+    return (
+      <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -117,74 +99,79 @@ const CourseDetails = () => {
                 src={thumbnail}
                 alt="course thumbnail"
                 className="aspect-auto w-full"
+                loading="lazy"
               />
             </div>
-  
+
             {/* Course Title & Details */}
             <div className="z-30 my-5 flex flex-col justify-center gap-4 py-5 text-lg text-white">
               <p className="text-center text-4xl font-bold tracking-wider sm:text-[42px] lg:text-left">
                 {courseName}
               </p>
-  
               <div className="text-gray-300">
-                <p>
-                  {courseDescription}
-                </p>
+                <p>{courseDescription}</p>
               </div>
-  
               <div className="text-md flex flex-wrap items-center justify-center gap-2 lg:justify-start">
                 <span className="text-yellow-400">{avgReviewCount}</span>
                 <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
                 <span>({ratingAndReviews.length} reviews)</span>
                 <span>{studentsEnrolled.length} students enrolled</span>
               </div>
-  
-              <p>Created By {`${instructor.firstName} ${instructor.lastName}`}</p>
-  
+              <p>
+                Created By {`${instructor.firstName} ${instructor.lastName}`}
+              </p>
               <div className="flex flex-wrap gap-5 text-lg">
                 <p className="flex items-center gap-2">
-                  <BsInfoCircle/> Created at {formatDate(createdAt)}
+                  <BsInfoCircle /> Created at {formatDate(createdAt)}
                 </p>
                 <p className="flex items-center gap-2">
                   <HiOutlineGlobeAlt /> English
                 </p>
               </div>
             </div>
-  
+
             {/* Mobile Buy Buttons */}
             <div className="flex w-full flex-col gap-4 border-y border-gray-600 py-4 lg:hidden">
-              <p className="pb-4 text-center text-3xl font-semibold text-white">
-                Rs. {price}
-              </p>
-              {user&&<button
-                className="bg-yellow-400 text-black py-2 px-4 rounded uppercase tracking-wider"
-                onClick={handleBuyCourse}
-              >
-                Buy Now
-              </button>
-              }{user&&<button className="bg-black text-white py-2 px-4 rounded uppercase tracking-wider">
-                Add to Cart
-              </button>}
+              {user && isUserEnrolled ? (
+                <button
+                  className="bg-green-600 text-white py-2 px-4 rounded uppercase tracking-wider"
+                  onClick={() => navigate("/dashboard/enrolled-courses")}
+                >
+                  Go to Course
+                </button>
+              ) : (
+                <>
+                  <p className="pb-4 text-center text-3xl font-semibold text-white">
+                    Rs. {price}
+                  </p>
+                  <button
+                    className="bg-yellow-400 text-black py-2 px-4 rounded uppercase tracking-wider"
+                    onClick={handleBuyCourse}
+                  >
+                    Buy Now
+                  </button>
+                  <button className="bg-black text-white py-2 px-4 rounded uppercase tracking-wider">
+                    Add to Cart
+                  </button>
+                </>
+              )}
             </div>
           </div>
-  
+
           {/* Desktop Course Card */}
-          
           <div className="top-[60px] mx-auto hidden min-h-[600px] w-1/3 max-w-[410px] translate-y-24 md:-translate-y-8 md:translate-x-220 lg:absolute lg:block">
             <CourseDetailsCard
               course={response}
-              setConfirmationModal={setConfirmationModal}
               handleBuyCourse={handleBuyCourse}
+              isUserEnrolled={isUserEnrolled}
             />
-          </div> 
-         
+          </div>
         </div>
       </div>
-  
+
       {/* Course Body */}
       <div className="mx-auto box-content px-4 text-start text-white lg:w-[1260px]">
         <div className="mx-auto max-w-maxContentTab lg:mx-0 xl:max-w-[810px]">
-          {/* What You'll Learn */}
           <div className="my-8 border border-gray-700 p-8">
             <p className="text-3xl font-semibold uppercase tracking-wider">
               What you'll Learn?
@@ -194,16 +181,13 @@ const CourseDetails = () => {
                 {whatYouWillLearn.split("\n").map((line, index) => (
                   <li key={index} className="flex items-start">
                     <span className="mr-2">{index + 1}.</span>
-                    <span>
-                      {line.trim().trim()}
-                    </span>
+                    <span>{line.trim().trim()}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-  
-          {/* Course Content Header */}
+
           <div className="max-w-[830px]">
             <div className="flex flex-col gap-3">
               <p className="text-[28px] font-semibold uppercase tracking-wider">
@@ -223,9 +207,7 @@ const CourseDetails = () => {
                 </button>
               </div>
             </div>
-  
-            {/* Course Details Accordion */}
-            
+
             <div className="py-4">
               {courseContent?.map((course, index) => (
                 <CourseContentBar
@@ -235,10 +217,8 @@ const CourseDetails = () => {
                   handleActive={handleActive}
                 />
               ))}
-            </div> 
-           
-  
-            {/* Author Section */}
+            </div>
+
             <div className="mb-12 py-4">
               <p className="text-[28px] font-semibold">Author</p>
               <div className="flex items-center gap-4 py-4">
@@ -262,14 +242,10 @@ const CourseDetails = () => {
           </div>
         </div>
       </div>
-  
+
       <Footer />
-  
-      {/* 
-      {confirmationModal && <Modal />} 
-      */}
     </>
-  );  
+  );
 };
 
 export default CourseDetails;
