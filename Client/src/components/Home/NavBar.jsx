@@ -39,7 +39,7 @@ const NavBar = () => {
         {/* Logo and Brand */}
         <Link to="/" className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <img src={logo} alt="logo" className="w-10 h-10" />
+            <img src={logo} alt="logo" className="w-10 h-10" loading="lazy"/>
             <h1 className="text-[1.3rem] font-bold text-gray-300">StudyHub</h1>
           </div>
         </Link>
@@ -126,7 +126,7 @@ const NavBar = () => {
           {/* Add Course */}
           {user && user?.accountType == "Instructor" && (
             <Link to="/dashboard/add-course" className="hover:text-blue-500">
-              <FaPlusCircle className="text-2xl text-blue-500" />
+              <button title="Add Course" className="text-2xl text-blue-500 mt-2"><FaPlusCircle/></button>
             </Link>
           )}
           {/* ProfileDropdown */}

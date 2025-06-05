@@ -3,14 +3,25 @@ import { Link } from "react-router-dom";
 import CTAButton from "./CTAButton";
 import { logout } from "../../services/operations/authapis";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const ProfileDropDown = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.profile.user);
+  let image,quality=10;
+  if (!user.image.includes("/upload/")) image = user.image;
+  else image = user.image.replace("/upload/", `/upload/q_${quality}/`);
+
   return (
     <div className="flex flex-row justify-center items-center gap-4">
       <Link to="/dashboard/my-profile" className="hover:text-blue-500">
-        <div className="bg-white h-7 w-7 rounded-full"></div>
+        <div className="h-9 w-9 border-1 rounded-full overflow-hidden">
+          <img
+            src={image || "https://via.placeholder.com/150"}
+            alt="Profile"
+            className="h-full w-full object-cover"
+          />
+        </div>
       </Link>
       {/* <div className="hover:text-blue-500">
         <CTAButton
