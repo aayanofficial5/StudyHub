@@ -14,10 +14,10 @@ const BannerBlocks = ({
 }) => {
   return (
     <div
-      className={`flex ${flexDirection} w-full justify-center items-center overflow-hidden px-20 mt-40 gap-15 py-10`}
+      className={`flex ${flexDirection} w-full justify-center items-center px-20 mt-20 md:mt-10 gap-15 md:py-10`}
     >
       {/* Left Section - Text */}
-      <div className="w-1/2 flex flex-col justify-between text-white scale-105">
+      <div className="md:w-1/2 flex flex-col justify-between text-white scale-105">
         <div className="font-bold text-3xl text-left w-[90%]">
           <div>
             {h1}
@@ -45,7 +45,7 @@ const BannerBlocks = ({
       </div>
 
       {/* Right Section - Image */}
-      <div className="w-1/2 flex justify-center items-center">
+      <div className="md:w-1/2 flex justify-center items-center">
         <img src={image} className="w-full h-full object-cover rounded-lg" />
       </div>
     </div>

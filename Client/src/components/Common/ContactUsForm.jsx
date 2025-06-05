@@ -35,9 +35,9 @@ const ContactUsForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(submitContactForm)}>
-      <div className="flex flex-col lg:flex-row gap-4 mt-8">
-        <label htmlFor="firstName" className="flex flex-col">
+    <form onSubmit={handleSubmit(submitContactForm)} className="flex flex-col gap-4 w-full max-w-3xl mx-auto p-5 bg-gray-800/80 rounded-b-lg mt-8">
+      <div className="flex flex-col lg:flex-row gap-4">
+        <label htmlFor="firstName" className="flex flex-col flex-1">
           <p>
             First Name<sup className="text-red-500">*</sup>
           </p>
@@ -53,7 +53,7 @@ const ContactUsForm = () => {
             <p className="text-red-500">Please enter your first name</p>
           )}
         </label>
-        <label htmlFor="lastName" className="flex flex-col">
+        <label htmlFor="lastName" className="flex flex-col flex-1">
           <p>Last Name</p>
           <input
             type="text"

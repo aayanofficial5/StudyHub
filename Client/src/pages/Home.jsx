@@ -17,6 +17,7 @@ import Testimonials from "../components/Common/Testimonials";
 import { getAllCourses } from "../services/operations/courseapis";
 import { useSelector } from "react-redux";
 import CourseCard from './../components/Common/CourseCard';
+import Footer from "../components/Home/Footer";
 const Home = () => {
   const [search, setSearch] = useState("");
   const [courseData, setCourseData] = useState([]);
@@ -46,13 +47,14 @@ const Home = () => {
         <div className="relative mx-auto flex flex-col w-11/12 items-center text-white top-10 justify-between">
           <form className="flex items-center gap-4 max-w-md w-full mt-5" onSubmit={(e)=>handleSubmit(e)}>
             <div className="flex items-center w-full  h-[50px] rounded-md overflow-hidden  bg-gray-300 text-gray-900">
-              <IoMdSearch className="mx-5" size={35} />
+              <div className="mx-3"><IoMdSearch size={25} />
+              </div>
               <input
                 type="text"
                 placeholder="Search for courses"
                 onChange={(e) => setSearch(e.target.value)}
                 value={search}
-                className="w-full h-full outline-none  placeholder-gray-500 text-base px-3"
+                className="w-full h-full outline-none  placeholder-gray-500 border-l-1 border-gray-400 text-base px-3"
               />
             
               <button className="bg-blue-500 hover:bg-blue-400 h-full px-7 font-semibold text-white">
@@ -102,7 +104,7 @@ const Home = () => {
       </section>
 
       {/* Section2 */}
-      <section>
+      <section className="bg-gray-900 pt-1 md:pt-0 pb-1">
         <BannerBlocks
           h1="Unlock your"
           h2="coding potential"
@@ -111,7 +113,7 @@ const Home = () => {
           button1="Get Started"
           button2="Learn More"
           image={Coding}
-          flexDirection="flex-row"
+          flexDirection="flex-col-reverse md:flex-row"
         />
         <BannerBlocks
           h1="Start"
@@ -121,7 +123,7 @@ const Home = () => {
           button1="Continue Lesson"
           button2="Learn More"
           image={Coding2}
-          flexDirection="flex-row-reverse"
+          flexDirection="flex-col-reverse md:flex-row-reverse"
         />
       </section>
       {/* Section3 */}
@@ -172,6 +174,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+      <Footer/>
     </div>
   );
 };

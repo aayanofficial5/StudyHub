@@ -11,12 +11,13 @@ import { NavLink } from "react-router-dom";
 import { aboutCardData, aboutUs } from "../data/aboutPage";
 import ContactUsForm from "../components/Common/ContactUsForm";
 import Testimonials from "../components/Common/Testimonials";
+import Footer from "../components/Home/Footer";
 const About = () => {
   return (
     <div>
       {/*Section 1 */}
       <section>
-        <div className="flex flex-col gap-4 w-full items-center my-5">
+        <div className="flex flex-col gap-4 w-full items-center mt-8">
           <div className="flex flex-col items-center">
             <HighlightBanner
               title="Crafting Tomorrow’s Success Through"
@@ -26,9 +27,13 @@ const About = () => {
             />
           </div>
           <div className="flex flex-row gap-4 w-full justify-center items-center my-5">
-            <img src={aboutus1} alt="" className="w-[25%] h-[25%]" />
-            <img src={aboutus2} alt="" className="w-[25%] h-[25%]" />
-            <img src={aboutus3} alt="" className="w-[25%] h-[25%]" />
+            <img src={aboutus1} alt="" className="w-[40%] md:w-[25%]" />
+            <img src={aboutus2} alt="" className="w-[40%] md:w-[25%]" />
+            <img
+              src={aboutus3}
+              alt=""
+              className="hidden md:block w-[25%] h-[25%]"
+            />
           </div>
           <div className="font-bold text-2xl mt-5 text-center w-[75%]">
             We’re on a mission to{" "}
@@ -57,20 +62,21 @@ const About = () => {
       </section>
       {/*Section 2 */}
       <section>
-        <div className="flex flex-col gap-4 w-full items-center my-5">
-          <div className="flex flex-col items-center w-[90%] my-10">
+        <div className="flex flex-col gap-4 w-full items-center">
+          <div className="flex flex-col items-center w-[100%]">
             <BannerBlocks
               h1="Our Mission"
               h2="Transforming Education"
               h3="for a Better Future"
+              flexDirection={"flex-col-reverse md:flex-row"}
               description={`At KnowGeek, we're on a mission to reshape the future of learning. Our platform blends cutting-edge technology, real-world expertise, and a thriving learner community to deliver a transformative educational experience that empowers every individual.
 
 Through innovative tools, industry-relevant content, and a strong community of learners and mentors, we aim to bridge the gap between education and opportunity. We’re not just preparing learners for exams we’re preparing them for life, careers, and leadership in a digital world.`}
               image={aboutBanner}
             ></BannerBlocks>
           </div>
-          <div className="flex flex-row ml-25 gap-15 w-[90%] justify-center items-center my-20">
-            <div className="flex flex-col w-[60%]">
+          <div className="flex flex-col md:flex-row gap-15 w-full h-fit my-20">
+            <div className="flex flex-col md:w-[60%] justify-center items-center">
               <HighlightBanner
                 highlightedText="Our Vision"
                 color="yellow-300"
@@ -78,7 +84,7 @@ Through innovative tools, industry-relevant content, and a strong community of l
                 textAlign="text-left"
               ></HighlightBanner>
             </div>
-            <div className="w-[60%] flex flex-col">
+            <div className="md:w-[60%] flex flex-col justify-center items-center">
               <HighlightBanner
                 highlightedText="Our Mission"
                 color="blue-400"
@@ -90,7 +96,10 @@ Through innovative tools, industry-relevant content, and a strong community of l
           <div className="w-full flex flex-row justify-evenly bg-gray-700 p-8">
             {aboutUs.map(({ num, desc }, index) => {
               return (
-                <div className="flex flex-col gap-2 items-center" key={index}>
+                <div
+                  className="flex flex-col gap-2 items-center w-20 md:w-50 text-center"
+                  key={index}
+                >
                   <p className="text-2xl font-bold">{num}</p>
                   <p className="text-white/30">{desc}</p>
                 </div>
@@ -101,7 +110,7 @@ Through innovative tools, industry-relevant content, and a strong community of l
       </section>
       {/*Section 3 */}
       <section>
-        <div className="flex flex-col m-30">
+        <div className="flex flex-col m-15 md:m-30">
           <div className="grid grid-cols-1 lg:grid-rows-2 lg:grid-cols-4 lg:h-[75vh] min-h-fit">
             {/*div*/}
             <div
@@ -120,7 +129,7 @@ Through innovative tools, industry-relevant content, and a strong community of l
                   and organizations worldwide.
                 </p>
               </div>
-              <div className="">
+              <div className="w-[150px]">
                 <NavLink to="/signup">
                   <CTAButton arrow={true} active={true} text="Learn More" />
                 </NavLink>
@@ -147,7 +156,7 @@ Through innovative tools, industry-relevant content, and a strong community of l
       <section>
         <div className="flex flex-col items-center">
           <Testimonials />
-          <div className="flex flex-col items-center border-2 border-gray-700 rounded-lg px-20 py-10 min-w-fit">
+          <div className="flex flex-col items-center border-1 border-gray-700 rounded-lg mt-10">
             <HighlightBanner
               title="Get in Touch"
               paragraph="We'd love to hear from you, Please fill out this form."
@@ -156,6 +165,7 @@ Through innovative tools, industry-relevant content, and a strong community of l
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

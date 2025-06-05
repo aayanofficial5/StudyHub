@@ -34,7 +34,7 @@ const Contact = () => {
           </p>
         </div>
         <div className="flex flex-col items-center lg:scale-110 lg:w-[60%] lg:mt-5">
-          <div className="flex flex-col items-center border-2 border-gray-700 rounded-lg py-10">
+          <div className="flex flex-col items-center border-2 border-gray-700 rounded-lg">
             <div className="w-[80%]">
               <HighlightBanner
                 title="Got a Idea? We've got the skills. Let's team up"
