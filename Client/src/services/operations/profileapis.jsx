@@ -119,7 +119,6 @@ export const updateProfile = (updatedUser) => {
       dispatch(setUser(newUser));
       localStorage.setItem("user", JSON.stringify(newUser));
       toast.success(response.data.message);
-      window.location.reload();
     } catch (error) {
       console.error("Update Profile Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";

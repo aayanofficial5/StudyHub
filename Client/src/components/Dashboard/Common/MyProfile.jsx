@@ -27,7 +27,6 @@ const MyProfile = () => {
             src={user?.image}
             alt="Profile"
             className="w-16 h-16 rounded-full"
-            loading="lazy"
           />
           <div className="flex flex-col">
             <p className="text-lg font-semibold">
