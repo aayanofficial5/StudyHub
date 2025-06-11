@@ -52,21 +52,16 @@ const NavBar = () => {
         <nav className="hidden md:block">
           <ul className="flex gap-x-6 font-semibold tracking-wider">
             {NavbarLinks.map((link, index) => (
-              <li key={index}>
+              <li className="flex flex-col gap-2 items-center w-fit" key={index}>
+              <div>
                 {link.name === "Catalog" ? (
                   <>
                     <div
                       className={`group relative flex cursor-pointer items-center gap-1`}
                     >
-                      <NavLink
-                        to={link.path}
-                        className={({ isActive }) =>
-                          ` ${isActive ? "text-blue-400" : ""}`
-                        }
-                      >
+                      <div className={`${pathname.includes(link.path) ? "text-blue-400" : ""}`}>
                         <span>{link.name}</span>
-                      </NavLink>
-
+                      </div>
                       <IoIosArrowDown />
                       <div className="invisible absolute left-[50%] top-[50%] z-[1000] flex w-[200px] translate-x-[-50%] translate-y-[3em] flex-col rounded-lg bg-gray-800 p-4 text-white opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-[1.65em] group-hover:opacity-100 lg:w-[300px]">
                         <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-gray-800"></div>
@@ -108,6 +103,8 @@ const NavBar = () => {
                     <span>{link.name}</span>
                   </NavLink>
                 )}
+              </div>
+              <div className={`${pathname.split("/")[1]==link.path.split("/")[1]?"border-t-[1px] border-blue-400/70" : "" } bg-blend-normal w-[80%]`}></div>
               </li>
             ))}
           </ul>

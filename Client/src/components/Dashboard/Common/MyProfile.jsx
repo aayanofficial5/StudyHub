@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FaEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import profile from "../../../assets/profilePlaceholder.jpg";
+
 const EditButton = () => {
   const navigate = useNavigate();
   return (
@@ -17,17 +19,17 @@ const EditButton = () => {
 
 const MyProfile = () => {
   const user = useSelector((state) => state.profile.user);
-  
+
   return (
     <div className="flex flex-col w-full gap-6 opacity-80">
       <h1 className="text-3xl font-bold mb-0">My Profile</h1>
       <div className="flex flex-row justify-between items-center w-full bg-gray-800/80 p-4 rounded-lg">
         <div className="flex flex-row gap-2 justify-center items-center">
           <img
-            src={user?.image}
-            alt="Profile"
+            src={user?.image || profile}
             className="w-16 h-16 rounded-full"
           />
+          {console.log(user.image)}
           <div className="flex flex-col">
             <p className="text-lg font-semibold">
               {user?.firstName} {user?.lastName}

@@ -4,6 +4,8 @@ import CTAButton from "./CTAButton";
 import { logout } from "../../services/operations/authapis";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import profile from "../../assets/profilePlaceholder.jpg";
+
 const ProfileDropDown = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,7 +19,7 @@ const ProfileDropDown = () => {
       <Link to="/dashboard/my-profile" className="hover:text-blue-500">
         <div className="h-9 w-9 border-1 rounded-full overflow-hidden">
           <img
-            src={image || "https://via.placeholder.com/150"}
+            src={image || profile}
             alt="Profile"
             className="h-full w-full object-cover"
           />

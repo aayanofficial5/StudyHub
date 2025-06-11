@@ -7,10 +7,10 @@ const AddCourse = () => {
   const dispatch = useDispatch();
   const editCourse = useSelector((state) => state.course.editCourse);
   return (
-    <div className="flex flex-row w-full gap-20 opacity-80">
-      <div className={"w-full lg:w-6/9 flex flex-col"+editCourse?"lg:w-11/12":""}>
+    <div className="flex flex-row w-full gap-20 opacity-80 min-h-[78vh]">
+      <div className={`flex flex-col w-full mt-50" ${editCourse?"lg:w-11/12":"lg:w-6/9"}`}>
         <h1 className="text-3xl font-bold mb-6">Add a New Course</h1>
-        <div>
+        <div className="w-full">
           <RenderSteps />
         </div>
       </div>
