@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import CTAButton from "../../../../Home/CTAButton";
 import {
   resetCourseState,
   setStep,
@@ -9,6 +8,7 @@ import {
 import { COURSE_STATUS } from "../../../../../utils/constant";
 import { editCourseDetails } from "../../../../../services/operations/courseapis";
 import { useNavigate } from "react-router-dom";
+import CTAButton from './../../../../Home/CTAButton';
 
 const PublishingCourseForm = () => {
   const { register, handleSubmit, setValue, getValues } = useForm();
@@ -69,14 +69,14 @@ const PublishingCourseForm = () => {
             <span className="ml-2 text-xl">Make this Course Public</span>
           </label>
         </div>
-        <div className="flex justify-end gap-x-3">
+        <div className="flex justify-end gap-x-3 mt-8">
           {/* Navigation Button */}
-          <CTAButton active={false} text="Back" action={goBack} />
+          <div><CTAButton active={false} text="Back" action={goBack} />
           {/* Submit Button */}
-          <CTAButton
+          </div><div><CTAButton
             active={true}
             text={editCourse ? "Save Changes" : "Save"}
-          />
+          /></div>
         </div>
       </form>
     </div>

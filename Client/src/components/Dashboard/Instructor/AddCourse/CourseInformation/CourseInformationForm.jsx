@@ -258,18 +258,22 @@ const CourseInformationForm = () => {
       {/* Next Button */}
       <div className="flex justify-end gap-x-3">
         {editCourse && (
-          <CTAButton
-            active={false}
-            text="Continue Without Saving"
-            arrow={false}
-            action={() => dispatch(setStep(2))}
-          />
+          <div>
+            <CTAButton
+              active={false}
+              text="Continue Without Saving"
+              arrow={false}
+              action={() => dispatch(setStep(2))}
+            />
+          </div>
         )}
-        <CTAButton
-          active={true}
-          text={!editCourse ? "Next" : "Save Changes"}
-          arrow={!editCourse && true}
-        />
+        <div>
+          <CTAButton
+            active={true}
+            text={!editCourse ? "Next" : "Save Changes"}
+            arrow={!editCourse && true}
+          />
+        </div>
       </div>
     </form>
   );

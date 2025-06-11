@@ -137,7 +137,13 @@ exports.editCourseDetails = async (req, res) => {
         message: "Course not found",
       });
     }
-
+    // --- PUBLISH LOGIC ---
+    if(updateData.status=="Draft"&&courseDetails.studentsEnrolled.length!=0){
+      return res.status(404).json({
+        success: false,
+        message:"Cannot change course visibility. Students are already enrolled."
+      });
+    }
     // --- TAG LOGIC ---
     if (updateData.tag) {
       updateData.tag = JSON.parse(updateData.tag).map((tag) =>
@@ -222,7 +228,7 @@ exports.getAllCourses = async (req, res) => {
   try {
     // fetch all tags from DB
     const allCourses = await Course.find(
-      {},
+      { status: "Published" },
       {
         courseName: true,
         instructor: true,
@@ -233,8 +239,7 @@ exports.getAllCourses = async (req, res) => {
       }
     )
       .populate("instructor")
-      .populate("ratingAndReviews")
-      .populate("studentsEnrolled");
+      .populate("ratingAndReviews");
 
     return res.status(200).json({
       success: true,
@@ -455,6 +460,7 @@ exports.getCoursesBySearch = async (req, res) => {
     const search = req.params.searchTerm; // or req.query.searchTerm if using query param
     console.log(search);
     const courses = await Course.find({
+      status: "Published",
       $or: [
         { tag: { $regex: search, $options: "i" } },
         { title: { $regex: search, $options: "i" } },
@@ -476,4 +482,4 @@ exports.getCoursesBySearch = async (req, res) => {
       .status(500)
       .json({ success: false, message: "Internal server error." });
   }
-}
+};
