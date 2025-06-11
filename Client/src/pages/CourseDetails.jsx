@@ -59,7 +59,9 @@ const CourseDetails = () => {
   };
 
   if (loading || !response) {
-    return <Loading />;
+    return <div className="grid h-[90vh] place-items-center">
+        <Loading/>
+      </div>;
   }
 
   const {
@@ -80,8 +82,8 @@ const CourseDetails = () => {
   // console.log(user?._id, studentsEnrolled, isUserEnrolled);
   if (paymentLoading) {
     return (
-      <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
-        <div className="spinner"></div>
+      <div className="grid h-[90vh] place-items-center">
+        <Loading/>
       </div>
     );
   }

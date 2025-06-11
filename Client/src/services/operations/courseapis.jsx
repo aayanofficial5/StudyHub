@@ -244,7 +244,7 @@ export const getStudentCourses = async () => {
 // getCourseBySearch courses
 export const getCoursesBySearch = async (searchTerm) => {
   try {
-    console.log(getCoursesBySearchApi + searchTerm);
+    // console.log(getCoursesBySearchApi + searchTerm);
     const response = await apiConnector(
       "GET",
       getCoursesBySearchApi + searchTerm

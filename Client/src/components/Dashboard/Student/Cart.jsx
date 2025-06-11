@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CartItem from "./CartItem";
 import { buyCourse } from "../../../services/operations/studentFeaturesApi";
+import Loading from './../../Loading';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -10,7 +11,8 @@ const Cart = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const { user } = useSelector((state) => state.profile);
   const { token } = useSelector((state) => state.auth);
-  const dispatch = useDispatch;
+  const { paymentLoading } = useSelector((state) => state.course);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const total = cart.reduce((sum, curr) => sum + curr.price, 0);
@@ -25,6 +27,14 @@ const Cart = () => {
       buyCourse(courses, user, navigate, dispatch);
     }
   };
+
+  if (paymentLoading) {
+    return (
+      <div className="grid h-[90vh] w-full place-items-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full min-h-screen gap-6 opacity-80 py-10">

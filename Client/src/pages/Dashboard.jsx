@@ -21,7 +21,7 @@ const Dashboard = () => {
     <div className="relative">
       <div className="flex flex-row min-h-fit w-full gap-10">
         <SideBar setLogoutModal={setLogoutModal} />
-        <div className="flex justify-center items-center w-full px-20 my-10">
+        <div className="flex justify-center items-center w-full px-10 lg:px-20 my-10">
           {loading ? <Loading /> : <Outlet context={{ setDeletionModal }} />}
         </div>
       </div>

@@ -3,6 +3,7 @@ import { apiConnector } from "./../apiConnector";
 import logo from "../../assets/icon.png";
 import { toast } from "react-hot-toast";
 import { resetCart } from "../../redux/slices/cartSlice";
+import { setPaymentLoading } from "../../redux/slices/courseSlice";
 const { coursePaymentApi, verifyPaymentApi, sendPaymentSuccessEmailApi } =
   paymentEndpoints;
 
@@ -43,14 +44,8 @@ export async function buyCourse(courses, user, navigate, dispatch) {
         email: user.email,
       },
       handler: async (response) => {
-        const verified = await verifyPayment(
-          { ...response, courses },
-          navigate,
-          dispatch
-        );
-        if (verified) {
-          await sendPaymentSuccessEmail(response, orderResponse);
-        }
+        sendPaymentSuccessEmail(response, orderResponse);
+        verifyPayment({ ...response, courses }, navigate, dispatch);
       },
 
       notes: {
@@ -62,6 +57,10 @@ export async function buyCourse(courses, user, navigate, dispatch) {
     };
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
+    paymentObject.on("payment.failed", (response) => {
+      console.error("Payment failed:", response);
+      toast.error("Payment failed, please try again.");
+    });
   } catch (error) {
     console.error("Error in buyCourse:", error);
     toast.error("Something went wrong, please try again later.");
@@ -86,27 +85,24 @@ function loadScript(src) {
 
 async function verifyPayment(paymentData, navigate, dispatch) {
   const toastId = toast.loading("Verifying payment...");
-  let result = null;
+  dispatch(setPaymentLoading(true));
   try {
     const response = await apiConnector("POST", verifyPaymentApi, paymentData);
     if (!response.data.success) {
-      throw new Error(response.data.message || "Payment verification failed");
+      throw new Error(response.data.message);
     }
     console.log("Payment verified Response:", response);
     toast.success(response?.data?.message);
     dispatch(resetCart());
     localStorage.setItem("totalItems", JSON.stringify(0));
     navigate("/dashboard/enrolled-courses");
-    result = response;
   } catch (error) {
     console.error("Error in verifyPayment:", error);
-    const errMsg =
-      error?.response?.data?.message ||
-      "Could not verify payment, please try again later.";
+    const errMsg = error?.response?.data?.message;
     toast.error(errMsg);
   } finally {
     toast.dismiss(toastId);
-    return result;
+    dispatch(setPaymentLoading(false));
   }
 }
 

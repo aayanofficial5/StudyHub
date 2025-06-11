@@ -35,11 +35,7 @@ export default function EnrolledCourses() {
 
   return (
     <div className="flex flex-col gap-6 w-full opacity-80 min-h-screen">
-      <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Enrolled Courses</h1>
-        <button className="text-3xl font-bold">+</button>
-      </div>
-
       {/* Filter Tabs */}
       <div className="flex gap-4">
         {["All", "Pending", "Completed"].map((tab) => (
@@ -67,7 +63,8 @@ export default function EnrolledCourses() {
           </div>
         </div>
 
-        {filteredCourses.map((course) => (
+
+        {filteredCourses.length!=0&&filteredCourses.map((course) => (
           <div
             key={course.id}
             className="flex flex-row bg-gray-800/80 p-4 rounded-lg hover:bg-gray-800 transition cursor-pointer lg:gap-20"
@@ -114,6 +111,9 @@ export default function EnrolledCourses() {
             </div>
           </div>
         ))}
+        {filteredCourses.length==0&&<div className="flex justify-center items-center w-full rounded-b-xl bg-gray-800 h-[50vh] text-2xl"><div>You are not Enrolled in any Courses!</div></div>}
+
+
       </div>
     </div>
   );
