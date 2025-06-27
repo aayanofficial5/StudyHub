@@ -13,14 +13,14 @@ const SideBarLink = ({link,icon}) => {
       key={link.id}
       to={link.path}
       className={({ isActive }) =>
-        isActive ? "border-l-4 border-blue-500 text-blue-500 bg-gray-800" : "border-l-4 border-transparent"
+        isActive ? "border-b-4 md:border-b-0 md:border-l-4 border-blue-500 text-blue-500 bg-gray-900" : "border-b-4 md:border-b-0 md:border-l-4 border-transparent"
       }
     >
-      <div className="flex items-center gap-2 px-8 py-2" onClick={()=>{
+      <div className="flex items-center gap-2 px-4 md:px-8 pt-3 pb-2" onClick={()=>{
         link.name=="Add Course"&&dispatch(setEditCourse(null));
       }}>
-        <Icon className="text-xl"/>
-        <span>{link.name}</span>
+        <Icon className="text-2xl md:text-xl"/>
+        <span className="hidden lg:block">{link.name}</span>
       </div>
     </NavLink>
   );
