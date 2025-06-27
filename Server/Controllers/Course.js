@@ -4,6 +4,8 @@ const { fileUploader } = require("../utils/fileUploader");
 const Category = require("../Models/Category");
 const User = require("../models/User");
 const Course = require("../models/Course");
+const CourseProgress = require("../Models/CourseProgress");
+const convertSecondsToDuration = require("../utils/secToDuration");
 require("dotenv").config();
 
 // createCourse Handler Function
@@ -138,10 +140,14 @@ exports.editCourseDetails = async (req, res) => {
       });
     }
     // --- PUBLISH LOGIC ---
-    if(updateData.status=="Draft"&&courseDetails.studentsEnrolled.length!=0){
+    if (
+      updateData.status == "Draft" &&
+      courseDetails.studentsEnrolled.length != 0
+    ) {
       return res.status(404).json({
         success: false,
-        message:"Cannot change course visibility. Students are already enrolled."
+        message:
+          "Cannot change course visibility. Students are already enrolled.",
       });
     }
     // --- TAG LOGIC ---
@@ -274,7 +280,7 @@ exports.getCourseDetails = async (req, res) => {
       .populate("category")
       .populate({ path: "courseContent", populate: { path: "subSection" } })
       .populate("tag")
-      .populate("ratingAndReviews")
+      .populate({ path: "ratingAndReviews", populate: { path: "user" } })
       .populate("studentsEnrolled");
 
     // validate courseDetails
@@ -423,7 +429,7 @@ exports.getStudentCourses = async (req, res) => {
       .populate("category")
       .populate({ path: "courseContent", populate: { path: "subSection" } })
       .populate("tag");
-
+    // console.log("Courses:", courses);
     const data = courses.map((course) => ({
       id: course._id,
       thumbnail: course.thumbnail,
@@ -438,6 +444,8 @@ exports.getStudentCourses = async (req, res) => {
         );
       }, 0),
       progress: course.studentsEnrolled.includes(studentId) ? 50 : 100,
+      sectionId: course.courseContent[0]._id,
+      subSectionId: course.courseContent[0].subSection[0]._id,
     }));
 
     return res.status(200).json({
@@ -481,5 +489,73 @@ exports.getCoursesBySearch = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Internal server error." });
+  }
+};
+
+// getFullCourseDetails
+exports.getFullCourseDetails = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const userId = req.user.id;
+    const courseDetails = await Course.findOne({
+      _id: courseId,
+    })
+      .populate({
+        path: "instructor",
+        populate: {
+          path: "additionalDetails",
+        },
+      })
+      .populate("category")
+      .populate("ratingAndReviews")
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      });
+
+    // console.log("courseDetails : ", courseDetails);
+
+    let courseProgressCount = await CourseProgress.findOne({
+      courseId: courseId,
+      userId: userId,
+    });
+
+    // console.log("courseProgressCount : ", courseProgressCount);
+
+    if (!courseDetails) {
+      return res.status(400).json({
+        success: false,
+        message: `Could not find course with id: ${courseId}`,
+      });
+    }
+
+    let totalDurationInSeconds = 0;
+    courseDetails.courseContent.forEach((content) => {
+      content.subSection.forEach((subSection) => {
+        const timeDurationInSeconds = parseInt(subSection.timeDuration);
+        totalDurationInSeconds += timeDurationInSeconds;
+      });
+    });
+
+    const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+
+    return res.status(200).json({
+      success: true,
+      message: "Full course details fetched successfully",
+      data: {
+        courseDetails,
+        totalDuration,
+        completedVideos: courseProgressCount?.completedVideos
+          ? courseProgressCount?.completedVideos
+          : [],
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `Error fetching full course details: ${error.message}`,
+    });
   }
 };

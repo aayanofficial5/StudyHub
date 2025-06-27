@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const {
   paymentSuccessEmail,
 } = require("../Templates/Mails/paymentSuccessEmail");
+const CourseProgress = require("../Models/CourseProgress");
 require("dotenv").config();
 
 // capturePayment handler function
@@ -123,8 +124,8 @@ exports.verifyPayment = async (req, res) => {
     }
 
     // Proceed to enroll user in courses
-    const updatedUser = await User.findById(userId);
-    if (!updatedUser) {
+    const user = await User.findById(userId);
+    if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found.",
@@ -147,20 +148,31 @@ exports.verifyPayment = async (req, res) => {
             errors.push(`Course with ID ${courseId} not found.`);
             return;
           }
+          const courseProgress = await CourseProgress.create({
+            courseId: courseId,
+            userId: userId,
+            completedVideos: [],
+          });
+          // console.log("Course Progress Created:", courseProgress);
 
-          await User.findByIdAndUpdate(
+          const enrolledStudent = await User.findByIdAndUpdate(
             userId,
-            { $addToSet: { course: courseId } },
+            {
+              $addToSet: {
+                courses: courseId,
+                courseProgress: courseProgress._id,
+              },
+            },
             { new: true }
           );
 
           await mailSender(
-            updatedUser.email,
+            enrolledStudent.email,
             "Course Purchased Successfully",
             coursePurchased(
-              updatedUser.email,
-              updatedUser.firstName,
-              updatedCourse.courseName
+              enrolledStudent.email,
+              enrolledStudent.firstName,
+              enrolledStudent.courseName
             )
           );
 

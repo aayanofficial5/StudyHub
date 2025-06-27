@@ -18,6 +18,7 @@ const {
   getInstructorCourses,
   getStudentCourses,
   getCoursesBySearch,
+  getFullCourseDetails,
 } = require("../Controllers/Course");
 const {
   createSection,
@@ -29,6 +30,8 @@ const {
   updateSubSection,
   deleteSubSection,
 } = require("../Controllers/SubSection");
+const { updateCourseProgress } = require("../Controllers/CourseProgress");
+const { createRatingAndReview, getAllRatingAndReview } = require("../Controllers/RatingAndReview");
 
 // routes
 
@@ -46,7 +49,8 @@ router.get("/instructor", auth, isInstructor, getInstructorCourses);
 router.get("/student", auth, isStudent, getStudentCourses);
 router.get("/:courseId", getCourseDetails);
 router.get("/search/:searchTerm", getCoursesBySearch);
-
+router.get("/full/:courseId", auth, isStudent, getFullCourseDetails);
+router.put("/progress", auth, isStudent, updateCourseProgress);
 // sections routes
 router.post("/section", auth, isInstructor, createSection);
 router.put("/section", auth, isInstructor, updateSection);
@@ -57,4 +61,7 @@ router.post("/section/subsection/", auth, isInstructor, createSubSection);
 router.put("/section/subsection", auth, isInstructor, updateSubSection);
 router.delete("/section/subsection", auth, isInstructor, deleteSubSection);
 
+// rating routes
+router.post("/rating", auth, isStudent, createRatingAndReview);
+router.get("/rating",getAllRatingAndReview);
 module.exports = router;
