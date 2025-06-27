@@ -27,6 +27,9 @@ import MyCourses from "./components/Dashboard/Instructor/MyCourses";
 import Reports from "./components/Dashboard/Instructor/Reports.jsx";
 import Catalog from "./pages/Catalog.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
+import VideoDetails from "./components/Core/ViewCourse/VideoDetails.jsx";
+import ViewCourse from "./pages/ViewCourse.jsx";
+import { ACCOUNT_TYPE } from "./utils/constant.js";
 
 const App = () => {
   const { pathname } = useLocation();
@@ -52,9 +55,26 @@ const App = () => {
           <Route path="/reset-password-link" element={<ResetPasswordLink />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           {/* Course Routes */}
-          <Route path="course/:courseId" element={<CourseDetails/>} />
+          <Route path="course/:courseId" element={<CourseDetails />} />
           <Route path="/search/:searchTerm" element={<Courses />}></Route>
           <Route path="/catalog/:catalogName" element={<Catalog />} />
+          {/*View Course Routes */}
+          <Route
+            element={
+              <PrivateRoute>
+                <ViewCourse />
+              </PrivateRoute>
+            }
+          >
+            {user?.accountType === ACCOUNT_TYPE.STUDENT && (
+              <>
+                <Route
+                  path="view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
+                  element={<VideoDetails/>}
+                />
+              </>
+            )}
+          </Route>
           {/* Dashboard Routes */}
           <Route
             element={

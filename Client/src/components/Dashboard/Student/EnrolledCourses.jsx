@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getStudentCourses } from "../../../services/operations/courseapis";
 import { useNavigate } from "react-router-dom";
+import convertSecondsToDuration from "../../../utils/secToDuration";
+import CTAButton from "../../Home/CTAButton";
 
 export default function EnrolledCourses() {
   const { user } = useSelector((state) => state.profile);
@@ -26,16 +28,9 @@ export default function EnrolledCourses() {
     return true;
   });
 
-  const formatDuration = (totalSeconds) => {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = Math.floor(totalSeconds % 60);
-    return `${hours}h ${minutes}m ${seconds}s`;
-  };
-
   return (
     <div className="flex flex-col gap-6 w-full opacity-80 min-h-screen">
-        <h1 className="text-3xl font-bold">Enrolled Courses</h1>
+      <h1 className="text-3xl font-bold">Enrolled Courses</h1>
       {/* Filter Tabs */}
       <div className="flex gap-4">
         {["All", "Pending", "Completed"].map((tab) => (
@@ -63,57 +58,63 @@ export default function EnrolledCourses() {
           </div>
         </div>
 
-
-        {filteredCourses.length!=0&&filteredCourses.map((course) => (
-          <div
-            key={course.id}
-            className="flex flex-row bg-gray-800/80 p-4 rounded-lg hover:bg-gray-800 transition cursor-pointer lg:gap-20"
-            onClick={() => navigate(`/course/${course.id}`)}
-          >
-            <div className="flex flex-col lg:flex-row items-center justify-between flex-grow">
-              {/* Course Info */}
-              <div className="flex items-center gap-4 w-full lg:w-1/3">
-                <img
-                  src={course.thumbnail}
-                  alt="thumbnail"
-                  loading="lazy"
-                  className="w-25 rounded-md object-contain"
-                />
-                <div>
-                  <h3 className="font-semibold text-lg">{course.title}</h3>
-                  <p className="text-sm text-gray-400">
-                    {course.description.substring(0, 50) + "..."}
-                  </p>
+        {/* {console.log("courses",filteredCourses)} */}
+        {filteredCourses.length != 0 &&
+          filteredCourses.map((course) => (
+            <div
+              key={course.id}
+              className="flex flex-row bg-gray-800/80 p-4 rounded-lg hover:bg-gray-800 transition cursor-pointer lg:gap-20"
+              onClick={() => navigate(`/view-course/${course.id}/section/${course.sectionId}/sub-section/${course.subSectionId}`)}
+            >
+              <div className="flex flex-col lg:flex-row items-center justify-between flex-grow">
+                {/* Course Info */}
+                <div className="flex items-center gap-4 w-full lg:w-1/3">
+                  <img
+                    src={course.thumbnail}
+                    alt="thumbnail"
+                    loading="lazy"
+                    className="w-25 rounded-md object-contain"
+                  />
+                  <div>
+                    <h3 className="font-semibold text-lg">{course.title}</h3>
+                    <p className="text-sm text-gray-400">
+                      {course.description.substring(0, 50) + "..."}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Duration */}
-              <div className="text-sm text-gray-300 w-full lg:w-[120px] mt-4 lg:mt-0">
-                {formatDuration(course.duration)}
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full lg:w-1/3 mt-4 lg:mt-0">
-                <div className="text-xs text-gray-300 mb-1">
-                  {course.progress === 100
-                    ? "Completed"
-                    : `Progress ${course.progress}%`}
+                {/* Duration */}
+                <div className="text-sm text-gray-300 w-full lg:w-[120px] mt-4 lg:mt-0">
+                  {convertSecondsToDuration(course.duration)}
                 </div>
-                <div className="w-full bg-gray-600 h-2 rounded-full">
-                  <div
-                    className={`h-2 rounded-full ${
-                      course.progress === 100 ? "bg-green-400" : "bg-yellow-400"
-                    }`}
-                    style={{ width: `${course.progress}%` }}
-                  ></div>
+
+                {/* Progress Bar */}
+                <div className="w-full lg:w-1/3 mt-4 lg:mt-0">
+                  <div className="text-xs text-gray-300 mb-1">
+                    {course.progress === 100
+                      ? "Completed"
+                      : `Progress ${course.progress}%`}
+                  </div>
+                  <div className="w-full bg-gray-600 h-2 rounded-full">
+                    <div
+                      className={`h-2 rounded-full ${
+                        course.progress === 100
+                          ? "bg-green-400"
+                          : "bg-yellow-400"
+                      }`}
+                      style={{ width: `${course.progress}%` }}
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>
+          ))}
+        {filteredCourses.length == 0 && (
+          <div className="flex flex-col gap-5 justify-center items-center w-full rounded-b-xl bg-gray-800 h-[50vh] text-2xl">
+            <div>You are not Enrolled in any Courses!</div>
+            <div className="text-lg"><CTAButton text="Buy Available Courses" active="true" arrow={true} action={()=>navigate("/search/all-courses")}/></div>
           </div>
-        ))}
-        {filteredCourses.length==0&&<div className="flex justify-center items-center w-full rounded-b-xl bg-gray-800 h-[50vh] text-2xl"><div>You are not Enrolled in any Courses!</div></div>}
-
-
+        )}
       </div>
     </div>
   );

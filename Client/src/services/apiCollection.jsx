@@ -1,3 +1,5 @@
+import { getFullDetailsOfCourse } from "./operations/courseapis";
+
 export const courseEndpoints = {
   // course
   createCourseApi: "/course",
@@ -8,6 +10,7 @@ export const courseEndpoints = {
   getInstructorCoursesApi: "/course/instructor",
   getStudentCoursesApi: "/course/student",
   getCoursesBySearchApi: "/course/search/",
+  getFullDetailsOfCourseApi: "/course/full/",
   // category
   getCourseCategoriesApi: "/course/categories",
   createCategoryApi: "/course/categories",
@@ -20,6 +23,11 @@ export const courseEndpoints = {
   createSubSectionApi: "/course/section/subsection",
   updateSubSectionApi: "/course/section/subsection",
   deleteSubSectionApi: "/course/section/subsection",
+  // progress,
+  lectureCompletionApi: "/course/progress",
+  // rating and review
+  createRatingApi: "/course/rating",
+  getAllRatingApi: "/course/rating",
 };
 
 export const authEndpoints = {
