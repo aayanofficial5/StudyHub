@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const CourseCard = ({ course, height = 380, width = 350 }) => {
   const { courseName,price, studentsEnrolled, thumbnail } = course;
-  console.log(course);
+  // console.log(course);
   const [avgReviewCount, setAvgReviewCount] = useState(0);
   useEffect(() => {
     const count = getAvgRating(course.ratingAndReviews);
@@ -49,7 +49,7 @@ const CourseCard = ({ course, height = 380, width = 350 }) => {
           </div>
         </div>
         <p className="text-left text-md font-bold text-green-400 mt-3">
-          {!studentsEnrolled.includes(user._id) ? "₹" + price : "Enrolled"}
+          {!studentsEnrolled?.includes(user?._id) ? "₹" + price : "Enrolled"}
         </p>
       </div>
     </div>

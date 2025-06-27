@@ -12,11 +12,17 @@ import formatDate from "../services/formatDate";
 import CourseContentBar from "../components/Core/Course/CourseContentBar";
 import CourseDetailsCard from "../components/Core/Course/CourseDetailsCard";
 import { buyCourse } from "../services/operations/studentFeaturesApi";
+import { ACCOUNT_TYPE } from "../utils/constant";
+import CTAButton from "../components/Home/CTAButton";
+import { setTotalItems } from "../redux/slices/cartSlice";
+import profilePlaceholder from "../assets/profilePlaceholder.jpg";
+import { toast } from "react-hot-toast";
 
 const CourseDetails = () => {
   const { user } = useSelector((state) => state.profile);
   const { token } = useSelector((state) => state.auth);
   const { loading } = useSelector((state) => state.profile);
+  const { totalItems } = useSelector((state) => state.cart);
   const { paymentLoading } = useSelector((state) => state.course);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,13 +65,14 @@ const CourseDetails = () => {
   };
 
   if (loading || !response) {
-    return <div className="grid h-[90vh] place-items-center">
-        <Loading/>
-      </div>;
+    return (
+      <div className="grid h-[90vh] place-items-center">
+        <Loading />
+      </div>
+    );
   }
 
   const {
-    _id: course_id,
     courseName,
     courseDescription,
     thumbnail,
@@ -78,15 +85,29 @@ const CourseDetails = () => {
     createdAt,
   } = response;
 
+  const sectionId = response.courseContent[0]._id;
+  const subSectionId = response.courseContent[0].subSection[0]._id;
+
   const isUserEnrolled = studentsEnrolled.some((e) => e._id === user?._id);
   // console.log(user?._id, studentsEnrolled, isUserEnrolled);
   if (paymentLoading) {
     return (
       <div className="grid h-[90vh] place-items-center">
-        <Loading/>
+        <Loading />
       </div>
     );
   }
+
+  const handleAddToCart = (course) => {
+    if (token) {
+      const existingItems =
+        JSON.parse(localStorage.getItem("totalItems")) || [];
+      const updatedItems = [...existingItems, course];
+      localStorage.setItem("totalItems", JSON.stringify(updatedItems));
+      dispatch(setTotalItems(updatedItems));
+      toast.success("Added to Cart");
+    }
+  };
 
   return (
     <>
@@ -133,29 +154,52 @@ const CourseDetails = () => {
             </div>
 
             {/* Mobile Buy Buttons */}
-            <div className="flex w-full flex-col gap-4 border-y border-gray-600 py-4 lg:hidden">
-              {user && isUserEnrolled ? (
-                <button
-                  className="bg-green-600 text-white py-2 px-4 rounded uppercase tracking-wider"
-                  onClick={() => navigate("/dashboard/enrolled-courses")}
-                >
-                  Go to Course
-                </button>
+            <div className="w-[100%] md:hidden border-y-1 border-gray-600 pt-2 pb-4">
+              {!isUserEnrolled && (
+                <div className="text-3xl text-center font-semibold text-white pb-2">
+                  ₹ {price}
+                </div>
+              )}
+              {user ? (
+                user.accountType === ACCOUNT_TYPE.STUDENT && (
+                  <div className="flex flex-col gap-4">
+                    <CTAButton
+                      active={true}
+                      text={isUserEnrolled ? "Go To Course" : "Buy Now"}
+                      action={
+                        isUserEnrolled
+                          ? () =>
+                              navigate(
+                                `/view-course/${courseId}/section/${sectionId}/sub-section/${subSectionId}`
+                              )
+                          : handleBuyCourse
+                      }
+                    />
+
+                    {!isUserEnrolled &&
+                    !totalItems.some((item) => item._id === response._id) ? (
+                      <CTAButton
+                        active={false}
+                        text="Add to Cart"
+                        action={() => handleAddToCart(response)}
+                      />
+                    ) : (
+                      !isUserEnrolled && (
+                        <CTAButton
+                          active={false}
+                          text="Go to Cart"
+                          action={() => navigate("/dashboard/cart")}
+                        />
+                      )
+                    )}
+                  </div>
+                )
               ) : (
-                <>
-                  <p className="pb-4 text-center text-3xl font-semibold text-white">
-                    Rs. {price}
-                  </p>
-                  <button
-                    className="bg-yellow-400 text-black py-2 px-4 rounded uppercase tracking-wider"
-                    onClick={handleBuyCourse}
-                  >
-                    Buy Now
-                  </button>
-                  <button className="bg-black text-white py-2 px-4 rounded uppercase tracking-wider">
-                    Add to Cart
-                  </button>
-                </>
+                <CTAButton
+                  active={true}
+                  text={<p>LOGIN TO BUY COURSE</p>}
+                  action={() => navigate("/login")}
+                />
               )}
             </div>
           </div>
@@ -166,6 +210,7 @@ const CourseDetails = () => {
               course={response}
               handleBuyCourse={handleBuyCourse}
               isUserEnrolled={isUserEnrolled}
+              handleAddToCart={handleAddToCart}
             />
           </div>
         </div>
@@ -240,6 +285,40 @@ const CourseDetails = () => {
               <p className="text-gray-400">
                 {instructor?.additionalDetails?.about}
               </p>
+            </div>
+            <div className="mb-12 py-4 border-1 p-5">
+              <p className="text-[30px] font-semibold">Reviews</p>
+              <div className="flex items-center gap-4 py-4">
+                <span className="text-2xl">{`${avgReviewCount}/5`}</span>
+                <span className="text-lg text-gray-400">{`(${ratingAndReviews.length} ratings) | ${studentsEnrolled.length} students`}</span>
+              </div>
+              {ratingAndReviews.length > 0 ? (
+                ratingAndReviews.map((review, index) => (
+                  <div
+                    key={index}
+                    className="w-full  border-b border-gray-300 bg-gray-800 space-y-4 p-3 text-gray-200 text-sm"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-1">
+                        <img
+                          className="h-10 w-10 mr-2 rounded-full"
+                          src={review?.user?.image || profilePlaceholder}
+                          alt="userImage1"
+                        />
+                        <div>
+                          <p className="text-gray-100 text-lg font-medium">
+                            {review?.user?.firstName || "Anomynous"} {review?.user?.lastName}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <RatingStars Review_Count={review?.rating} Star_Size={20} />
+                    <p>“{review?.review}”</p>
+                  </div>
+                ))
+              ) : (
+                <p>No reviews yet.</p>
+              )}
             </div>
           </div>
         </div>

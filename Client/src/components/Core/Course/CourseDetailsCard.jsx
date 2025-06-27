@@ -8,7 +8,7 @@ import { setTotalItems } from "../../../redux/slices/cartSlice";
 import { ACCOUNT_TYPE } from "../../../utils/constant";
 import CTAButton from "./../../Home/CTAButton";
 
-function CourseDetailsCard({ course, handleBuyCourse ,isUserEnrolled}) {
+function CourseDetailsCard({ course, handleBuyCourse ,isUserEnrolled ,handleAddToCart}) {
   const { user } = useSelector((state) => state.profile);
   const { token } = useSelector((state) => state.auth);
   const { totalItems } = useSelector((state) => state.cart);
@@ -21,21 +21,15 @@ function CourseDetailsCard({ course, handleBuyCourse ,isUserEnrolled}) {
     _id: courseId,
   } = course;
 
+  const sectionId = course.courseContent[0]._id
+  const subSectionId = course.courseContent[0].subSection[0]._id;
+
   const handleShare = () => {
     copy(window.location.href);
     toast.success("Link copied to Clipboard");
   };
 
-  const handleAddToCart = () => {
-    if (token) {
-      const existingItems =
-        JSON.parse(localStorage.getItem("totalItems")) || [];
-      const updatedItems = [...existingItems, course];
-      localStorage.setItem("totalItems", JSON.stringify(updatedItems));
-      dispatch(setTotalItems(updatedItems));
-      toast.success("Added to Cart");
-    }
-  };
+  
 
   return (
     <div className="flex flex-col gap-4 rounded-md bg-gray-800/80 p-4 text-white shadow-md">
@@ -61,7 +55,7 @@ function CourseDetailsCard({ course, handleBuyCourse ,isUserEnrolled}) {
                 text={isUserEnrolled ? "Go To Course" : "Buy Now"}
                 action={
                   isUserEnrolled
-                    ? () => navigate("/dashboard/enrolled-courses")
+                    ? () => navigate(`/view-course/${courseId}/section/${sectionId}/sub-section/${subSectionId}`)
                     : handleBuyCourse
                 }
               />
@@ -71,7 +65,7 @@ function CourseDetailsCard({ course, handleBuyCourse ,isUserEnrolled}) {
                 <CTAButton
                   active={false}
                   text="Add to Cart"
-                  action={handleAddToCart}
+                  action={()=>handleAddToCart(course)}
                 />
               ) : (
                 !isUserEnrolled && (
