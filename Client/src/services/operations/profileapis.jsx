@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import {  settingsEndpoints } from "../apiCollection";
 import { apiConnector } from "./../apiConnector";
 import { setUser } from "../../redux/slices/profileSlice";
+import { logout } from "./authapis";
 
 const {
   updateProfilePictureApi,
@@ -83,8 +84,8 @@ export const deleteAccount = (navigate) => {
         throw new Error(response.data.message);
       }
       toast.success(response.data.message);
+      dispatch(logout());
       navigate("/login");
-      localStorage.removeItem("user");
     } catch (error) {
       console.error("Delete Account Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";

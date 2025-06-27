@@ -15,20 +15,39 @@ import HighlightBanner from "../components/Home/HighlightBanner";
 import { useEffect } from "react";
 import Testimonials from "../components/Common/Testimonials";
 import { getAllCourses } from "../services/operations/courseapis";
-import { useSelector } from "react-redux";
-import CourseCard from './../components/Common/CourseCard';
+import { useDispatch, useSelector } from "react-redux";
+import CourseCard from "./../components/Common/CourseCard";
 import Footer from "../components/Home/Footer";
+import { logout } from "../services/operations/authapis";
 const Home = () => {
   const [search, setSearch] = useState("");
   const [courseData, setCourseData] = useState([]);
-  const {user} = useSelector((state)=>state.profile);
+  const { user } = useSelector((state) => state.profile);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const fetchTopCourses = async () => {
     const data = await getAllCourses();
-    if(data.length>0)
-      setCourseData(data);
+    if (data.length > 0) setCourseData(data);
   };
+
+  function getTokenFromCookie(tokenName) {
+    const cookies = document.cookie.split(";");
+    // console.log("Cookies:", cookies);
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split("=");
+      if (name === tokenName) {
+        return decodeURIComponent(value);
+      }
+    }
+    return null;
+  }
+  const token = getTokenFromCookie("token");
+
   useEffect(() => {
+    // console.log("Token:", token);
+    // if (!token) {
+    //   dispatch(logout());
+    // }
     fetchTopCourses();
   }, []);
 
@@ -38,16 +57,20 @@ const Home = () => {
       // setSearch("");
       navigate(`/search/${search}`);
     }
-  }
+  };
 
   return (
     <div>
       {/* Section1 */}
       <section>
         <div className="relative mx-auto flex flex-col w-11/12 items-center text-white top-10 justify-between">
-          <form className="flex items-center gap-4 max-w-md w-full mt-5" onSubmit={(e)=>handleSubmit(e)}>
+          <form
+            className="flex items-center gap-4 max-w-md w-full mt-5"
+            onSubmit={(e) => handleSubmit(e)}
+          >
             <div className="flex items-center w-full  h-[50px] rounded-md overflow-hidden  bg-gray-300 text-gray-900">
-              <div className="mx-3"><IoMdSearch size={25} />
+              <div className="mx-3">
+                <IoMdSearch size={25} />
               </div>
               <input
                 type="text"
@@ -56,20 +79,22 @@ const Home = () => {
                 value={search}
                 className="w-full h-full outline-none  placeholder-gray-500 border-l-1 border-gray-400 text-base px-3"
               />
-            
+
               <button className="bg-blue-500 hover:bg-blue-400 h-full px-7 font-semibold text-white">
                 Submit
               </button>
             </div>
           </form>
-          {!user&&<NavLink to="/signup">
-            <div className="group mx-auto rounded-full bg-gray-700 font-bold text-gray-200 transition-all duration-200 hover:scale-97 border-3 border-black hover:border-blue-400 mt-5">
-              <button className="flex flex-row items-center gap-2 rounded-full px-10 py-2 group-hover:bg-black cursor-pointer">
-                <p>Become an Instructor</p>
-                <FaArrowRightLong />
-              </button>
-            </div>
-          </NavLink>}
+          {!user && (
+            <NavLink to="/signup">
+              <div className="group mx-auto rounded-full bg-gray-700 font-bold text-gray-200 transition-all duration-200 hover:scale-97 border-3 border-black hover:border-blue-400 mt-5">
+                <button className="flex flex-row items-center gap-2 rounded-full px-10 py-2 group-hover:bg-black cursor-pointer">
+                  <p>Become an Instructor</p>
+                  <FaArrowRightLong />
+                </button>
+              </div>
+            </NavLink>
+          )}
           <HighlightBanner
             title="Empower your future with the courses designed to"
             highlightedText="fit your choice"
@@ -145,9 +170,11 @@ const Home = () => {
         </div>
         <div className="flex flex-col md:flex-row gap-2 my-7 px-30">
           {courseData.length > 0 &&
-            courseData.slice(0,4).map((course, index) => (
-              <CourseCard key={index} course={course} />
-            ))}
+            courseData
+              .slice(0, 4)
+              .map((course, index) => (
+                <CourseCard key={index} course={course} />
+              ))}
         </div>
         <NavLink to="/search/all-courses">
           <CTAButton active={true} arrow={true} text="View All Courses" />
@@ -174,7 +201,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

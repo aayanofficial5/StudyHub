@@ -127,13 +127,16 @@ export const login = ({ email, password }, navigate) => {
 // logout
 export const logout = (navigate) => {
   return (dispatch) => {
+    console.log("Logging out...");
     dispatch(setToken(null));
     dispatch(setUser(null));
     dispatch(resetCart());
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    toast.success("Logged Out Sucessfully");
-    navigate("/login");
+    if (navigate) {
+      toast.success("Logged Out Sucessfully");
+      navigate("/login");
+    }
   };
 };
 

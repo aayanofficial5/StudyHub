@@ -15,5 +15,4 @@ const formatDate = (dateString) => {
   return date.toLocaleString('en-US', options); // Format as per the options
 };
 
- 
 export default formatDate;
