@@ -9,7 +9,7 @@ function CourseSubSectionBar({ subSec }) {
           <span>
             <HiOutlineVideoCamera />
           </span>
-          <p>{subSec?.title}</p>
+          <p>{subSec?.subSectionName}</p>
         </div>
       </div>
     </div>

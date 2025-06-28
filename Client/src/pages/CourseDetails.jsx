@@ -136,7 +136,7 @@ const CourseDetails = () => {
               </div>
               <div className="text-md flex flex-wrap items-center justify-center gap-2 lg:justify-start">
                 <span className="text-yellow-400">{avgReviewCount}</span>
-                <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
+                <RatingStars Review_Count={parseFloat(avgReviewCount)} Star_Size={24} />
                 <span>({ratingAndReviews.length} reviews)</span>
                 <span>{studentsEnrolled.length} students enrolled</span>
               </div>
@@ -154,7 +154,7 @@ const CourseDetails = () => {
             </div>
 
             {/* Mobile Buy Buttons */}
-            <div className="w-[100%] md:hidden border-y-1 border-gray-600 pt-2 pb-4">
+            <div className="w-[100%] md:hidden border-y-1 border-gray-600 py-3">
               {!isUserEnrolled && (
                 <div className="text-3xl text-center font-semibold text-white pb-2">
                   ₹ {price}
@@ -265,7 +265,7 @@ const CourseDetails = () => {
                 />
               ))}
             </div>
-
+            
             <div className="mb-12 py-4">
               <p className="text-[28px] font-semibold">Author</p>
               <div className="flex items-center gap-4 py-4">
@@ -286,17 +286,18 @@ const CourseDetails = () => {
                 {instructor?.additionalDetails?.about}
               </p>
             </div>
-            <div className="mb-12 py-4 border-1 p-5">
+            {/* Reviews */}
+            <div className="mb-12 py-4 border-1 border-gray-700 p-5">
               <p className="text-[30px] font-semibold">Reviews</p>
               <div className="flex items-center gap-4 py-4">
-                <span className="text-2xl">{`${avgReviewCount}/5`}</span>
+                <span className="text-2xl">{`${avgReviewCount}/5.0`}</span>
                 <span className="text-lg text-gray-400">{`(${ratingAndReviews.length} ratings) | ${studentsEnrolled.length} students`}</span>
               </div>
               {ratingAndReviews.length > 0 ? (
                 ratingAndReviews.map((review, index) => (
                   <div
                     key={index}
-                    className="w-full  border-b border-gray-300 bg-gray-800 space-y-4 p-3 text-gray-200 text-sm"
+                    className="w-full  border-b border-gray-500 bg-gray-900 space-y-4 p-3 text-gray-200 text-sm mb-5"
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-1">
@@ -312,7 +313,10 @@ const CourseDetails = () => {
                         </div>
                       </div>
                     </div>
+                    <div className="flex gap-2">
                     <RatingStars Review_Count={review?.rating} Star_Size={20} />
+                    <p>{review?.rating}</p>
+                    </div>
                     <p>“{review?.review}”</p>
                   </div>
                 ))

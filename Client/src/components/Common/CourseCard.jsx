@@ -42,7 +42,7 @@ const CourseCard = ({ course, height = 380, width = 350 }) => {
 
           <div className="flex items-center gap-2">
             <span className="text-yellow-5">{avgReviewCount || 0}</span>
-            <RatingStars Review_Count={avgReviewCount} />
+            <RatingStars Review_Count={parseFloat(avgReviewCount)} />
             <span className="text-richblack-400">
               {course?.ratingAndReviews?.length} Ratings
             </span>
