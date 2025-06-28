@@ -26,8 +26,8 @@ export const courseEndpoints = {
   // progress,
   lectureCompletionApi: "/course/progress",
   // rating and review
-  createRatingApi: "/course/rating",
-  getAllRatingApi: "/course/rating",
+  createRatingApi: "/course/rating/review",
+  getAllRatingApi: "/course/rating/review",
 };
 
 export const authEndpoints = {

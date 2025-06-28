@@ -13,12 +13,12 @@ import paypal_logo from "../assets/paypal_logo.svg";
 import Coding2 from "../assets/coding2.png";
 import HighlightBanner from "../components/Home/HighlightBanner";
 import { useEffect } from "react";
-import Testimonials from "../components/Common/Testimonials";
-import { getAllCourses } from "../services/operations/courseapis";
+import { getAllCourses, getAllRating } from "../services/operations/courseapis";
 import { useDispatch, useSelector } from "react-redux";
 import CourseCard from "./../components/Common/CourseCard";
 import Footer from "../components/Home/Footer";
 import { logout } from "../services/operations/authapis";
+import ReviewSlider from "../components/Common/ReviewSlider";
 const Home = () => {
   const [search, setSearch] = useState("");
   const [courseData, setCourseData] = useState([]);
@@ -50,6 +50,8 @@ const Home = () => {
     // }
     fetchTopCourses();
   }, []);
+  
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -168,12 +170,12 @@ const Home = () => {
             paragraph="Discover our top-rated courses across various categories. From coding and design to business and wellness, our courses are crafted to deliver results."
           />
         </div>
-        <div className="flex flex-col md:flex-row gap-2 my-7 px-30">
+        <div className="flex flex-row justify-center flex-wrap gap-2 my-7 md:px-10">
           {courseData.length > 0 &&
             courseData
               .slice(0, 4)
               .map((course, index) => (
-                <CourseCard key={index} course={course} />
+                <CourseCard key={index} course={course}/>
               ))}
         </div>
         <NavLink to="/search/all-courses">
@@ -182,7 +184,7 @@ const Home = () => {
       </section>
       {/* Section4 */}
       <section>
-        <Testimonials />
+        <ReviewSlider/>
         <div className="flex flex-col justify-center flex-wrap gap-3 items-center text-center">
           <div className="flex flex-col items-center">
             <HighlightBanner

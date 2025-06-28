@@ -62,6 +62,6 @@ router.put("/section/subsection", auth, isInstructor, updateSubSection);
 router.delete("/section/subsection", auth, isInstructor, deleteSubSection);
 
 // rating routes
-router.post("/rating", auth, isStudent, createRatingAndReview);
-router.get("/rating",getAllRatingAndReview);
+router.post("/rating/review", auth, isStudent, createRatingAndReview);
+router.get("/rating/review",getAllRatingAndReview);
 module.exports = router;

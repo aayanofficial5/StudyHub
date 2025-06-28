@@ -1,10 +1,10 @@
 import React from "react";
 import ContactUsForm from "../components/Common/ContactUsForm";
-import Testimonials from "../components/Common/Testimonials";
 import HighlightBanner from "../components/Home/HighlightBanner";
 import { AiFillMessage } from "react-icons/ai";
 import { HiOfficeBuilding } from "react-icons/hi";
 import { MdCall } from "react-icons/md";
+import ReviewSlider from "../components/Common/ReviewSlider";
 const Contact = () => {
   return (
     <div className="flex flex-col items-center mt-15 w-screen gap">
@@ -47,7 +47,7 @@ const Contact = () => {
         </div>
       </div>
       <div className="mt-15">
-        <Testimonials />
+        <ReviewSlider />
       </div>
     </div>
   );

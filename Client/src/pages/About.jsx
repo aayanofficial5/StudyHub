@@ -10,8 +10,8 @@ import CTAButton from "../components/Home/CTAButton";
 import { NavLink } from "react-router-dom";
 import { aboutCardData, aboutUs } from "../data/aboutPage";
 import ContactUsForm from "../components/Common/ContactUsForm";
-import Testimonials from "../components/Common/Testimonials";
 import Footer from "../components/Home/Footer";
+import ReviewSlider from "../components/Common/ReviewSlider";
 const About = () => {
   return (
     <div>
@@ -155,7 +155,7 @@ Through innovative tools, industry-relevant content, and a strong community of l
       {/*Section 4*/}
       <section>
         <div className="flex flex-col items-center">
-          <Testimonials />
+          <ReviewSlider />
           <div className="flex flex-col items-center border-1 border-gray-700 rounded-lg mt-10">
             <HighlightBanner
               title="Get in Touch"
