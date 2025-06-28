@@ -413,7 +413,6 @@ exports.getInstructorCourses = async (req, res) => {
 exports.getStudentCourses = async (req, res) => {
   try {
     const studentId = req.user.id;
-    // console.log("Student ID:", studentId);
     if (!studentId) {
       return res.status(400).json({
         success: false,
@@ -421,37 +420,103 @@ exports.getStudentCourses = async (req, res) => {
       });
     }
 
-    // Retrieve courses enrolled by the student
-    const courses = await Course.find({
-      studentsEnrolled: studentId,
-    })
+    /* ------------------------------------------------------------------ */
+    /* 1. Get all courses this student is enrolled in                     */
+    /* ------------------------------------------------------------------ */
+    const courses = await Course.find({ studentsEnrolled: studentId })
       .sort({ createdAt: -1 })
       .populate("category")
       .populate({ path: "courseContent", populate: { path: "subSection" } })
       .populate("tag");
-    // console.log("Courses:", courses);
-    const data = courses.map((course) => ({
-      id: course._id,
-      thumbnail: course.thumbnail,
-      title: course.courseName,
-      description: course.courseDescription,
-      duration: course.courseContent.reduce((sum, section) => {
+
+    /* ------------------------------------------------------------------ */
+    /* 2. Get all course‑progress docs for this student in one shot       */
+    /*    (one query is faster than N queries in the loop)                */
+    /* ------------------------------------------------------------------ */
+    const progressDocs = await CourseProgress.find({
+      userId: studentId,
+      courseId: { $in: courses.map(c => c._id) },
+    }).lean();                                     // lean() → plain JS objects
+
+    /* Helper: quick lookup by courseId */
+    const progressMap = new Map(
+      progressDocs.map(doc => [doc.courseId.toString(), doc])
+    );
+
+    /* ------------------------------------------------------------------ */
+    /* 3. Build the response                                              */
+    /* ------------------------------------------------------------------ */
+    const data = courses.map(course => {
+      /* a. Total number of videos (sub‑sections) in the course */
+      const totalVideos = course.courseContent.reduce(
+        (sum, section) => sum + section.subSection.length,
+        0
+      );
+
+      /* b. Number of videos the student has finished in this course */
+      const progressDoc     = progressMap.get(course._id.toString());
+      const completedVideos = progressDoc ? progressDoc.completedVideos.length : 0;
+
+      /* c. Percentage progress, rounded to an integer                  */
+      const progress =
+        totalVideos > 0 ? Math.round((completedVideos / totalVideos) * 100) : 0;
+
+      /* d. Find the first un‑watched video to resume from              */
+      let sectionIdToOpen  = null;
+      let subSectionIdToOpen = null;
+
+      if (totalVideos === 0) {
+        // No content yet – nothing to resume
+        sectionIdToOpen   = null;
+        subSectionIdToOpen = null;
+      } else {
+        const watchedSet = new Set(
+          progressDoc ? progressDoc.completedVideos.map(id => id.toString()) : []
+        );
+
+        outer: for (const section of course.courseContent) {
+          for (const subSec of section.subSection) {
+            if (!watchedSet.has(subSec._id.toString())) {
+              sectionIdToOpen   = section._id;
+              subSectionIdToOpen = subSec._id;
+              break outer;
+            }
+          }
+        }
+
+        // If everything is watched, default to first lecture
+        if (!sectionIdToOpen) {
+          sectionIdToOpen   = course.courseContent[0]._id;
+          subSectionIdToOpen = course.courseContent[0].subSection[0]._id;
+        }
+      }
+
+      /* e. Total course duration (seconds)                             */
+      const durationSeconds = course.courseContent.reduce((sum, section) => {
         return (
           sum +
           section.subSection.reduce((subSum, subSec) => {
             return subSum + (parseFloat(subSec.timeDuration) || 0);
           }, 0)
         );
-      }, 0),
-      progress: course.studentsEnrolled.includes(studentId) ? 50 : 100,
-      sectionId: course.courseContent[0]._id,
-      subSectionId: course.courseContent[0].subSection[0]._id,
-    }));
+      }, 0);
+
+      return {
+        id: course._id,
+        thumbnail: course.thumbnail,
+        title: course.courseName,
+        description: course.courseDescription,
+        duration: durationSeconds,
+        progress,                       // <-- fixed value
+        sectionId: sectionIdToOpen,
+        subSectionId: subSectionIdToOpen,
+      };
+    });
 
     return res.status(200).json({
       success: true,
       message: "Courses retrieved successfully",
-      data: data,
+      data,
     });
   } catch (error) {
     console.error("Error while fetching student courses:", error.message);
