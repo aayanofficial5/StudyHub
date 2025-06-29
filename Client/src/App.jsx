@@ -24,7 +24,7 @@ import { useSelector } from "react-redux";
 import AddCourse from "./components/Dashboard/Instructor/AddCourse/index.jsx";
 import Settings from "./components/Dashboard/Common/Settings/index";
 import MyCourses from "./components/Dashboard/Instructor/MyCourses";
-import Reports from "./components/Dashboard/Instructor/Reports.jsx";
+import Reports from "./components/Dashboard/Instructor/Reports/Reports.jsx";
 import Catalog from "./pages/Catalog.jsx";
 import CourseDetails from "./pages/CourseDetails.jsx";
 import VideoDetails from "./components/Core/ViewCourse/VideoDetails.jsx";
@@ -70,7 +70,7 @@ const App = () => {
               <>
                 <Route
                   path="view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
-                  element={<VideoDetails/>}
+                  element={<VideoDetails />}
                 />
               </>
             )}

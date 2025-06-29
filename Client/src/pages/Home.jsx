@@ -19,6 +19,7 @@ import CourseCard from "./../components/Common/CourseCard";
 import Footer from "../components/Home/Footer";
 import { logout } from "../services/operations/authapis";
 import ReviewSlider from "../components/Common/ReviewSlider";
+import InstallPrompt from './../components/Common/InstallPrompt';
 const Home = () => {
   const [search, setSearch] = useState("");
   const [courseData, setCourseData] = useState([]);
@@ -64,6 +65,7 @@ const Home = () => {
   return (
     <div>
       {/* Section1 */}
+      <InstallPrompt/>
       <section>
         <div className="relative mx-auto flex flex-col w-11/12 items-center text-white top-10 justify-between">
           <form
