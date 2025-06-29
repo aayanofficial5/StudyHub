@@ -38,12 +38,13 @@ export const authEndpoints = {
   resetPasswordApi: "/auth/reset-password",
 };
 
-export const settingsEndpoints = {
+export const profileEndpoints = {
   getUserDetailsApi: "/profile/me",
   updateProfileApi: "/profile",
   deleteAccountApi: "/profile",
   updateProfilePictureApi: "/profile/picture",
   updatePasswordApi: "/profile/password",
+  getInstructorReportsApi:"/profile/instructor/reports",
 };
 
 export const contactUsEndpoints = {

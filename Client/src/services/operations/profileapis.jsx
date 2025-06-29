@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import {  settingsEndpoints } from "../apiCollection";
+import { profileEndpoints } from "../apiCollection";
 import { apiConnector } from "./../apiConnector";
 import { setUser } from "../../redux/slices/profileSlice";
 import { logout } from "./authapis";
@@ -9,8 +9,9 @@ const {
   updatePasswordApi,
   deleteAccountApi,
   updateProfileApi,
-  getUserDetailsApi
-} = settingsEndpoints;
+  getUserDetailsApi,
+  getInstructorReportsApi,
+} = profileEndpoints;
 
 // profilePictureUpdate
 export const profilePictureUpdate = (profilePicture) => {
@@ -44,8 +45,8 @@ export const profilePictureUpdate = (profilePicture) => {
       console.error("Profile Picture Update Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
-    }finally{
-    toast.dismiss(toastId);
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 };
@@ -55,11 +56,7 @@ export const updatePassword = (password) => {
   return async (dispatch) => {
     const toastId = toast.loading("Updating Password...");
     try {
-      const response = await apiConnector(
-        "PUT",
-        updatePasswordApi,
-        password
-      );
+      const response = await apiConnector("PUT", updatePasswordApi, password);
       if (!response.data.success) {
         throw new Error(response.data.message);
       }
@@ -68,9 +65,9 @@ export const updatePassword = (password) => {
       console.error("Update Password Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
-    }finally{
+    } finally {
       toast.dismiss(toastId);
-      }
+    }
   };
 };
 
@@ -90,7 +87,7 @@ export const deleteAccount = (navigate) => {
       console.error("Delete Account Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
-    }finally{
+    } finally {
       toast.dismiss(toastId);
     }
   };
@@ -101,11 +98,7 @@ export const updateProfile = (updatedUser) => {
   return async (dispatch, getState) => {
     const toastId = toast.loading("Updating Profile...");
     try {
-      const response = await apiConnector(
-        "PUT",
-        updateProfileApi,
-        updatedUser
-      );
+      const response = await apiConnector("PUT", updateProfileApi, updatedUser);
 
       if (!response.data.success) {
         throw new Error(response.data.message);
@@ -124,7 +117,7 @@ export const updateProfile = (updatedUser) => {
       console.error("Update Profile Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
       toast.error(errMsg);
-    }finally{
+    } finally {
       toast.dismiss(toastId);
     }
   };
@@ -132,25 +125,45 @@ export const updateProfile = (updatedUser) => {
 
 // getUserDetails
 export const getUserDetails = async () => {
-    let result = null;
-    const toastId = toast.loading("Fetching User Details...");
-    try {
-      const response = await apiConnector("GET", getUserDetailsApi);
-      if (!response.data.success) {
-        throw new Error(response.data.message);
-      }
-      const user = response.data.user;
-      const userDetails = {
-        ...user,
-        ...user.additionalDetails,
-      }
-      result= userDetails;
-    } catch (error) {
-      console.error("Get User Details Error:", error);
-      const errMsg = error?.response?.data?.message || "Something went wrong";
-      toast.error(errMsg);
-    }finally{
-      toast.dismiss(toastId);
-      return result;
+  let result = null;
+  const toastId = toast.loading("Fetching User Details...");
+  try {
+    const response = await apiConnector("GET", getUserDetailsApi);
+    if (!response.data.success) {
+      throw new Error(response.data.message);
     }
+    const user = response.data.user;
+    const userDetails = {
+      ...user,
+      ...user.additionalDetails,
+    };
+    result = userDetails;
+  } catch (error) {
+    console.error("Get User Details Error:", error);
+    const errMsg = error?.response?.data?.message || "Something went wrong";
+    toast.error(errMsg);
+  } finally {
+    toast.dismiss(toastId);
+    return result;
+  }
+};
+
+// getInstructorReposts
+export const getInstructorReports = async () => {
+  let result = null;
+  const toastId = toast.loading("Loading...");
+  try {
+    const response = await apiConnector("GET", getInstructorReportsApi);
+    if (!response.data.success) {
+      throw new Error(response.data.message);
+    }
+    result = response.data.data;
+  } catch (error) {
+    console.error("Error in fetching Instructor Reports:", error);
+    const errMsg = error?.response?.data?.message || "Error Fetching Reports!";
+    toast.error(errMsg);
+  } finally {
+    toast.dismiss(toastId);
+    return result;
+  }
 };
