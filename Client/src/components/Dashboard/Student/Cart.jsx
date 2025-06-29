@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import CartItem from "./CartItem";
 import { buyCourse } from "../../../services/operations/studentFeaturesApi";
 import Loading from './../../Loading';
+import CTAButton from './../../Home/CTAButton';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -43,12 +44,10 @@ const Cart = () => {
         {!cart.length ? (
           <div className="flex flex-col justify-center items-center gap-8">
             <p className="text-2xl font-semibold">Your cart is empty!</p>
-            <button
-              onClick={() => navigate("/")}
-              className="px-8 py-3 rounded-lg border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition duration-300 font-semibold"
-            >
-              Browse Courses
-            </button>
+            <div className="text-xl hover:text-black transition-all duration-100">
+            <CTAButton text="Browse Courses" active="true" arrow="true"
+            action={() => navigate("/search/all-courses")}/>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-20 justify-between max-w-6xl mx-auto">
@@ -68,7 +67,7 @@ const Cart = () => {
 
             {/* Summary Section */}
             <div className="bg-gray-800 p-6 rounded-2xl shadow-lg w-full h-fit lg:w-[45%] flex flex-col gap-4">
-              <h3 className="text-xl font-semibold text-yellow-300">
+              <h3 className="text-xl font-semibold text-yellow-400">
                 Order Summary
               </h3>
               <div className="flex justify-between text-gray-300">
@@ -77,12 +76,12 @@ const Cart = () => {
               </div>
               <div className="flex justify-between text-gray-300">
                 <span>Total Amount:</span>
-                <span className="font-bold text-green-400">
+                <span className="font-bold text-green-500">
                   ₹ {Math.round(totalAmount * 100) / 100}
                 </span>
               </div>
               <button
-                className="mt-4 bg-yellow-400 text-black py-2 px-6 rounded-lg font-semibold hover:bg-yellow-300 transition"
+                className="mt-4 bg-yellow-500 text-black py-2 px-6 rounded-lg font-semibold hover:opacity-70 transition-all duration-400"
                 onClick={() => {
                   handleBuyCourses(cart);
                 }}

@@ -308,7 +308,7 @@ const CourseDetails = () => {
                         />
                         <div>
                           <p className="text-gray-100 text-lg font-medium">
-                            {review?.user?.firstName || "Anomynous"} {review?.user?.lastName}
+                            {review?.user?.firstName || "Anonymous"} {review?.user?.lastName}
                           </p>
                         </div>
                       </div>

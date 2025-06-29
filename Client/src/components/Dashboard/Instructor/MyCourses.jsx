@@ -72,7 +72,7 @@ const MyCourses = () => {
             <FaPlus />
           </CTAButton>
         </div></div>
-        <div className="bg-gray-900/80 text-xl font-semibold text-gray-400/80 rounded-2xl shadow-md hidden md:flex lg:flex flex-row mb-5 justify-between py-4 px-5">
+        <div className="bg-gray-800/80 text-xl font-semibold text-gray-200 rounded-2xl shadow-md hidden md:flex lg:flex flex-row mb-5 justify-between py-4 px-5">
           <div>Courses</div>
           <div className="flex gap-15">
             <div>Price</div>
@@ -81,7 +81,7 @@ const MyCourses = () => {
         </div>
         <div className="grid gap-6">
           {courses.length === 0 && (
-            <div className="bg-gray-900/80 text-xl font-semibold text-gray-400/80 rounded-2xl shadow-md flex mb-5 justify-center items-center h-[50vh]">
+            <div className="bg-gray-800/80 text-xl font-semibold text-gray-400/80 rounded-2xl shadow-md flex mb-5 justify-center items-center h-[50vh]">
               <div className="text-center">
                 <p className="text-2xl font-bold text-gray-200 mb-3">
                   No Courses Created
@@ -99,7 +99,7 @@ const MyCourses = () => {
               // Instructor course card
               <div
                 key={index}
-                className="bg-gray-900/80 p-4 rounded-2xl shadow-md flex flex-col md:flex-row gap-6"
+                className="bg-gray-800/80 p-4 rounded-2xl shadow-md flex flex-col md:flex-row gap-6"
               >
                 <img
                   src={course.thumbnail}

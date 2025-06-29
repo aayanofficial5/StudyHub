@@ -111,8 +111,10 @@ export default function EnrolledCourses() {
           ))}
         {filteredCourses.length == 0 && (
           <div className="flex flex-col gap-5 justify-center items-center w-full rounded-b-xl bg-gray-800 h-[50vh] text-2xl">
-            <div>You are not Enrolled in any Courses!</div>
-            <div className="text-lg"><CTAButton text="Buy Available Courses" active="true" arrow={true} action={()=>navigate("/search/all-courses")}/></div>
+            {filter=="All"&&<div>You are not Enrolled in any Courses!</div>}
+            {filter=="Pending"&&<div>You have no Pending Courses!</div>}
+            {filter=="Completed"&&<div>You have not Completed any Courses Yet!</div>}
+            {filter=="All"&&<div className="text-lg"><CTAButton text="Buy Available Courses" active="true" arrow={true} action={()=>navigate("/search/all-courses")}/></div>}
           </div>
         )}
       </div>
