@@ -6,7 +6,9 @@ const {
   getUserDetails,
   deleteAccount,
   updatePassword,
+  getInstructorReports,
 } = require("../Controllers/Profile");
+const { isInstructor } = require("../Middlewares/Authorization/isInstructor");
 
 // routes
 
@@ -15,5 +17,6 @@ router.delete("/", deleteAccount);
 router.put("/picture", updateProfilePicture);
 router.put("/", updateProfile);
 router.get("/me", getUserDetails);
+router.get("/instructor/reports", isInstructor, getInstructorReports);
 
 module.exports = router;
