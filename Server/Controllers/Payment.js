@@ -1,5 +1,5 @@
-const Course = require("../models/Course");
-const User = require("../models/User");
+const Course = require("../Models/Course");
+const User = require("../Models/User");
 const { instance } = require("../Configurations/razorpay");
 const { coursePurchased } = require("../Templates/Mails/coursePurchased");
 const mailSender = require("../utils/mailSender");

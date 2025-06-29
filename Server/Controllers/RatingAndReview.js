@@ -1,4 +1,4 @@
-const Course = require("../models/Course");
+const Course = require("../Models/Course");
 const RatingAndReview = require("../Models/RatingAndReview");
 
 // createRatingAndReview handler function
