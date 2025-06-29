@@ -1,10 +1,10 @@
 {
-  "name": "fileuploadapp",
+  "name": "server",
   "version": "1.0.0",
-  "description": "<h1>This is a Backend of File Upload App.</h1>",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+  "start": "node server.js",
+  "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
