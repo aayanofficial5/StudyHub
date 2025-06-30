@@ -44,7 +44,7 @@ Here is a high-level diagram that illustrates the architecture of the StudyHub e
 
 ## 🌐 Live Demo
 
-[🔗 Deployed Link (Coming Soon)]()
+[🔗 Deployed Link](https://studyhub-frontend-woad.vercel.app)
 
 ---
 
