@@ -228,6 +228,8 @@ exports.login = async (req, res) => {
     const options = {
       httpOnly: true, // prevents client-side JS from accessing the cookie
       expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
+      secure: true, // ✅ important for HTTPS
+      sameSite: "None", // ✅ cross-origin cookies won't work without this
     };
 
     // Set token in cookie and return response
@@ -304,6 +306,8 @@ exports.googleLogin = async (req, res) => {
 
     const options = {
       httpOnly: true,
+      secure: true,
+      sameSite: "None",
       expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
     };
 

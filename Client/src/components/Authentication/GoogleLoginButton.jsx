@@ -21,7 +21,7 @@ const GoogleLoginButton = ({ accountType }) => {
         const access_token = tokenResponse.access_token;
 
         const res = await axios.post(
-          "http://localhost:4000/api/v1/auth/google",
+          `${import.meta.env.VITE_API_URL}/auth/google`,
           { access_token, accountType },
           { withCredentials: true }
         );
