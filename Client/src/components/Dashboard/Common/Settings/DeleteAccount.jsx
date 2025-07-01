@@ -1,10 +1,7 @@
 import React from "react";
 import { MdDelete } from "react-icons/md";
-import { deleteAccount } from "../../../../services/operations/profileapis";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
 const DeleteAccount = ({setDeletionModal}) => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleAccountDeletion = () => {
     setDeletionModal(true);

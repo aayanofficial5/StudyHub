@@ -2,6 +2,7 @@ import React from "react";
 import Password from "../../../Authentication/Password";
 import { useState } from "react";
 import { updatePassword } from "../../../../services/operations/profileapis";
+import { useSelector } from 'react-redux';
 
 const UpdatePassword = () => {
   const [showP1, setShowP1] = useState(false);
@@ -12,13 +13,14 @@ const UpdatePassword = () => {
     newPassword: "",
     confirmNewPassword: "",
   });
+  const { token } = useSelector((state) => state.auth);
   const handleLoginData = (e) => {
     setFormData({ ...FormData, [e.target.name]: e.target.value });
   };
   async function handleSubmit(e) {
     e.preventDefault();
     console.log(FormData);
-    dispatch(updatePassword(FormData));
+    await updatePassword(FormData,token);
   }
   return (
     <form

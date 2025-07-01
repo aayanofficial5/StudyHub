@@ -25,7 +25,7 @@ const CourseInformationForm = () => {
 
   const dispatch = useDispatch();
   const { course, editCourse } = useSelector((state) => state.course);
-
+  const { token } = useSelector((state) => state.auth);
   const [courseCategories, setCourseCategories] = useState([]);
 
   async function fetchCategories() {
@@ -94,7 +94,7 @@ const CourseInformationForm = () => {
           formData.append("thumbnail", data.courseImage);
         }
 
-        const result = await editCourseDetails(formData);
+        const result = await editCourseDetails(formData,token);
 
         if (result) {
           dispatch(setStep(2));
@@ -113,7 +113,7 @@ const CourseInformationForm = () => {
       formData.append("category", data.courseCategory);
       formData.append("status", COURSE_STATUS.DRAFT);
       formData.append("thumbnail", data.courseImage);
-      const result = await createCourse(formData);
+      const result = await createCourse(formData,token);
       if (result) {
         dispatch(setStep(2));
         dispatch(setCourse(result));

@@ -6,6 +6,7 @@ import { profilePictureUpdate } from "../../../../services/operations/profileapi
 
 const ChangeProfilePicture = () => {
   const user = useSelector((state) => state.profile.user);
+  const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [profilePicture, setProfilePicture] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -46,7 +47,7 @@ const ChangeProfilePicture = () => {
 
             <button
               className="bg-blue-500 text-white px-4 rounded-lg py-2 flex flex-row gap-2 items-center cursor-pointer border-3 border-blue-500 active:scale-95 transition-all duration-200 hover:opacity-70 box-border"
-              onClick={() => dispatch(profilePictureUpdate(profilePicture))}
+              onClick={() => dispatch(profilePictureUpdate(profilePicture,token))}
             >
               Upload
               <FaUpload />

@@ -12,6 +12,7 @@ const Dashboard = () => {
   const { loading: profileLoading } = useSelector((state) => state.profile);
   const { loading: authLoading } = useSelector((state) => state.auth);
   const { loading: courseLoading } = useSelector((state) => state.course);
+  const { token } = useSelector((state) => state.auth);
   const loading = courseLoading||profileLoading || authLoading;
   const [logoutModal, setLogoutModal] = useState(false);
   const [deletionModal, setDeletionModal] = useState(false);
@@ -43,7 +44,7 @@ const Dashboard = () => {
           paragraph="Are you sure you want to Delete your account?"
           button1="Yes"
           button2="No"
-          action1={() => dispatch(deleteAccount(navigate))}
+          action1={() => dispatch(deleteAccount(navigate,token))}
           action2={() => {
             setDeletionModal(false);
           }}

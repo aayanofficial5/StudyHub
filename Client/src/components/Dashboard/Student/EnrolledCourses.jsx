@@ -6,13 +6,14 @@ import convertSecondsToDuration from "../../../utils/secToDuration";
 import CTAButton from "../../Home/CTAButton";
 
 export default function EnrolledCourses() {
-  const { user } = useSelector((state) => state.profile);
+  const { token } = useSelector((state) => state.auth);
+
   const [filter, setFilter] = useState("All");
   const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
 
   async function fetchCourses() {
-    const response = await getStudentCourses();
+    const response = await getStudentCourses(token);
     if (response) {
       setCourses(response);
     }

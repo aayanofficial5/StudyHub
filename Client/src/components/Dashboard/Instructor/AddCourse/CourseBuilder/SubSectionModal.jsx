@@ -27,6 +27,7 @@ const SubSectionModal = ({
 
   const dispatch = useDispatch();
   const { course } = useSelector((state) => state.course);
+  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (view || edit) {
@@ -69,7 +70,7 @@ const SubSectionModal = ({
         formData.append("video", currentValues.lectureVideo);
       }
 
-      const result = await updateSubSection(formData);
+      const result = await updateSubSection(formData,token);
       if (result) {
         const updatedCourseContent = course.courseContent.map((section) =>
           section._id == result._id ? result : section
@@ -90,7 +91,7 @@ const SubSectionModal = ({
     formData.append("description", data.lectureDesc);
     formData.append("video", data.lectureVideo);
 
-    const result = await createSubSection(formData);
+    const result = await createSubSection(formData,token);
     if (result) {
       const updatedCourseContent = course.courseContent.map((section) =>
         section._id == result._id ? result : section

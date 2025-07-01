@@ -5,6 +5,7 @@ import { updateProfile } from "../../../../services/operations/profileapis";
 const EditProfile = () => {
   const user = useSelector((state) => state.profile.user);
   const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
   const genders = [
     "Male",
     "Female",
@@ -20,7 +21,7 @@ const EditProfile = () => {
 
   const onSubmit = async (data) => {
     // Handle form submission logic here
-    dispatch(updateProfile(data));
+    dispatch(updateProfile(data,token));
   };
   return (
     <div className="flex flex-col gap-2 bg-gray-800/80 p-4 rounded-lg w-full">

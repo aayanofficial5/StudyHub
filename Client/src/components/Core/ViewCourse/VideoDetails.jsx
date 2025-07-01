@@ -134,29 +134,32 @@ export default function VideoDetails() {
   /* ───────── Mark complete ───────── */
   const handleLectureCompletion = async () => {
     setMarkLoading(true);
-    const res = await markLectureAsComplete({
-      courseId,
-      subSectionId: subSectionId,
-    });
+    const res = await markLectureAsComplete(
+      {
+        courseId,
+        subSectionId: subSectionId,
+      },
+      token
+    );
     if (res) dispatch(updateCompletedLectures(subSectionId));
     setMarkLoading(false);
   };
 
   const handleReplay = () => {
-  const player = playerRef.current;
-  if (!player) return;
+    const player = playerRef.current;
+    if (!player) return;
 
-  // Prefer Vidstack’s remote if it’s ready…
-  if (player.remote) {
-    player.remote.seek(0);
-    player.remote.play();
-  } else {
-    // …otherwise fall back to the native media element properties
-    player.currentTime = 0;
-    player.play?.();
-  }
-  setVideoEnded(false);
-};
+    // Prefer Vidstack’s remote if it’s ready…
+    if (player.remote) {
+      player.remote.seek(0);
+      player.remote.play();
+    } else {
+      // …otherwise fall back to the native media element properties
+      player.currentTime = 0;
+      player.play?.();
+    }
+    setVideoEnded(false);
+  };
 
   /* ───────── UI ───────── */
   return (

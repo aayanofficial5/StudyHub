@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCourse,
   setEditCourse,
@@ -27,9 +27,10 @@ const MyCourses = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [deleteModal, setDeleteModal] = useState(null);
+  const { token } = useSelector((state) => state.auth);
 
   const fetchCourses = async () => {
-    const result = await getInstructorCourses();
+    const result = await getInstructorCourses(token);
     if (result) {
       setCourses(result);
     }

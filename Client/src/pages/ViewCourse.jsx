@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CourseReviewModal from "../components/Core/ViewCourse/CourseReviewModal";
 import Loading from "./../components/Loading";
 import { Outlet, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCompletedLectures, setCourseSectionData, setEntireCourseData, setTotalNoOfLectures } from "../redux/slices/viewCourseSlice";
 import VideoDetailsSidebar from './../components/Core/ViewCourse/VideoDetailsSideBar';
 import { getFullDetailsOfCourse } from './../services/operations/courseapis';
@@ -12,12 +12,13 @@ const ViewCourse = () => {
   const [loading, setLoading] = useState(true);
   const { courseId } = useParams();
   const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
 
   const setCourseSpecificDetails = async () => {
     setLoading(true);
     try {
       // Simulate fetching course details
-      const courseData = await getFullDetailsOfCourse(courseId);
+      const courseData = await getFullDetailsOfCourse(courseId,token);
       // console.log("Course Data:", courseData);
       dispatch(setCourseSectionData(courseData.courseDetails.courseContent));
       dispatch(setEntireCourseData(courseData.courseDetails));

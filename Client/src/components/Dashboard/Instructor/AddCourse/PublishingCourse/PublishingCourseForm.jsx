@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import CTAButton from './../../../../Home/CTAButton';
 
 const PublishingCourseForm = () => {
+  const { token } = useSelector((state) => state.auth);
   const { register, handleSubmit, setValue, getValues } = useForm();
   const { course, editCourse } = useSelector((state) => state.course);
   const dispatch = useDispatch();
@@ -45,7 +46,7 @@ const PublishingCourseForm = () => {
     formData.append("status", courseStatus);
     // console.log(courseStatus);
     // call api
-    const result = await editCourseDetails(formData);
+    const result = await editCourseDetails(formData,token);
     if(result){
       console.log(result);
       dispatch(resetCourseState());

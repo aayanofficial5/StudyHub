@@ -25,7 +25,7 @@ const Cart = () => {
     const courses = cart.map((course) => course._id);
     console.log(courses);
     if (token) {
-      buyCourse(courses, user, navigate, dispatch);
+      buyCourse(courses, user, navigate, dispatch,token);
     }
   };
 

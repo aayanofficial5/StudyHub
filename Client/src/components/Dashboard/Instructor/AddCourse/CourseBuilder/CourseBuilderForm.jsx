@@ -26,7 +26,7 @@ const CourseBuilderForm = () => {
   const dispatch = useDispatch();
 
   const { course } = useSelector((state) => state.course);
-
+  const { token } = useSelector((state) => state.auth);
   const [editSectionName, setEditSectionName] = useState(null);
 
   const handleCancelEdit = () => {
@@ -58,7 +58,7 @@ const CourseBuilderForm = () => {
       result = await createSection({
         sectionName: data.sectionName,
         courseId: course?._id,
-      });
+      },token);
       if (result) {
         dispatch(setCourse(result));
         handleCancelEdit();
@@ -67,7 +67,7 @@ const CourseBuilderForm = () => {
       result = await updateSection({
         sectionId: editSectionName,
         sectionName: data.sectionName,
-      });
+      },token);
       if (result) {
         const updatedCourseContent = course?.courseContent.map((section) =>
           section?._id == result?._id ? result : section

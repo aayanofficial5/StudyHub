@@ -60,7 +60,7 @@ const CourseDetails = () => {
 
   const handleBuyCourse = async () => {
     if (token) {
-      await buyCourse([courseId], user, navigate, dispatch);
+      await buyCourse([courseId], user, navigate, dispatch,token);
     }
   };
 
@@ -80,11 +80,10 @@ const CourseDetails = () => {
     whatYouWillLearn,
     courseContent,
     ratingAndReviews,
-    instructor,
     studentsEnrolled,
     createdAt,
   } = response;
-
+  const instructor=response.instructor||{firstName:"Anonymous",lastName:""};
   const sectionId = response.courseContent[0]._id;
   const subSectionId = response.courseContent[0].subSection[0]._id;
 
@@ -141,7 +140,7 @@ const CourseDetails = () => {
                 <span>{studentsEnrolled.length} students enrolled</span>
               </div>
               <p>
-                Created By {`${instructor.firstName} ${instructor.lastName}`}
+                Created By {`${instructor?.firstName} ${instructor?.lastName}`}
               </p>
               <div className="flex flex-wrap gap-5 text-lg">
                 <p className="flex items-center gap-2">
@@ -271,15 +270,15 @@ const CourseDetails = () => {
               <div className="flex items-center gap-4 py-4">
                 <img
                   src={
-                    instructor.image
-                      ? instructor.image
-                      : `https://api.dicebear.com/5.x/initials/svg?seed=${instructor.firstName} ${instructor.lastName}`
+                    instructor?.image
+                      ? instructor?.image
+                      : `https://api.dicebear.com/5.x/initials/svg?seed=${instructor?.firstName} ${instructor?.lastName}`
                   }
                   alt="Author"
                   className="h-14 w-14 rounded-full object-cover"
                 />
                 <p className="text-lg">
-                  {`${instructor.firstName} ${instructor.lastName}`}
+                  {`${instructor?.firstName} ${instructor?.lastName}`}
                 </p>
               </div>
               <p className="text-gray-400">

@@ -9,6 +9,7 @@ import { setCourse } from "../../../../../redux/slices/courseSlice";
 import { deleteSection, deleteSubSection } from "../../../../../services/operations/courseapis";
 const NestedView = ({ handleChangeByEditSectionName }) => {
   const { course } = useSelector((state) => state.course);
+  const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const [addSubSection, setAddSubSection] = useState(null);
@@ -19,7 +20,7 @@ const NestedView = ({ handleChangeByEditSectionName }) => {
   const [confirmationModal, setConfirmationModal] = useState(null);
 
   const handleDeleteSection = async(sectionId) => {
-    const result = await deleteSection({sectionId,courseId:course._id});
+    const result = await deleteSection({sectionId,courseId:course._id},token);
     // console.log(result);
     if(result){
       dispatch(setCourse(result))
@@ -28,7 +29,7 @@ const NestedView = ({ handleChangeByEditSectionName }) => {
   };
 
   const handleDeleteSubSection = async(subSectionId) => {
-    const result = await deleteSubSection(subSectionId);
+    const result = await deleteSubSection(subSectionId,token);
     console.log(result);
     if(result){
       const updatedCourseContent = course.courseContent.map((section)=>section._id==result._id?result:section);
