@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  googleId: {     
+    type: String,
+    unique: true,
+    sparse: true   // allows multiple docs with null googleId 
+  },
   additionalDetails: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Profile",

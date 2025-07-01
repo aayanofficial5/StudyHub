@@ -197,6 +197,14 @@ exports.login = async (req, res) => {
       });
     }
 
+    if (user.googleId) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This account is registered via Google login. Please use Google Sign-In.",
+      });
+    }
+
     // Compare entered password with stored hashed password
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
@@ -227,9 +235,9 @@ exports.login = async (req, res) => {
     // Cookie options
     const options = {
       httpOnly: true, // prevents client-side JS from accessing the cookie
-      expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
       secure: true, // ✅ important for HTTPS
       sameSite: "None", // ✅ cross-origin cookies won't work without this
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     };
 
     // Set token in cookie and return response
@@ -266,6 +274,14 @@ exports.googleLogin = async (req, res) => {
     const { id: googleId, email, name, picture } = googleRes.data;
     // console.log(picture);
     let user = await User.findOne({ email }).populate("additionalDetails");
+    
+    if (!user.googleId) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This email is registered with a password. Please login using your email and password.",
+      });
+    }
     // console.log("User found:", user);
     if (!user) {
       const profileDetails = await Profile.create({
@@ -279,7 +295,7 @@ exports.googleLogin = async (req, res) => {
         firstName,
         lastName,
         email,
-        password: "GOOGLE_OAUTH_NO_PASSWORD", // Ensure your schema allows this
+        password: "GOOGLE_OAUTH_NO_PASSWORD",
         accountType: accountType,
         additionalDetails: profileDetails._id,
         image:
@@ -308,7 +324,7 @@ exports.googleLogin = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
-      expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days,
     };
 
     return res.cookie("token", jwtToken, options).status(200).json({
