@@ -44,7 +44,7 @@ router.get("/category-page/:name", getCategoryPageDetails);
 router.post("/", auth, isInstructor, createCourse);
 router.get("/", getAllCourses);
 router.put("/", auth, isInstructor, editCourseDetails);
-router.delete("/", auth, isInstructor, deleteCourse);
+router.delete("/:courseId", auth, isInstructor, deleteCourse);
 router.get("/instructor", auth, isInstructor, getInstructorCourses);
 router.get("/student", auth, isStudent, getStudentCourses);
 router.get("/:courseId", getCourseDetails);

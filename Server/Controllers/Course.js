@@ -310,7 +310,7 @@ exports.getCourseDetails = async (req, res) => {
 // deleteCourse
 exports.deleteCourse = async (req, res) => {
   try {
-    const { courseId } = req.body;
+    const { courseId } = req.params;
 
     if (!courseId) {
       return res.status(400).json({
@@ -435,18 +435,18 @@ exports.getStudentCourses = async (req, res) => {
     /* ------------------------------------------------------------------ */
     const progressDocs = await CourseProgress.find({
       userId: studentId,
-      courseId: { $in: courses.map(c => c._id) },
-    }).lean();                                     // lean() → plain JS objects
+      courseId: { $in: courses.map((c) => c._id) },
+    }).lean(); // lean() → plain JS objects
 
     /* Helper: quick lookup by courseId */
     const progressMap = new Map(
-      progressDocs.map(doc => [doc.courseId.toString(), doc])
+      progressDocs.map((doc) => [doc.courseId.toString(), doc])
     );
 
     /* ------------------------------------------------------------------ */
     /* 3. Build the response                                              */
     /* ------------------------------------------------------------------ */
-    const data = courses.map(course => {
+    const data = courses.map((course) => {
       /* a. Total number of videos (sub‑sections) in the course */
       const totalVideos = course.courseContent.reduce(
         (sum, section) => sum + section.subSection.length,
@@ -454,30 +454,34 @@ exports.getStudentCourses = async (req, res) => {
       );
 
       /* b. Number of videos the student has finished in this course */
-      const progressDoc     = progressMap.get(course._id.toString());
-      const completedVideos = progressDoc ? progressDoc.completedVideos.length : 0;
+      const progressDoc = progressMap.get(course._id.toString());
+      const completedVideos = progressDoc
+        ? progressDoc.completedVideos.length
+        : 0;
 
       /* c. Percentage progress, rounded to an integer                  */
       const progress =
         totalVideos > 0 ? Math.round((completedVideos / totalVideos) * 100) : 0;
 
       /* d. Find the first un‑watched video to resume from              */
-      let sectionIdToOpen  = null;
+      let sectionIdToOpen = null;
       let subSectionIdToOpen = null;
 
       if (totalVideos === 0) {
         // No content yet – nothing to resume
-        sectionIdToOpen   = null;
+        sectionIdToOpen = null;
         subSectionIdToOpen = null;
       } else {
         const watchedSet = new Set(
-          progressDoc ? progressDoc.completedVideos.map(id => id.toString()) : []
+          progressDoc
+            ? progressDoc.completedVideos.map((id) => id.toString())
+            : []
         );
 
         outer: for (const section of course.courseContent) {
           for (const subSec of section.subSection) {
             if (!watchedSet.has(subSec._id.toString())) {
-              sectionIdToOpen   = section._id;
+              sectionIdToOpen = section._id;
               subSectionIdToOpen = subSec._id;
               break outer;
             }
@@ -486,7 +490,7 @@ exports.getStudentCourses = async (req, res) => {
 
         // If everything is watched, default to first lecture
         if (!sectionIdToOpen) {
-          sectionIdToOpen   = course.courseContent[0]._id;
+          sectionIdToOpen = course.courseContent[0]._id;
           subSectionIdToOpen = course.courseContent[0].subSection[0]._id;
         }
       }
@@ -507,7 +511,7 @@ exports.getStudentCourses = async (req, res) => {
         title: course.courseName,
         description: course.courseDescription,
         duration: durationSeconds,
-        progress,                       // <-- fixed value
+        progress, // <-- fixed value
         sectionId: sectionIdToOpen,
         subSectionId: subSectionIdToOpen,
       };
