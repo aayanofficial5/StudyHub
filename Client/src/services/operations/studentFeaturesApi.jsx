@@ -4,10 +4,11 @@ import logo from "../../assets/icon.png";
 import { toast } from "react-hot-toast";
 import { resetCart } from "../../redux/slices/cartSlice";
 import { setPaymentLoading } from "../../redux/slices/courseSlice";
+
 const { coursePaymentApi, verifyPaymentApi, sendPaymentSuccessEmailApi } =
   paymentEndpoints;
 
-export async function buyCourse(courses, user, navigate, dispatch) {
+export async function buyCourse(courses, user, navigate, dispatch, token) {
   const toastId = toast.loading(
     "Redirecting to Razorpay for payment, please wait..."
   );
@@ -21,9 +22,16 @@ export async function buyCourse(courses, user, navigate, dispatch) {
       return;
     }
 
-    const orderResponse = await apiConnector("POST", coursePaymentApi, {
-      courses,
-    });
+    const orderResponse = await apiConnector(
+      "POST",
+      coursePaymentApi,
+      {
+        courses,
+      },
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
 
     if (!orderResponse?.data?.success) {
       throw new Error(orderResponse?.data?.message || "Order creation failed.");
@@ -44,8 +52,8 @@ export async function buyCourse(courses, user, navigate, dispatch) {
         email: user.email,
       },
       handler: async (response) => {
-        sendPaymentSuccessEmail(response, orderResponse);
-        verifyPayment({ ...response, courses }, navigate, dispatch);
+        sendPaymentSuccessEmail(response, orderResponse, token);
+        verifyPayment({ ...response, courses }, navigate, dispatch, token);
       },
 
       notes: {
@@ -83,11 +91,13 @@ function loadScript(src) {
   });
 }
 
-async function verifyPayment(paymentData, navigate, dispatch) {
+async function verifyPayment(paymentData, navigate, dispatch, token) {
   const toastId = toast.loading("Verifying payment...");
   dispatch(setPaymentLoading(true));
   try {
-    const response = await apiConnector("POST", verifyPaymentApi, paymentData);
+    const response = await apiConnector("POST", verifyPaymentApi, paymentData, {
+      Authorization: `Bearer ${token}`,
+    });
     if (!response.data.success) {
       throw new Error(response.data.message);
     }
@@ -106,14 +116,16 @@ async function verifyPayment(paymentData, navigate, dispatch) {
   }
 }
 
-async function sendPaymentSuccessEmail(response, orderResponse) {
+async function sendPaymentSuccessEmail(response, orderResponse, token) {
   try {
     const emailData = {
       paymentId: response.razorpay_payment_id,
       orderId: response.razorpay_order_id,
       amount: orderResponse.data.data.amount / 100,
     };
-    await apiConnector("POST", sendPaymentSuccessEmailApi, emailData);
+    await apiConnector("POST", sendPaymentSuccessEmailApi, emailData, {
+      Authorization: `Bearer ${token}`,
+    });
   } catch (error) {
     console.error("Error sending payment success email:", error);
   }

@@ -5,10 +5,10 @@ const User = require("../../Models/User");
 exports.auth = async (req, res, next) => {
   try {
     const token =
-      req.cookies?.token || // best way to fetch token
-      req.body?.token ||
-      req.header("Authentication")?.split(" ")[1];
-
+      req?.cookies?.token || // best way to fetch token
+      req?.header("Authorization")?.split(" ")[1] ||
+      req?.body?.token;
+    // console.log(token);
     // validation of token
     if (!token) {
       return res.status(401).json({
@@ -20,7 +20,7 @@ exports.auth = async (req, res, next) => {
     // verification of token
     try {
       const payload = jwt.verify(token, process.env.JWT_SECRET);
-      
+
       //attaching user data with request
       req.user = payload;
     } catch (error) {

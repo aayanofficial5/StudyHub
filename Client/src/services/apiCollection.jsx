@@ -6,7 +6,7 @@ export const courseEndpoints = {
   getAllCoursesApi: "/course",
   getCourseDetailsApi: "/course",
   editCourseDetailsApi: "/course",
-  deleteCourseApi: "/course",
+  deleteCourseApi: "/course/",
   getInstructorCoursesApi: "/course/instructor",
   getStudentCoursesApi: "/course/student",
   getCoursesBySearchApi: "/course/search/",

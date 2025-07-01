@@ -14,17 +14,19 @@ const {
 } = profileEndpoints;
 
 // profilePictureUpdate
-export const profilePictureUpdate = (profilePicture) => {
+export const profilePictureUpdate = (profilePicture,token) => {
   const formData = new FormData();
   formData.append("profilePicture", profilePicture);
-
   return async (dispatch, getState) => {
     const toastId = toast.loading("Updating Profile Picture...");
     try {
       const response = await apiConnector(
         "PUT",
         updateProfilePictureApi,
-        formData
+        formData,
+        {
+          Authorization: `Bearer ${token}`,
+        }
       );
 
       if (!response.data.success) {
@@ -52,15 +54,17 @@ export const profilePictureUpdate = (profilePicture) => {
 };
 
 // updatePassword
-export const updatePassword = (password) => {
-  return async (dispatch) => {
+export const updatePassword = async  (password,token) => {
     const toastId = toast.loading("Updating Password...");
     try {
-      const response = await apiConnector("PUT", updatePasswordApi, password);
-      if (!response.data.success) {
-        throw new Error(response.data.message);
+      const response = await apiConnector("PATCH", updatePasswordApi, password, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log(response);
+      if (!response?.data?.success) {
+        throw new Error(response?.data?.message);
       }
-      toast.success(response.data.message);
+      toast.success(response?.data?.message);
     } catch (error) {
       console.error("Update Password Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
@@ -68,15 +72,16 @@ export const updatePassword = (password) => {
     } finally {
       toast.dismiss(toastId);
     }
-  };
 };
 
 // deleteAccount
-export const deleteAccount = (navigate) => {
+export const deleteAccount = (navigate,token) => {
   return async (dispatch) => {
     const toastId = toast.loading("Deleting Account...");
     try {
-      const response = await apiConnector("DELETE", deleteAccountApi);
+      const response = await apiConnector("DELETE", deleteAccountApi,null, {
+        Authorization: `Bearer ${token}`,
+      });
       if (!response.data.success) {
         throw new Error(response.data.message);
       }
@@ -94,11 +99,18 @@ export const deleteAccount = (navigate) => {
 };
 
 // updateProfile
-export const updateProfile = (updatedUser) => {
+export const updateProfile = (updatedUser,token) => {
   return async (dispatch, getState) => {
     const toastId = toast.loading("Updating Profile...");
     try {
-      const response = await apiConnector("PUT", updateProfileApi, updatedUser);
+      const response = await apiConnector(
+        "PUT",
+        updateProfileApi,
+        updatedUser,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
 
       if (!response.data.success) {
         throw new Error(response.data.message);
@@ -124,11 +136,13 @@ export const updateProfile = (updatedUser) => {
 };
 
 // getUserDetails
-export const getUserDetails = async () => {
+export const getUserDetails = async (token) => {
   let result = null;
   const toastId = toast.loading("Fetching User Details...");
   try {
-    const response = await apiConnector("GET", getUserDetailsApi);
+    const response = await apiConnector("GET", getUserDetailsApi, null,{
+      Authorization: `Bearer ${token}`,
+    });
     if (!response.data.success) {
       throw new Error(response.data.message);
     }
@@ -149,11 +163,13 @@ export const getUserDetails = async () => {
 };
 
 // getInstructorReposts
-export const getInstructorReports = async () => {
+export const getInstructorReports = async (token) => {
   let result = null;
   const toastId = toast.loading("Loading...");
   try {
-    const response = await apiConnector("GET", getInstructorReportsApi);
+    const response = await apiConnector("GET", getInstructorReportsApi,null, {
+      Authorization: `Bearer ${token}`,
+    });
     if (!response.data.success) {
       throw new Error(response.data.message);
     }

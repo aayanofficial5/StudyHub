@@ -143,6 +143,7 @@ export const logout = (navigate) => {
 // resetPasswordLink
 export const resetPasswordLink = (email, navigate) => {
   return async (dispatch) => {
+    let result=false;
     const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
     try {
@@ -154,7 +155,7 @@ export const resetPasswordLink = (email, navigate) => {
         throw new Error(response?.data?.message);
       }
       toast.success(response?.data?.message);
-      navigate("/reset-password");
+      result = true;
     } catch (error) {
       console.error("Reset Password Link Error:", error);
       const errMsg = error?.response?.data?.message || "Something went wrong";
@@ -162,6 +163,7 @@ export const resetPasswordLink = (email, navigate) => {
     } finally {
       dispatch(setLoading(false));
       toast.dismiss(toastId);
+      return result;
     }
   };
 };
