@@ -207,7 +207,7 @@ exports.updatePassword = async (req, res) => {
     // find user by id
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
         message: "User not found",
       });
@@ -226,6 +226,18 @@ exports.updatePassword = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "new password & confirm new password does not match",
+      });
+    }
+
+    // Validate password strength
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
       });
     }
 

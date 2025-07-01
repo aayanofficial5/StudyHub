@@ -13,11 +13,10 @@ import paypal_logo from "../assets/paypal_logo.svg";
 import Coding2 from "../assets/coding2.png";
 import HighlightBanner from "../components/Home/HighlightBanner";
 import { useEffect } from "react";
-import { getAllCourses, getAllRating } from "../services/operations/courseapis";
+import { getAllCourses } from "../services/operations/courseapis";
 import { useDispatch, useSelector } from "react-redux";
 import CourseCard from "./../components/Common/CourseCard";
 import Footer from "../components/Home/Footer";
-import { logout } from "../services/operations/authapis";
 import ReviewSlider from "../components/Common/ReviewSlider";
 import InstallPrompt from './../components/Common/InstallPrompt';
 const Home = () => {
