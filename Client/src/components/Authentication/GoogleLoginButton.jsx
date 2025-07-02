@@ -69,7 +69,7 @@ const GoogleLoginButton = ({ accountType }) => {
   return (
     <button
       onClick={() => login()}
-      className="w-full h-[44px] rounded-lg my-3 border-2 border-blue-500 hover:scale-95 transition-all duration-200 ease-in-out cursor-pointer"
+      className="mt-2 w-full bg-transparent border-1 hover:bg-gray-200/20 text-white px-4 py-2 rounded-lg"
     >
       <img src={logo} alt="Google" className="w-6 h-6 inline-block mr-3" />
       <span>Continue with Google</span>

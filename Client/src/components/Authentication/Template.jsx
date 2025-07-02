@@ -1,6 +1,5 @@
 import SignUpForm from "./SignUpForm";
 import LogInForm from "./LogInForm";
-import frameImage from "../../assets/frameImage.png";
 import logo from "../../assets/googleLogo.svg";
 import { useSelector } from "react-redux";
 import Loading from "../../components/Loading";
@@ -10,48 +9,48 @@ import { useState } from "react";
 export default function Template({ title, desc1, desc2, formType, image }) {
   const loading = useSelector((state) => state.auth.loading);
   const [accountType, setAccountType] = useState("Student");
+
   return (
-    <div className="flex  gap-10 mx-auto  justify-around scale-85 -translate-5">
+    <div className="relative w-full min-h-screen bg-gradient-to-tr from-slate-black via-slate-850 to-slate-950 text-white flex justify-center items-start  py-5 px-2 md:p-0 overflow-hidden">
+      
+      {/* ⬅️ Background Image with Blur */}
+      <img
+        src={image}
+        alt="background"
+        className="absolute inset-0 w-full h-full object-cover blur-sm opacity-15 z-10"
+      />
+
       {loading ? (
-        <div className="flex justify-center items-center h-[75vh]">
+        <div className="flex justify-center items-center h-[75vh] w-full">
           <Loading />
         </div>
       ) : (
-        <>
-          <div className="sm:w-[320px] lg:w-[450px]">
-            <h1 className="font-semibold text-2xl md:text-3xl mb-3">{title}</h1>
-            <p>
-              <span className="text-gray-400 text-base md:text-lg">
-                {desc1}
-              </span>
-              <br></br>
+        <div className="z-10 flex flex-col md:flex-row items-center justify-center w-full max-w-[500px] gap-12 rounded-2xl p-6 md:p-10">
+          
+          {/* Form Section */}
+          <div className="w-full max-w-md">
+            <h1 className="font-semibold text-2xl md:text-3xl mb-4">{title}</h1>
+            <p className="mb-4">
+              <span className="text-gray-300 text-base md:text-lg">{desc1}</span>
+              <br />
               <i className="text-blue-400 text-base md:text-lg">{desc2}</i>
             </p>
-            <div className="my-3">
-              {formType == "login" ? (
-                <LogInForm />
-              ) : (
-                <SignUpForm setAccountType={setAccountType} />
-              )}
+
+            {formType === "login" ? (
+              <LogInForm />
+            ) : (
+              <SignUpForm setAccountType={setAccountType} />
+            )}
+
+            <div className="flex items-center mt-2">
+              <div className="bg-gray-700 h-[1px] w-full"></div>
+              <span className="mx-2 text-gray-500">OR</span>
+              <div className="bg-gray-700 h-[1px] w-full"></div>
             </div>
-            <div className="flex items-center">
-              <div className="bg-gray-700 w-[45%] h-[1px] "></div>
-              <span className="mx-2 text-gray-700">OR</span>
-              <div className="bg-gray-700 w-[45%] h-[1px] "></div>
-            </div>
+
             <GoogleLoginButton accountType={accountType} />
           </div>
-          <div className="flex flex-col items-center justify-center h-100 lg:mt-5">
-            <div className="relative mt-15 lg:h-[60vh] lg:w-[40vw] sm:w-[32vw] sm:h-[28vh]">
-              <img src={frameImage} alt="" className="h-full w-full" />
-              <img
-                src={image}
-                alt=""
-                className="h-full w-full absolute top-[-15px] left-[-15px]"
-              />
-            </div>
-          </div>
-        </>
+        </div>
       )}
     </div>
   );

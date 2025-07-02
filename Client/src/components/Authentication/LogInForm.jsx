@@ -50,7 +50,7 @@ export default function LogInForm() {
         forgot={true}
       ></Password>
       <button
-        className={`flex flex-row gap-2 items-center w-min-fit w-full justify-center transition-all duration-200 ease-in hover:scale-95 mt-10 px-4 py-2 cursor-pointer rounded-lg border-blue-500 border-3 font-semibold bg-blue-500 text-lg`}
+        className="mt-10 w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold border-1 border-blue-700"
         type="submit"
       >
         Sign in

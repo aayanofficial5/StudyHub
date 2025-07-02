@@ -3,7 +3,7 @@ import signup from "../assets/signup.png";
 
 export default function SignUp() {
   return (
-    <div className="text-white mt-2">
+    <div>
       <Template
         title="Join the millions learning to code with StudyNotion for free"
         desc1="Build skills for today, tomorrow, and beyond."
