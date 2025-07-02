@@ -89,7 +89,7 @@ const Home = () => {
                   className="w-full h-full outline-none  placeholder-gray-500 border-l-1 border-gray-400 text-base px-3"
                 />
 
-                <button className="bg-blue-500 hover:bg-blue-400 h-full px-7 font-semibold text-white">
+                <button className="bg-blue-600 hover:bg-blue-700 h-full px-7 font-semibold text-white">
                   Submit
                 </button>
               </div>
@@ -159,7 +159,7 @@ const Home = () => {
       <section className="py-15 bg-gradient-to-b from-black via-gray-900 to-black text-center flex flex-col items-center text-white">
         <p className="text-gray-400 text-sm md:text-lg mb-6">Trusted by learners from</p>
 
-        <div className="flex justify-center flex-wrap gap-10 items-center mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 mb-10 gap-10">
           <img src={microsoft_logo} alt="Microsoft" className="h-6 md:h-8" />
           <img src={walmart_logo} alt="Walmart" className="h-6 md:h-8" />
           <img src={adobe_logo} alt="Adobe" className="h-6 md:h-8" />

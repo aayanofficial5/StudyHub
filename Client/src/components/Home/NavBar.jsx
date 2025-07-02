@@ -138,7 +138,7 @@ const NavBar = () => {
             <Link to="/dashboard/cart" className="relative">
               <FaShoppingCart className="text-2xl hover:text-blue-400" />
               {totalItems.length > 0 && (
-                <span className="bg-blue-500 rounded-full absolute -top-2 -right-2 h-5 w-5 text-xs flex items-center justify-center animate-bounce">
+                <span className="bg-blue-500 rounded-full absolute -top-2 -right-0 h-5 w-5 text-xs flex items-center justify-center animate-bounce">
                   {totalItems.length}
                 </span>
               )}
@@ -171,7 +171,7 @@ const NavBar = () => {
           <div className="flex flex-col gap-4 p-6">
             {/* Close Button */}
             <button
-              className="text-white self-start text-2xl"
+              className="text-white self-end text-2xl"
               onClick={() => setMobileMenuOpen(false)}
             >
               <MdClose size={30}/>

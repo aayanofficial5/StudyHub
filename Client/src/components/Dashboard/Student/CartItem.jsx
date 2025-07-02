@@ -6,6 +6,7 @@ import { removeFromCart } from "../../../redux/slices/cartSlice";
 const CartItem = ({ id, title, desc, price, img }) => {
   const dispatch = useDispatch();
   const totalItems = useSelector((state) => state.cart.totalItems);
+
   const handleRemove = () => {
     dispatch(removeFromCart(id));
     localStorage.setItem("totalItems", JSON.stringify(totalItems));
@@ -13,24 +14,24 @@ const CartItem = ({ id, title, desc, price, img }) => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 border-b border-gray-700 pb-5">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6 border-b border-gray-700 pb-5">
       {/* Thumbnail */}
       <img
         src={img}
         alt={title}
-        className="w-[150px] lg:w-[200px]  rounded-xl"
+        className="w-full sm:w-[150px] lg:w-[230px] object-cover rounded-xl"
       />
 
       {/* Details */}
       <div className="flex flex-col justify-between w-full text-white">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        <p className="text-sm text-gray-400 mt-1">
+        <h3 className="text-base sm:text-lg lg:text-xl font-semibold">{title}</h3>
+        <p className="text-sm sm:text-base text-gray-400 mt-1 leading-snug">
           {desc?.length > 80 ? `${desc.substring(0, 80)}...` : desc}
         </p>
 
-        {/* Price and Delete */}
-        <div className="mt-4 flex justify-between items-center">
-          <span className="text-green-400 text-md font-semibold">
+        {/* Price and Delete Button */}
+        <div className="mt-4 flex flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+          <span className="text-green-400 text-sm sm:text-base font-semibold">
             ₹ {price}
           </span>
           <button

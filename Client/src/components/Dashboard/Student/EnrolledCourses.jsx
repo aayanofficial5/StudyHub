@@ -30,15 +30,15 @@ export default function EnrolledCourses() {
   });
 
   return (
-    <div className="flex flex-col gap-6 w-full opacity-80 min-h-screen">
-      <h1 className="text-3xl font-bold">Enrolled Courses</h1>
+    <div className="flex flex-col mb-10 gap-6 w-full opacity-80 min-h-screen">
+      <h1 className="text-2xl md:text-3xl font-bold">Enrolled Courses</h1>
       {/* Filter Tabs */}
       <div className="flex gap-4">
         {["All", "Pending", "Completed"].map((tab) => (
           <button
             key={tab}
             onClick={() => setFilter(tab)}
-            className={`px-4 py-1 rounded-full border transition cursor-pointer ${
+            className={`px-4 py-1 rounded-full border transition cursor-pointer text-sm md:text-base ${
               filter === tab
                 ? "bg-white text-black font-semibold"
                 : "bg-gray-700 text-white"
@@ -69,34 +69,34 @@ export default function EnrolledCourses() {
             >
               <div className="flex flex-col lg:flex-row items-center justify-between flex-grow">
                 {/* Course Info */}
-                <div className="flex items-center gap-4 w-full lg:w-1/3">
+                <div className="flex flex-col md:flex-row items-center gap-4 w-full lg:w-1/3">
                   <img
                     src={course.thumbnail}
                     alt="thumbnail"
                     loading="lazy"
-                    className="w-25 rounded-md object-contain"
+                    className="md:w-38 rounded-md object-contain"
                   />
                   <div>
-                    <h3 className="font-semibold text-lg">{course.title}</h3>
-                    <p className="text-sm text-gray-400">
+                    <h3 className="font-semibold text-base md:text-lg">{course.title}</h3>
+                    <p className="text-xs md:text-sm text-gray-400">
                       {course.description.substring(0, 50) + "..."}
                     </p>
                   </div>
                 </div>
 
                 {/* Duration */}
-                <div className="text-sm text-gray-300 w-full lg:w-[120px] mt-4 lg:mt-0">
+                <div className="text-xs md:text-sm text-gray-300 w-full lg:w-[120px] mt-4 lg:mt-0">
                   {convertSecondsToDuration(course.duration)}
                 </div>
 
                 {/* Progress Bar */}
                 <div className="w-full lg:w-1/3 mt-4 lg:mt-0">
-                  <div className="text-xs text-gray-300 mb-1">
+                  <div className="text-xs md:text-sm text-gray-300 mb-1">
                     {course.progress === 100
                       ? "Completed"
                       : `Progress ${course.progress}%`}
                   </div>
-                  <div className="w-full bg-gray-600 h-2 rounded-full">
+                  <div className="md:w-[90%] bg-gray-600 h-2 rounded-full">
                     <div
                       className={`h-2 rounded-full ${
                         course.progress === 100
@@ -111,7 +111,7 @@ export default function EnrolledCourses() {
             </div>
           ))}
         {filteredCourses.length == 0 && (
-          <div className="flex flex-col gap-5 justify-center items-center w-full rounded-b-xl bg-gray-800 h-[50vh] text-2xl">
+          <div className="flex flex-col gap-5 justify-center items-center w-full rounded-b-xl bg-gray-800 h-[50vh] text-2xl text-center">
             {filter=="All"&&<div>You are not Enrolled in any Courses!</div>}
             {filter=="Pending"&&<div>You have no Pending Courses!</div>}
             {filter=="Completed"&&<div>You have not Completed any Courses Yet!</div>}

@@ -20,9 +20,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
   return (
     <div className="relative">
-      <div className="flex flex-row min-h-fit w-full gap-10">
+      <div className="flex flex-row min-h-fit w-full">
         <SideBar setLogoutModal={setLogoutModal} />
-        <div className="flex justify-center items-center w-full px-10 lg:px-20 my-10">
+        <div className="flex justify-center items-center w-full px-10 lg:px-20 py-10 bg-gradient-to-br from-black via-gray-900 to-slate-950">
           {loading ? <Loading /> : <Outlet context={{ setDeletionModal }} />}
         </div>
       </div>
