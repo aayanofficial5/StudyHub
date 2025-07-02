@@ -14,11 +14,11 @@ const BannerBlocks = ({
 }) => {
   return (
     <div
-      className={`flex ${flexDirection} w-full justify-center items-center px-20 mt-20 md:mt-10 gap-15 md:py-10`}
+      className={`flex ${flexDirection} w-full justify-center items-center px-10 md:px-20 mt-5 md:mt-0 gap-15 md:py-10`}
     >
       {/* Left Section - Text */}
       <div className="md:w-1/2 flex flex-col justify-between text-white scale-105">
-        <div className="font-bold text-3xl text-left w-[90%]">
+        <div className="font-bold text-xl md:text-3xl text-left w-[90%]">
           <div>
             {h1}
             <HighlightedText text={h2} color="yellow-300" />
@@ -27,10 +27,10 @@ const BannerBlocks = ({
           </div>
         </div>
 
-        <div className="w-[90%] mt-5 text-lg opacity-70 text-left">
+        <div className="w-[90%] mt-5 text-sm md:text-lg opacity-70 text-left">
           <pre className="whitespace-pre-wrap">{description}</pre>
         </div>
-        <div className="flex flex-row mt-5 gap-4 justify-start w-[90%]">
+        <div className="flex flex-col md:flex-row mt-5 gap-4 justify-start w-fit text-sm md:text-base">
           {button1 && (
             <NavLink to="/signup">
               <CTAButton arrow={true} active={true} text={button1} />

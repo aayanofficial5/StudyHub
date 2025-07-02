@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getCatalogPageData } from "./../services/operations/pageAndComponentDataApi";
 import Footer from "../components/Home/Footer";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { catalogData } from "./../data/dummyData";
 import CourseCard from "../components/Common/CourseCard";
 import { useSelector } from "react-redux";
@@ -27,12 +27,12 @@ const Catalog = () => {
     <>
       <div className="text-gray-400 w-full m-0 p-0 overflow-x-hidden">
         {/* Hero Section */}
-        <div className="bg-gray-900/60 mb-8">
-          <div className="flex flex-col justify-center gap-4 pl-5 md:pl-20 min-h-[260px] max-w-screen-xl mx-auto">
+        <div className="bg-gradient-to-tr from-slate-950 via-gray-800 to-black">
+          <div className="flex flex-col justify-center gap-4 px-5 md:pl-20 min-h-[260px] max-w-screen-xl mx-auto">
             <p className="text-sm">
-              Home / Catalog /
+              <Link to="/" className="hover:underline">Home</Link> / Catalog /
               <span className="text-yellow-300">
-                {catalogPageData?.data?.selectedCategory?.name}
+                {" "+catalogPageData?.data?.selectedCategory?.name}
               </span>
             </p>
             <p className="text-3xl text-gray-200 font-semibold">
@@ -48,7 +48,7 @@ const Catalog = () => {
         </div>
 
         {/* Content Sections */}
-        <div className="w-full flex flex-col items-center px-4 md:px-10">
+        <div className="w-full flex flex-col items-center py-8 px-4 md:px-10 bg-gradient-to-br from-black via-gray-900 to-black">
           {/* Section 1 */}
           <section className="mb-12 w-full max-w-screen-xl">
             <div className="flex mb-4">
@@ -73,13 +73,17 @@ const Catalog = () => {
             </div>
             <CourseSlider
               courses={catalogPageData?.data?.selectedCategory.course}
+              slider="1"
             />
           </section>
 
           {/* Section 2 */}
           <section className="mb-12 w-full max-w-screen-xl text-white">
             <h1 className="text-2xl font-bold mb-4">Most Selling Courses</h1>
-            <CourseSlider courses={catalogPageData?.data?.mostSellingCourses} />
+            <CourseSlider
+              courses={catalogPageData?.data?.mostSellingCourses}
+              slider="2"
+            />
           </section>
 
           {/* Section 3 */}
@@ -88,16 +92,15 @@ const Catalog = () => {
               Frequently Bought Together
             </h1>
             {catalogPageData?.data?.differentCategory.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2">
+              <div className="grid grid-cols-1 md:grid-cols-3">
                 {catalogPageData?.data?.differentCategory
-                  .slice(0, 4)
+                  .slice(0, 6)
                   .map((course, index) => (
                     <div
                       key={index}
                       className="flex justify-center items-center"
                     >
-                      
-                      <CourseCard course={course} width={700} height={500} />
+                      <CourseCard course={course} width={500} height={550} />
                     </div>
                   ))}
               </div>

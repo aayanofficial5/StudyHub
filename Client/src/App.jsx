@@ -40,7 +40,7 @@ const App = () => {
   const user = useSelector((state) => state.profile.user);
 
   return (
-    <div className="max-h-fit bg-black opacity-90 flex flex-col w-screen mx-auto pr-[15px]">
+    <div className="max-h-fit bg-black opacity-90 flex flex-col w-screen mx-auto">
       {/* <div className="flex flex-col items-center bg-blue-500">
       <h1 className="text-white">Welcome to Our Application</h1>
       </div> */}

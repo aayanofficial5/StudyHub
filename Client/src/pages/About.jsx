@@ -16,8 +16,8 @@ const About = () => {
   return (
     <div>
       {/*Section 1 */}
-      <section>
-        <div className="flex flex-col gap-4 w-full items-center mt-8">
+      <section className="bg-gradient-to-tl from-slate-950 via-gray-800 to-black pt-8 px-5">
+        <div className="flex flex-col gap-4 w-full items-center">
           <div className="flex flex-col items-center">
             <HighlightBanner
               title="Crafting Tomorrow’s Success Through"
@@ -35,7 +35,7 @@ const About = () => {
               className="hidden md:block w-[25%] h-[25%]"
             />
           </div>
-          <div className="font-bold text-2xl mt-5 text-center w-[75%]">
+          <div className="font-bold text-base md:text-2xl mt-5 text-center w-[90%] md:w-[75%]">
             We’re on a mission to{" "}
             <HighlightedText
               text="reshape the future of learning."
@@ -61,7 +61,7 @@ const About = () => {
         </div>
       </section>
       {/*Section 2 */}
-      <section>
+      <section className="bg-gradient-to-bl from-slate-950 via-gray-800 to-black pt-10 md:pt-20">
         <div className="flex flex-col gap-4 w-full items-center">
           <div className="flex flex-col items-center w-[100%]">
             <BannerBlocks
@@ -70,13 +70,13 @@ const About = () => {
               h3="for a Better Future"
               flexDirection={"flex-col-reverse md:flex-row"}
               description={`At KnowGeek, we're on a mission to reshape the future of learning. Our platform blends cutting-edge technology, real-world expertise, and a thriving learner community to deliver a transformative educational experience that empowers every individual.
-
+              
 Through innovative tools, industry-relevant content, and a strong community of learners and mentors, we aim to bridge the gap between education and opportunity. We’re not just preparing learners for exams we’re preparing them for life, careers, and leadership in a digital world.`}
               image={aboutBanner}
             ></BannerBlocks>
           </div>
-          <div className="flex flex-col md:flex-row gap-15 w-full h-fit my-20">
-            <div className="flex flex-col md:w-[60%] justify-center items-center">
+          <div className="flex flex-col md:flex-row gap-15 w-full h-fit my-10 md:my-20 px-5">
+            <div>
               <HighlightBanner
                 highlightedText="Our Vision"
                 color="yellow-300"
@@ -84,7 +84,7 @@ Through innovative tools, industry-relevant content, and a strong community of l
                 textAlign="text-left"
               ></HighlightBanner>
             </div>
-            <div className="md:w-[60%] flex flex-col justify-center items-center">
+            <div>
               <HighlightBanner
                 highlightedText="Our Mission"
                 color="blue-400"
@@ -93,15 +93,15 @@ Through innovative tools, industry-relevant content, and a strong community of l
               ></HighlightBanner>
             </div>
           </div>
-          <div className="w-full flex flex-row justify-evenly bg-gray-700 p-8">
+          <div className="w-full flex flex-row justify-evenly bg-gradient-to-b from-slate-900 via-slate-700 to-slate-900 p-5 md:p-8">
             {aboutUs.map(({ num, desc }, index) => {
               return (
                 <div
                   className="flex flex-col gap-2 items-center w-20 md:w-50 text-center"
                   key={index}
                 >
-                  <p className="text-2xl font-bold">{num}</p>
-                  <p className="text-white/30">{desc}</p>
+                  <p className="text-xl md:text-2xl font-bold">{num}</p>
+                  <p className="text-xs md:text-base text-white/30">{desc}</p>
                 </div>
               );
             })}{" "}
@@ -109,27 +109,26 @@ Through innovative tools, industry-relevant content, and a strong community of l
         </div>
       </section>
       {/*Section 3 */}
-      <section>
-        <div className="flex flex-col m-15 md:m-30">
+      <section className="bg-gradient-to-b from-slate-950 via-gray-800 to-black py-10 md:py-30 px-10 md:mx-0">
+        <div className="flex flex-col md:mx-30">
           <div className="grid grid-cols-1 lg:grid-rows-2 lg:grid-cols-4 lg:h-[75vh] min-h-fit">
             {/*div*/}
             <div
-              className="flex flex-col gap-3 mx-auto my-auto text-white p-2 lg:col-span-2
-
+              className="flex flex-col gap-2 mx-auto pb-10 text-white lg:col-span-2
             "
             >
-              <div className="font-bold text-3xl text-left">
+              <div className="font-bold text-xl md:text-3xl text-left">
                 World-Class Learning for <br />
                 <HighlightedText text="Anyone, Anywhere" color="yellow-300" />
               </div>
-              <div className="text-lg opacity-70 text-left w-11/12">
+              <div className="text-sm md:text-lg opacity-60 text-left w-11/12">
                 <p>
                   KnowGeek partners with top educators and companies to bring
                   flexible, affordable, and job-relevant learning to individuals
                   and organizations worldwide.
                 </p>
               </div>
-              <div className="w-[150px]">
+              <div className="w-fit text-sm md:text-base">
                 <NavLink to="/signup">
                   <CTAButton arrow={true} active={true} text="Learn More" />
                 </NavLink>
@@ -139,13 +138,13 @@ Through innovative tools, industry-relevant content, and a strong community of l
             {aboutCardData.map((card, index) => (
               <div
                 key={index}
-                className={`flex flex-col flex-wrap gap-4 text-sm opacity-90 ${
+                className={`flex flex-col flex-wrap gap-4 text-sm opacity-90 mx-5 ${
                   index === 2 && "lg:col-start-2"
                 }`}
               >
-                <div className={`${card.bgColor} p-5 h-full text-xl`}>
+                <div className={`${card.bgColor} p-5 h-full text-base md:text-xl`}>
                   <h3 className=" font-medium text-white mb-2">{card.title}</h3>
-                  <p className="text-gray-400 text-lg">{card.description}</p>
+                  <p className="text-gray-400 text-sm md:text-lg">{card.description}</p>
                 </div>
               </div>
             ))}
@@ -153,16 +152,13 @@ Through innovative tools, industry-relevant content, and a strong community of l
         </div>
       </section>
       {/*Section 4*/}
-      <section>
-        <div className="flex flex-col items-center">
-          <ReviewSlider />
-          <div className="flex flex-col items-center border-1 border-gray-700 rounded-lg mt-10">
-            <HighlightBanner
-              title="Get in Touch"
-              paragraph="We'd love to hear from you, Please fill out this form."
-            />
-            <ContactUsForm />
-          </div>
+      <section className="bg-gradient-to-b from-slate-950 via-gray-800 to-black">
+        <ReviewSlider />
+        <div className="w-full flex justify-center p-20">
+          <ContactUsForm
+            title="Get in Touch"
+            paragraph="We'd love to hear from you, Please fill out this form."
+          />
         </div>
       </section>
       <Footer />

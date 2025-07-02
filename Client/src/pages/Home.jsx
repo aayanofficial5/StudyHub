@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CourseCard from "./../components/Common/CourseCard";
 import Footer from "../components/Home/Footer";
 import ReviewSlider from "../components/Common/ReviewSlider";
-import InstallPrompt from './../components/Common/InstallPrompt';
+import InstallPrompt from "./../components/Common/InstallPrompt";
 const Home = () => {
   const [search, setSearch] = useState("");
   const [courseData, setCourseData] = useState([]);
@@ -50,8 +50,6 @@ const Home = () => {
     // }
     fetchTopCourses();
   }, []);
-  
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -62,77 +60,80 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <div className="w-[100w]">
       {/* Section1 */}
-      <InstallPrompt/>
-      <section>
-        <div className="relative mx-auto flex flex-col w-11/12 items-center text-white top-10 justify-between">
-          <form
-            className="flex items-center gap-4 max-w-md w-full mt-5"
-            onSubmit={(e) => handleSubmit(e)}
-          >
-            <div className="flex items-center w-full  h-[50px] rounded-md overflow-hidden  bg-gray-300 text-gray-900">
-              <div className="mx-3">
-                <IoMdSearch size={25} />
-              </div>
-              <input
-                type="text"
-                placeholder="Search for courses"
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                className="w-full h-full outline-none  placeholder-gray-500 border-l-1 border-gray-400 text-base px-3"
-              />
+      <InstallPrompt />
+      <section
+        style={{
+          backgroundImage: `url(${Banner})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        className="w-full min-h-fit"
+      >
+        <div className="bg-gradient-to-b from-black/90 via-gray-900/80 to-black/95 h-full">
+          <div className="relative mx-auto flex flex-col w-11/12 items-center text-white pt-10 pb-20 justify-between h-full">
+            <form
+              className="flex items-center gap-4 max-w-md w-full mt-5"
+              onSubmit={(e) => handleSubmit(e)}
+            >
+              <div className="flex items-center w-full  h-[50px] rounded-md overflow-hidden  bg-gray-300 text-gray-900">
+                <div className="mx-3">
+                  <IoMdSearch size={25} />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search for courses"
+                  onChange={(e) => setSearch(e.target.value)}
+                  value={search}
+                  className="w-full h-full outline-none  placeholder-gray-500 border-l-1 border-gray-400 text-base px-3"
+                />
 
-              <button className="bg-blue-500 hover:bg-blue-400 h-full px-7 font-semibold text-white">
-                Submit
-              </button>
-            </div>
-          </form>
-          {!user && (
-            <NavLink to="/signup">
-              <div className="group mx-auto rounded-full bg-gray-700 font-bold text-gray-200 transition-all duration-200 hover:scale-97 border-3 border-black hover:border-blue-400 mt-5">
-                <button className="flex flex-row items-center gap-2 rounded-full px-10 py-2 group-hover:bg-black cursor-pointer">
-                  <p>Become an Instructor</p>
-                  <FaArrowRightLong />
+                <button className="bg-blue-500 hover:bg-blue-400 h-full px-7 font-semibold text-white">
+                  Submit
                 </button>
               </div>
-            </NavLink>
-          )}
-          <HighlightBanner
-            title="Empower your future with the courses designed to"
-            highlightedText="fit your choice"
-            color="yellow-300"
-            paragraph="With our online coding courses, you can learn at your own pace, from anywhere in the world, and get access to a wealth of resources, including hands-on projects, quizzes, and personalized feedback from instructors."
-          />
-          <div className="flex flex-row gap-4 mt-5">
-            <NavLink to="/signup">
-              <CTAButton
-                active={true}
-                arrow={false}
-                text="Learn More"
-              ></CTAButton>
-            </NavLink>
-            <NavLink to="/demo">
-              <CTAButton
-                active={false}
-                arrow={false}
-                text="Book a Demo"
-              ></CTAButton>
-            </NavLink>
-          </div>
-          <div className="relative my-20 mx-5">
-            <img src={Banner} className="rounded-xl opacity-30" />
-            <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black to-transparent "></div>
-            <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-black to-transparent "></div>
-            <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-black to-transparent "></div>
-
-            <div className="absolute bottom-0 right-0 w-24 h-full bg-gradient-to-l from-black to-transparent "></div>
+            </form>
+            {!user && (
+              <NavLink to="/signup">
+                <div className="group mx-auto rounded-full bg-gradient-to-r from-slate-900 via-gray-800 to-gray-950 font-bold text-gray-200 transition-all duration-200 hover:scale-97 border-2 border-gray-600 hover:border-blue-400 mt-5">
+                  <button className="flex flex-row items-center gap-2 rounded-full px-10 py-2 group-hover:bg-black cursor-pointer">
+                    <p>Become an Instructor</p>
+                    <FaArrowRightLong className="animate-pulse" />
+                  </button>
+                </div>
+              </NavLink>
+            )}
+            <div className="md:w-320">
+            <HighlightBanner
+              title="Empower your future with the courses designed to"
+              highlightedText="fit your choice"
+              color="yellow-300"
+              paragraph="With our online coding courses, you can learn at your own pace, from anywhere in the world, and get access to a wealth of resources, including hands-on projects, quizzes, and personalized feedback from instructors."
+            />
+            </div>
+            <div className="flex flex-row gap-4 mt-5">
+              <NavLink to="/signup">
+                <CTAButton
+                  active={true}
+                  arrow={false}
+                  text="Learn More"
+                ></CTAButton>
+              </NavLink>
+              <NavLink to="/demo">
+                <CTAButton
+                  active={false}
+                  arrow={false}
+                  text="Book a Demo"
+                ></CTAButton>
+              </NavLink>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Section2 */}
-      <section className="bg-gray-900 pt-1 md:pt-0 pb-1">
+      <section className="bg-gradient-to-b from-black via-gray-900 to-black w-full flex flex-col gap-10">
         <BannerBlocks
           h1="Unlock your"
           h2="coding potential"
@@ -155,19 +156,18 @@ const Home = () => {
         />
       </section>
       {/* Section3 */}
-      <section className="py-10 bg-black text-center flex flex-col items-center text-white">
-        <p className="text-gray-400 text-base mb-6">Trusted by learners from</p>
+      <section className="py-15 bg-gradient-to-b from-black via-gray-900 to-black text-center flex flex-col items-center text-white">
+        <p className="text-gray-400 text-sm md:text-lg mb-6">Trusted by learners from</p>
 
         <div className="flex justify-center flex-wrap gap-10 items-center mb-10">
-          <img src={microsoft_logo} alt="Microsoft" className="h-8" />
-          <img src={walmart_logo} alt="Walmart" className="h-6" />
-          <img src={adobe_logo} alt="Adobe" className="h-6" />
-          <img src={paypal_logo} alt="PayPal" className="h-8" />
+          <img src={microsoft_logo} alt="Microsoft" className="h-6 md:h-8" />
+          <img src={walmart_logo} alt="Walmart" className="h-6 md:h-8" />
+          <img src={adobe_logo} alt="Adobe" className="h-6 md:h-8" />
+          <img src={paypal_logo} alt="PayPal" className="h-6 md:h-8" />
         </div>
         <div className="flex flex-col items-center">
           <HighlightBanner
             title="Learn from the best"
-            color="yellow-300"
             paragraph="Discover our top-rated courses across various categories. From coding and design to business and wellness, our courses are crafted to deliver results."
           />
         </div>
@@ -176,16 +176,16 @@ const Home = () => {
             courseData
               .slice(0, 4)
               .map((course, index) => (
-                <CourseCard key={index} course={course}/>
+                <CourseCard key={index} course={course} />
               ))}
         </div>
-        <NavLink to="/search/all-courses">
+        <NavLink to="/search/all-courses" className="text-sm md:text-base">
           <CTAButton active={true} arrow={true} text="View All Courses" />
         </NavLink>
       </section>
       {/* Section4 */}
-      <section>
-        <ReviewSlider/>
+      <section className="bg-gradient-to-b from-black via-gray-900 to-gray-950 pb-10 w-full">
+        <ReviewSlider />
         <div className="flex flex-col justify-center flex-wrap gap-3 items-center text-center">
           <div className="flex flex-col items-center">
             <HighlightBanner
@@ -194,7 +194,7 @@ const Home = () => {
             integrity, purpose, and attention to user satisfaction."'
             />
           </div>
-          <div className="flex flex-row gap-4 text-white mt-5">
+          <div className="flex flex-row gap-4 text-sm md:text-base text-white mt-5">
             <NavLink to="/course-list">
               <CTAButton active={true} arrow={false} text="Get Started" />
             </NavLink>

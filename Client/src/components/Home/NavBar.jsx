@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import logo from "../../assets/icon.png"; // adjust the path as needed
-import CTAButton from "./CTAButton"; // reusable button
+import CTAButton from "./CTAButton";
 import { useSelector } from "react-redux";
 import { FaShoppingCart, FaPlusCircle } from "react-icons/fa";
-import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
 import ProfileDropDown from "./ProfileDropDown";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { Outlet } from "react-router-dom";
 import { NavbarLinks } from "../../data/Navbar-Link";
 import { getCourseCategories } from "../../services/operations/courseapis";
+import { MdClose, MdMenu } from 'react-icons/md';
+import Logo from "../Common/Logo";
 
 const NavBar = () => {
   const token = useSelector((state) => state.auth.token);
@@ -17,7 +17,9 @@ const NavBar = () => {
   const { totalItems } = useSelector((state) => state.cart);
   const [subLinks, setSubLinks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { pathname } = useLocation();
+
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -31,24 +33,33 @@ const NavBar = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "auto";
+  }, [mobileMenuOpen]);
+
   return (
     <>
+      {/* Top Nav */}
       <div
-        className={`flex items-center justify-around px-6 py-4 shadow-md border-b-1 border-gray-700 h-[70px] ${
-          pathname != "/" && "bg-gray-900/60"
+        className={`relative flex items-center justify-between md:justify-around px-6 py-4 shadow-md border-b-1 border-gray-800 h-[70px] ${
+          pathname !== "/" && "bg-gray-900/60"
         }`}
       >
-        {/* Hamburger Menu */}
-        <GiHamburgerMenu className="text-2xl text-gray-300 md:hidden cursor-pointer" />
-        {/* Logo and Brand */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            <img src={logo} alt="logo" className="w-10 h-10" loading="lazy" />
-            <h1 className="text-[1.3rem] font-bold text-gray-300">StudyHub</h1>
-          </div>
-        </Link>
+        {/* Hamburger Menu (mobile only) */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden text-3xl text-gray-300 focus:outline-none"
+        >
+          <MdMenu/>
+        </button>
 
-        {/* Navigation Links */}
+        {/* Logo */}
+        <Logo/>
+        {/*ProfileDropDown*/}
+        <div className={`md:hidden ${token?"visible":"invisible"}`}>
+          <button>{token&&<ProfileDropDown />}</button>
+        </div>
+        {/* Desktop Nav */}
         <nav className="hidden md:block">
           <ul className="flex gap-x-6 font-semibold tracking-wider">
             {NavbarLinks.map((link, index) => (
@@ -110,48 +121,149 @@ const NavBar = () => {
           </ul>
         </nav>
 
-        {/* CTA Buttons , Profile & Cart Icon */}
-        <div className="flex flex-row justify-between items-center gap-5 text-white">
-          {/* Login */}
+        {/* Right Section */}
+        <div className="hidden md:flex items-center gap-5 text-white">
           {!token && (
-            <Link to="/login" className="hover:text-black">
-              <CTAButton text="Login" active={true}></CTAButton>
-            </Link>
+            <>
+              <Link to="/login">
+                <CTAButton text="Login" active />
+              </Link>
+              <Link to="/signup">
+                <CTAButton text="Signup" />
+              </Link>
+            </>
           )}
-          {/* Signup */}
-          {!token && (
-            <Link to="/signup" className="hover:text-blue-500">
-              <CTAButton text="Signup" active={false}></CTAButton>
-            </Link>
-          )}
-          {/* Cart */}
-          {user && user?.accountType != "Instructor" && (
+
+          {user && user?.accountType !== "Instructor" && (
             <Link to="/dashboard/cart" className="relative">
-              <div className="relative">
-                <FaShoppingCart className=" hover:text-blue-400 text-2xl" />
-                {totalItems.length > 0 && (
-                  <span className="bg-blue-500 rounded-full absolute -top-2 -right-2 h-5 w-5 text-xs flex justify-center items-center animate-bounce">
-                    {totalItems.length}
-                  </span>
-                )}
-              </div>
+              <FaShoppingCart className="text-2xl hover:text-blue-400" />
+              {totalItems.length > 0 && (
+                <span className="bg-blue-500 rounded-full absolute -top-2 -right-2 h-5 w-5 text-xs flex items-center justify-center animate-bounce">
+                  {totalItems.length}
+                </span>
+              )}
             </Link>
           )}
-          {/* Add Course */}
-          {user && user?.accountType == "Instructor" && (
-            <Link to="/dashboard/add-course" className="hover:text-blue-500">
-              <button
-                title="Add Course"
-                className="text-2xl text-blue-500 mt-2"
-              >
-                <FaPlusCircle />
-              </button>
+
+          {user && user?.accountType === "Instructor" && (
+            <Link to="/dashboard/add-course">
+              <FaPlusCircle className="text-2xl text-blue-500 mt-1 hover:text-blue-400" />
             </Link>
           )}
-          {/* ProfileDropdown */}
+
           {token && <ProfileDropDown />}
         </div>
       </div>
+
+      {/* Slide-in Mobile Menu with Backdrop */}
+      <div
+        className={`md:hidden fixed inset-0 z-999 transition-all duration-300 ${
+          mobileMenuOpen ? "visible bg-black/30 backdrop-blur-sm" : "invisible"
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        <div
+          className={`absolute top-0 left-0 h-full w-[70%] max-w-[300px] bg-gray-900/80 text-white shadow-md transform transition-transform duration-300 ${
+            mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex flex-col gap-4 p-6">
+            {/* Close Button */}
+            <button
+              className="text-white self-start text-2xl"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <MdClose size={30}/>
+            </button>
+
+            {/* Mobile Links */}
+            {NavbarLinks.map((link, index) => (
+              <div key={index}>
+                {link.name === "Catalog" ? (
+                  <details>
+                    <summary className="cursor-pointer py-2 text-lg flex items-center justify-between font-semibold">
+                      Catalog <IoIosArrowDown />
+                    </summary>
+                    <div className="flex flex-col gap-2 ml-2 mt-2">
+                      {loading ? (
+                        <span>Loading…</span>
+                      ) : subLinks.length ? (
+                        subLinks
+                          .filter((s) => s?.course?.length > 0)
+                          .map((s, i) => (
+                            <NavLink
+                              to={`${link.path}/${s.name
+                                .split(" ")
+                                .join("-")
+                                .toLowerCase()}`}
+                              key={i}
+                              onClick={() => setMobileMenuOpen(false)}
+                              className={({ isActive }) =>`py-1 bg-gray-600/30 pl-3 rounded-md ${isActive&&"text-blue-400"}`}
+                            >
+                              {s.name}
+                            </NavLink>
+                          ))
+                      ) : (
+                        <span>No Courses Found</span>
+                      )}
+                    </div>
+                  </details>
+                ) : (
+                  <NavLink
+                    to={link.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `block py-2 text-lg font-semibold ${
+                        isActive ? "text-blue-400" : ""
+                      }`
+                    }
+                  >
+                    {link.name}
+                  </NavLink>
+                )}
+              </div>
+            ))}
+
+            {/* Mobile CTAs */}
+            <div className="flex flex-col gap-3 border-t-1 pt-6">
+              {!token && (
+                <>
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                    <CTAButton text="Login" active />
+                  </Link>
+                  <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
+                    <CTAButton text="Signup" />
+                  </Link>
+                </>
+              )}
+
+              {user && user?.accountType !== "Instructor" && (
+                <NavLink
+                  to="/dashboard/cart"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>`flex items-center gap-3 ${isActive&&"text-blue-400"}`}
+                >
+                  <FaShoppingCart className="text-xl" />
+                  Cart ({totalItems.length})
+                </NavLink>
+              )}
+
+              {user && user?.accountType === "Instructor" && (
+                <Link
+                  to="/dashboard/add-course"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3"
+                >
+                  <FaPlusCircle className="text-xl" />
+                  Add Course
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <Outlet />
     </>
   );
