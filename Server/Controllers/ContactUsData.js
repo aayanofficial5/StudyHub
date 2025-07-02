@@ -2,7 +2,7 @@ const ContactUsData = require("../Models/ContactUsData.js");
 // Contact Us Data
 exports.contactUsData = async (req, res) => {
   try {
-    const { firstName, lastName, email, phoneNumber, message } = req.body;
+    const { firstName="", lastName="", email, phoneNumber="", message="" } = req.body;
     const contactUsData = await ContactUsData.create({
       firstName,
       lastName,

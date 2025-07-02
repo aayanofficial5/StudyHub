@@ -1,80 +1,94 @@
-import React from "react";
+import React, { use, useState } from "react";
 import logo from "../../assets/icon.png";
 import { NavLink } from "react-router-dom";
+import Logo from "./../Common/Logo";
+import { contactUsData } from "../../services/operations/authapis";
+import toast from "react-hot-toast";
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  async function handleSubscribe(e) {
+    e.preventDefault();
+    if (!email) {
+      toast.error("Please Enter Email to Subscribe");
+      return;
+    }
+    const result = await contactUsData({ email });
+    if (result) {
+      toast.success("Subscribed Successfully!");
+      setEmail("");
+    }
+  }
+
   return (
-    <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500 bg-gray-800/50 mt-20">
-      <div className="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-500/30 pb-6">
-        <div className="md:max-w-96">
-          <NavLink
-            to="/"
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => window.scrollTo(0, 0)}
-          >
-            <div className="flex items-center gap-2">
-              <img src={logo} alt="logo" className="w-10 h-10" />
-              <h1 className="text-[1.3rem] font-bold text-gray-300">
-                KnowGeek
-              </h1>
-            </div>
-          </NavLink>
-          <p className="mt-6 text-sm">
-            Learn smarter. Build faster. Grow continuously. KnowGeek helps you
-            take charge of your learning journey.
+    <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-400 bg-gradient-to-bl from-gray-950 via-gray-900 to-gray-950 border-t border-gray-800">
+      <div className="flex flex-col md:flex-row justify-around gap-10 border-b border-gray-700 pb-8">
+        {/* Branding Section */}
+        <div className="md:max-w-md">
+          <div onClick={() => window.scrollTo(0, 0)} className="cursor-pointer">
+            <Logo />
+          </div>
+          <p className="mt-6 text-sm leading-relaxed">
+            Learn smarter. Build faster. Grow continuously.
+            <br />
+            <span className="text-white font-medium">StudyHub</span> empowers
+            your learning journey with curated content, expert instructors, and
+            hands-on projects.
           </p>
         </div>
-        <div className="flex-1 flex items-start md:justify-end gap-20">
+
+        {/* Links and Newsletter */}
+        <div className="flex-1 flex flex-col sm:flex-row justify-between gap-10">
+          {/* Company Links */}
           <div>
-            <h2 className="font-semibold mb-5 text-white">Company</h2>
+            <h2 className="font-semibold text-white mb-4">Company</h2>
             <ul className="text-sm space-y-2">
               <li>
                 <NavLink to="/" onClick={() => window.scrollTo(0, 0)}>
-                  <div>Home</div>
+                  Home
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/about">
-                  <div>About us</div>
-                </NavLink>
+                <NavLink to="/about">About Us</NavLink>
               </li>
               <li>
-                <NavLink to="/contact">
-                  <div>Contact us</div>
-                </NavLink>
+                <NavLink to="/contact">Contact Us</NavLink>
               </li>
               <li>
-                <NavLink to="/privacy">
-                  <div>Privacy policy</div>
-                </NavLink>
+                <NavLink to="/privacy">Privacy Policy</NavLink>
               </li>
             </ul>
           </div>
+
+          {/* Newsletter Section */}
           <div>
-            <h2 className="font-semibold text-white mb-5">
-              Subscribe to our newsletter
-            </h2>
-            <div className="text-sm space-y-2">
-              <p>
-                The latest news, articles, and resources, sent to your inbox
-                weekly.
-              </p>
-              <div className="flex items-center gap-2 pt-4">
-                <input
-                  className="border border-gray-500/30 placeholder-gray-500 outline-none w-full max-w-64 h-9 rounded px-2"
-                  type="email"
-                  placeholder="Enter your email"
-                />
-                <button className="bg-blue-600 w-24 h-9 text-white rounded cursor-pointer">
-                  Subscribe
-                </button>
-              </div>
+            <h2 className="font-semibold text-white mb-4">Stay Updated</h2>
+            <p className="text-sm mb-4">
+              Get the latest courses, news, and updates delivered straight to
+              your inbox.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                className="w-full max-w-xs px-3 py-2 border border-gray-600 rounded bg-transparent text-white placeholder-gray-400 outline-none"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <button
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                onClick={(e) => handleSubscribe(e)}
+              >
+                Subscribe
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <p className="pt-4 text-center text-xs md:text-sm pb-5">
-        Copyright 2024 © KnowGeek. All Right Reserved.
-      </p>
+
+      {/* Bottom copyright */}
+      <div className="pt-6 pb-4 text-center text-xs md:text-sm text-gray-500">
+        © {new Date().getFullYear()} StudyHub. All rights reserved.
+      </div>
     </footer>
   );
 };
