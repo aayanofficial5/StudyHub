@@ -197,11 +197,11 @@ exports.login = async (req, res) => {
       });
     }
 
-    if (user.googleId) {
+    if (user?.googleId) {
       return res.status(400).json({
         success: false,
         message:
-          "This account is registered via Google login. Please use Google Sign-In.",
+          "This account is registered via Google login. Please continue with Google to Sign-In.",
       });
     }
 
@@ -275,7 +275,7 @@ exports.googleLogin = async (req, res) => {
     // console.log(picture);
     let user = await User.findOne({ email }).populate("additionalDetails");
     
-    if (!user.googleId) {
+    if (user&&(!user?.googleId)) {
       return res.status(400).json({
         success: false,
         message:

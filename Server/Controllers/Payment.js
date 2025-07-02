@@ -159,7 +159,7 @@ exports.verifyPayment = async (req, res) => {
             userId,
             {
               $addToSet: {
-                courses: courseId,
+                course: courseId,
                 courseProgress: courseProgress._id,
               },
             },
