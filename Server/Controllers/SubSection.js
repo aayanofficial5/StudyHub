@@ -21,7 +21,7 @@ exports.createSubSection = async (req, res) => {
     }
     // upload video to cloudinary
     const uploadDetails = await fileUploader(video, process.env.FOLDER_NAME);
-    console.log(uploadDetails);
+    // console.log(uploadDetails);
 
     if (!uploadDetails?.secure_url || !uploadDetails?.duration) {
       return res.status(500).json({
@@ -156,7 +156,7 @@ exports.deleteSubSection = async (req, res) => {
 
     // delete video from cloudinary
     if (subSection.videoUrl) {
-      console.log(subSection.videoUrl);
+      // console.log(subSection.videoUrl);
       
       await fileDeleter(subSection.videoUrl,"video");
     }
