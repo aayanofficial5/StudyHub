@@ -73,7 +73,7 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
 
       {/* ───────────── sidebar container ───────────── */}
       <aside
-        className={`fixed inset-y-0 left-0 z-99 top-[70px] md:top-0 flex w-[300px] flex-col border-r border-gray-700 bg-gray-800 transition-transform duration-700 md:relative md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-99 top-[70px] md:top-0 flex w-[300px] flex-col border-r border-gray-700 bg-gradient-to-tr from-slate-900 via-gray-700 to-slate-900 transition-transform duration-700 md:relative md:translate-x-0 ${
           showSidebar ? "translate-x-0" : "-translate-x-full"
         }`}
       >

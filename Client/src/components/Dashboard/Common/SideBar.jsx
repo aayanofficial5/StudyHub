@@ -17,7 +17,7 @@ const SideBar = ({ setLogoutModal }) => {
   return (
     <>
       {/* ---------- desktop / tablet (left) ---------- */}
-      <div className="hidden lg:flex flex-col bg-gray-800 min-h-[89vh] w-[270px] gap-3">
+      <div className="hidden lg:flex flex-col bg-gradient-to-bl from-slate-900 via-gray-700 to-slate-950 min-h-[89vh] w-[270px] gap-3">
         <div className="flex flex-col mt-10">
           {permittedLinks.map((link) => (
             <SideBarLink key={link.id} link={link} icon={link.icon} />
@@ -42,7 +42,7 @@ const SideBar = ({ setLogoutModal }) => {
       </div>
 
       {/* ---------- mobile (bottom) ---------- */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-gray-800 border-gray-700 border-t-2">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-gradient-to-br from-slate-900 via-gray-700 to-slate-950 border-gray-700 border-t-2">
         {permittedLinks.map((link) => (
             <SideBarLink key={link.id} link={link} icon={link.icon} />
           ))}

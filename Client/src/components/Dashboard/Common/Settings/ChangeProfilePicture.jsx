@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaUpload } from "react-icons/fa";
-import { useState } from "react";
 import { profilePictureUpdate } from "../../../../services/operations/profileapis";
 
 const ChangeProfilePicture = () => {
@@ -15,24 +14,31 @@ const ChangeProfilePicture = () => {
     if (profilePicture) {
       const objectUrl = URL.createObjectURL(profilePicture);
       setPreviewUrl(objectUrl);
-
       return () => URL.revokeObjectURL(objectUrl);
     }
   }, [profilePicture]);
+
   return (
-    <div className="flex flex-row justify-between items-center w-full bg-gray-800/80 p-4 rounded-lg">
-      <div className="flex flex-row gap-2 justify-center items-center">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-800/80 p-4 rounded-lg w-full text-white">
+      {/* Profile Image */}
+      <div className="flex sm:flex-row gap-4 items-center">
         <img
           src={previewUrl || user?.image}
           alt="Profile"
-          className="w-16 h-16 rounded-full"
+          className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover"
         />
-        <div className="flex flex-col gap-2 items-center">
-          <p className="text-lg font-semibold">Change Profile Picture</p>
-          <div className="flex flex-row gap-2 font-semibold">
+
+        {/* Info and Buttons */}
+        <div className="flex flex-col gap-3 items-center sm:items-start">
+          <p className="text-base sm:text-lg font-semibold text-center sm:text-left">
+            Change Profile Picture
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* Select Button */}
             <label
               htmlFor="profilePictureUpload"
-              className="cursor-pointer px-4 py-2 bg-black border-3 border-blue-500 text-white rounded-lg active:scale-95 transition-all duration-200 hover:opacity-70 box-border"
+              className="cursor-pointer px-4 py-2 border border-blue-500 text-white rounded-lg active:scale-95 transition-all duration-200 hover:opacity-70"
             >
               Select
               <input
@@ -45,12 +51,14 @@ const ChangeProfilePicture = () => {
               />
             </label>
 
+            {/* Upload Button */}
             <button
-              className="bg-blue-500 text-white px-4 rounded-lg py-2 flex flex-row gap-2 items-center cursor-pointer border-3 border-blue-500 active:scale-95 transition-all duration-200 hover:opacity-70 box-border"
-              onClick={() => dispatch(profilePictureUpdate(profilePicture,token))}
+              disabled={!profilePicture}
+              onClick={() => dispatch(profilePictureUpdate(profilePicture, token))}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200
+              ${profilePicture ? "bg-blue-500 hover:opacity-80" : "bg-gray-500 !cursor-not-allowed"}`}
             >
-              Upload
-              <FaUpload />
+              Upload <FaUpload />
             </button>
           </div>
         </div>

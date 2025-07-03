@@ -29,16 +29,14 @@ export default function ChipInput({
       event.preventDefault();
       const chipValue = event.target.value.trim();
       if (chipValue && !chips.includes(chipValue)) {
-        const newChips = [...chips, chipValue];
-        setChips(newChips);
+        setChips((prev) => [...prev, chipValue]);
         event.target.value = "";
       }
     }
   };
 
-  const handleDeleteChip = (chipIndex) => {
-    const newChips = chips.filter((_, index) => index !== chipIndex);
-    setChips(newChips);
+  const handleDeleteChip = (index) => {
+    setChips((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -47,17 +45,18 @@ export default function ChipInput({
         {label} <span className="text-red-500">*</span>
       </label>
 
-      <div className="flex flex-wrap gap-2 mb-2">
+      <div className="flex flex-wrap gap-2 mb-2 overflow-hidden">
         {chips.map((chip, index) => (
           <span
             key={index}
-            className="bg-blue-500 px-3 py-1 rounded-full flex items-center gap-2"
+            className="bg-blue-500 px-3 py-1 rounded-full flex items-center gap-2 text-sm max-w-[90%] sm:max-w-xs truncate"
+            title={chip}
           >
-            {chip}
+            <span className="truncate">{chip}</span>
             <button
               type="button"
               onClick={() => handleDeleteChip(index)}
-              className="font-bold cursor-pointer hover:text-black"
+              className="cursor-pointer hover:text-black"
             >
               <MdClose />
             </button>

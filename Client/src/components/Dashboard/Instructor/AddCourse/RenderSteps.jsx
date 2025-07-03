@@ -25,7 +25,7 @@ const RenderSteps = () => {
 
   return (
     <>
-    <div className="flex items-center justify-between w-full max-w-xl mx-auto px-15 py-6">
+    <div className="flex items-center justify-between w-full max-w-xl mx-auto px-5 md:px-15 py-6">
       {steps.map((item, index) => (
         <React.Fragment key={index}>
           {/* Step */}

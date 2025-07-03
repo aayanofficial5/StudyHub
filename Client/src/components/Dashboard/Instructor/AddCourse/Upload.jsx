@@ -60,7 +60,7 @@ export default function Upload({
       <div>
         <label
           htmlFor={name}
-          className="block mb-1 font-medium text-richblack-5"
+          className="block mb-1 font-medium"
         >
           {label} {!viewData && <span className="text-red-500">*</span>}
         </label>
@@ -118,7 +118,7 @@ export default function Upload({
                 <span className="font-semibold text-blue-400">browse</span> a
                 file
               </p>
-              <ul className="mt-10 flex list-disc justify-between space-x-12 text-xs text-gray-400/90 tracking-wider">
+              <ul className="mt-10 flex flex-col md:flex-row list-disc justify-between space-x-12 text-xs text-gray-400/90 tracking-wider">
                 <li>Aspect ratio 16:9</li>
                 <li>Recommended size 1024x576</li>
               </ul>

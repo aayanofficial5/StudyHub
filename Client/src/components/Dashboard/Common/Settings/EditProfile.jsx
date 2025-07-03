@@ -1,18 +1,15 @@
 import React from "react";
-import { useSelector , useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { updateProfile } from "../../../../services/operations/profileapis";
+
 const EditProfile = () => {
   const user = useSelector((state) => state.profile.user);
-  const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
-  const genders = [
-    "Male",
-    "Female",
-    "Non-Binary",
-    "Prefer not to say",
-    "Other",
-  ];
+  const dispatch = useDispatch();
+
+  const genders = ["Male", "Female", "Non-Binary", "Prefer not to say", "Other"];
+
   const {
     register,
     handleSubmit,
@@ -20,131 +17,111 @@ const EditProfile = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    // Handle form submission logic here
-    dispatch(updateProfile(data,token));
+    dispatch(updateProfile(data, token));
   };
+
   return (
-    <div className="flex flex-col gap-2 bg-gray-800/80 p-4 rounded-lg w-full">
-      <div className="flex flex-row justify-between">
-        <h2 className="text-lg font-semibold">Personal Details</h2>
+    <div className="flex flex-col gap-4 bg-gray-800/80 p-4 sm:p-6 rounded-lg w-full text-white">
+      <div className="flex justify-between">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold">Personal Details</h2>
       </div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-5 w-full"
-      >
-        <div className="flex flex-col lg:flex-row gap-5 w-full">
-          {/*First Name*/}
-          <label className="flex flex-col lg:w-1/2">
-            <h3 className="text-sm text-gray-500 mb-2">First Name</h3>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        {/* Row 1 - First and Last Name */}
+        <div className="flex flex-col lg:flex-row gap-5">
+          <label className="flex flex-col lg:w-1/2 text-sm gap-1">
+            <span className="text-gray-400">First Name</span>
             <input
               type="text"
-              name="firstName"
               placeholder="Enter First Name"
-              aria-invalid={errors.firstName ? "true" : "false"}
               defaultValue={user?.firstName}
-              className="text-base p-2 border-1 rounded-md border-gray-500/80 bg-gray-700/80 "
               {...register("firstName", { required: true })}
+              className="p-2 rounded-md bg-gray-700 border border-gray-500 text-base"
             />
-            {errors.firstName && (
-            <span className="text-red-500">Please Enter First Name</span>
-          )}
+            {errors.firstName && <span className="text-red-500">Please Enter First Name</span>}
           </label>
-          {/*Last Name*/}
-          <label className="flex flex-col lg:w-1/2">
-            <h3 className="text-sm text-gray-500 mb-2">Last Name</h3>
+
+          <label className="flex flex-col lg:w-1/2 text-sm gap-1">
+            <span className="text-gray-400">Last Name</span>
             <input
               type="text"
-              name="lastName"
               placeholder="Enter Last Name"
-              aria-invalid={errors.lastName ? "true" : "false"}
               defaultValue={user?.lastName}
-              className="text-base p-2 border-1 rounded-md border-gray-500/80 bg-gray-700/80"
               {...register("lastName", { required: true })}
+              className="p-2 rounded-md bg-gray-700 border border-gray-500 text-base"
             />
-            {errors.lastName && (
-            <span className="text-red-500">Please Enter Last Name</span>
-          )}
+            {errors.lastName && <span className="text-red-500">Please Enter Last Name</span>}
           </label>
         </div>
-        <div className="flex flex-col lg:flex-row gap-5 w-full">
-          {/*Date of Birth*/}
-          <label className="flex flex-col lg:w-1/2">
-            <h3 className="text-sm text-gray-500 mb-2">Date of Birth</h3>
+
+        {/* Row 2 - Date of Birth and Gender */}
+        <div className="flex flex-col lg:flex-row gap-5">
+          <label className="flex flex-col lg:w-1/2 text-sm gap-1">
+            <span className="text-gray-400">Date of Birth</span>
             <input
               type="date"
-              name="dateOfBirth"
               defaultValue={user?.dateOfBirth}
               max={new Date().toISOString().split("T")[0]}
-              className="text-base p-2 border-1 rounded-md border-gray-500/80 bg-gray-700/80"
               {...register("dateOfBirth")}
+              className="p-2 rounded-md bg-gray-700 border border-gray-500 text-base"
             />
           </label>
-          {/*Gender*/}
-          <label className="flex flex-col lg:w-1/2">
-            <h3 className="text-sm text-gray-500 mb-2">Gender</h3>
+
+          <label className="flex flex-col lg:w-1/2 text-sm gap-1">
+            <span className="text-gray-400">Gender</span>
             <select
-              name="Gender"
-              className="text-base p-2 border-1 rounded-md border-gray-500/80 bg-gray-700/80"
-              defaultValue={user?.gender}
+              defaultValue={user?.gender || ""}
               {...register("gender")}
+              className="p-2 rounded-md bg-gray-700 border border-gray-500 text-base"
             >
-              <option value="" selected disabled>
-                Select Gender
-              </option>
-              {genders.map((val, index) => (
-                <option value={val} key={index}>
-                  {val}
-                </option>
+              <option value="" disabled>Select Gender</option>
+              {genders.map((g, i) => (
+                <option key={i} value={g}>{g}</option>
               ))}
             </select>
           </label>
         </div>
-        <div className="flex flex-col lg:flex-row gap-5 w-full">
-          {/*Phone Number*/}
-          <label className="flex flex-col lg:w-1/2">
-            <h3 className="text-sm text-gray-500 mb-2">Phone Number</h3>
+
+        {/* Row 3 - Phone and About */}
+        <div className="flex flex-col lg:flex-row gap-5">
+          <label className="flex flex-col lg:w-1/2 text-sm gap-1">
+            <span className="text-gray-400">Phone Number</span>
             <input
               type="tel"
-              placeholder="Enter your Contact number"
+              placeholder="Enter your contact number"
               defaultValue={user?.contactNumber}
               {...register("contactNumber", {
-                minLength: {
-                  value: 10,
-                  message: "Phone number must be at least 10 digits",
-                },
-                maxLength: {
-                  value: 13,
-                  message: "Phone number can't exceed 13 digits",
-                },
+                minLength: { value: 10, message: "Must be at least 10 digits" },
+                maxLength: { value: 13, message: "Can't exceed 13 digits" },
               })}
-              className="text-base p-2 border-1 rounded-md border-gray-500/80 bg-gray-700/80"
+              className="p-2 rounded-md bg-gray-700 border border-gray-500 text-base"
             />
             {errors.contactNumber && (
-              <span className="text-red-500">
-                {errors.contactNumber.message}
-              </span>
+              <span className="text-red-500">{errors.contactNumber.message}</span>
             )}
           </label>
-          {/*About*/}
-          <label className="flex flex-col lg:w-1/2">
-            <h3 className="text-sm text-gray-500 mb-2">About</h3>
+
+          <label className="flex flex-col lg:w-1/2 text-sm gap-1">
+            <span className="text-gray-400">About</span>
             <textarea
-              type="text"
-              name="about"
-              placeholder="Write Something about yourself"
               rows={3}
+              placeholder="Write something about yourself"
               defaultValue={user?.about}
-              className="text-base p-2 border-1 rounded-md border-gray-500/80 bg-gray-700/80"
               {...register("about")}
+              className="p-2 rounded-md bg-gray-700 border border-gray-500 text-base resize-none"
             />
           </label>
         </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-3 rounded-lg w-[80px] lg:w-[150px] cursor-pointer self-end-safe"
-        >
-          Save
-        </button>
+
+        {/* Submit Button */}
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white px-6 py-2 rounded-lg text-sm sm:text-base font-semibold"
+          >
+            Save
+          </button>
+        </div>
       </form>
     </div>
   );

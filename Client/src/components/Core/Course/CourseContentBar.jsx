@@ -18,10 +18,10 @@ export default function CourseContentBar({ course, isActive, handleActive }) {
   }, [active])
 
   return (
-    <div className="overflow-hidden border border-solid border-gray-700 bg-gray-800 text-white last:mb-0 rounded-md">
+    <div className="overflow-hidden border border-solid border-gray-700  text-white last:mb-0 rounded-md">
       {/* Section Header */}
       <div
-        className="flex cursor-pointer items-start justify-between px-6 py-5 bg-opacity-20 hover:bg-gray-700 transition-colors duration-200"
+        className="flex cursor-pointer items-start justify-between px-6 py-5 bg-opacity-20 bg-gradient-to-b from-slate-800 via-gray-900 to-slate-800 hover:bg-gray-700 transition-colors duration-200"
         onClick={() => handleActive(course._id)}
       >
         <div className="flex items-center gap-2">
@@ -40,7 +40,7 @@ export default function CourseContentBar({ course, isActive, handleActive }) {
       {/* Section Content */}
       <div
         ref={contentEl}
-        className="relative h-0 overflow-hidden bg-gray-900 transition-[height] duration-300 ease-in-out"
+        className="relative h-0 overflow-hidden transition-[height] duration-300 ease-in-out bg-gradient-to-bl from-slate-800 via-gray-700 to-slate-800"
         style={{ height: sectionHeight }}
       >
         <div className="flex flex-col gap-2 px-6 py-5 text-gray-200 font-semibold text-sm">

@@ -110,7 +110,7 @@ const CourseDetails = () => {
 
   return (
     <>
-      <div className="relative w-full bg-gray-900">
+      <div className="relative w-full bg-gradient-to-br from-slate-950 via-gray-800 to-slate-950">
         {/* Hero Section */}
         <div className="mx-auto box-content px-4 lg:w-[1260px] 2xl:relative">
           <div className="mx-auto grid min-h-[450px] max-w-maxContentTab justify-items-center py-8 lg:mx-0 lg:justify-items-start lg:py-0 xl:max-w-[810px]">
@@ -216,9 +216,9 @@ const CourseDetails = () => {
       </div>
 
       {/* Course Body */}
-      <div className="mx-auto box-content px-4 text-start text-white lg:w-[1260px]">
+      <div className="mx-auto box-content px-4 text-start text-white lg:w-[1260px] bg-gradient-to-r from-black via-gray-900 to-black">
         <div className="mx-auto max-w-maxContentTab lg:mx-0 xl:max-w-[810px]">
-          <div className="my-8 border border-gray-700 p-8">
+          <div className="my-8 border border-gray-700 p-8 bg-gradient-to-br from-slate-950 via-gray-800 to-slate-950">
             <p className="text-3xl font-semibold uppercase tracking-wider">
               What you'll Learn?
             </p>
@@ -286,7 +286,7 @@ const CourseDetails = () => {
               </p>
             </div>
             {/* Reviews */}
-            <div className="mb-12 py-4 border-1 border-gray-700 p-5">
+            <div className="mb-12 py-4 border-1 border-gray-700 p-5 bg-gradient-to-br from-slate-950 via-gray-800 to-slate-950">
               <p className="text-[30px] font-semibold">Reviews</p>
               <div className="flex items-center gap-4 py-4">
                 <span className="text-2xl">{`${avgReviewCount}/5.0`}</span>
@@ -296,7 +296,7 @@ const CourseDetails = () => {
                 ratingAndReviews.map((review, index) => (
                   <div
                     key={index}
-                    className="w-full  border-b border-gray-500 bg-gray-900 space-y-4 p-3 text-gray-200 text-sm mb-5"
+                    className="w-full  border-b border-gray-500 space-y-4 p-3 text-gray-200 text-sm mb-5"
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-1">

@@ -4,6 +4,7 @@ import { getStudentCourses } from "../../../services/operations/courseapis";
 import { useNavigate } from "react-router-dom";
 import convertSecondsToDuration from "../../../utils/secToDuration";
 import CTAButton from "../../Home/CTAButton";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function EnrolledCourses() {
   const { token } = useSelector((state) => state.auth);
@@ -65,7 +66,11 @@ export default function EnrolledCourses() {
             <div
               key={course.id}
               className="flex flex-row bg-gray-800/80 p-4 rounded-lg hover:bg-gray-800 transition cursor-pointer lg:gap-20"
-              onClick={() => navigate(`/view-course/${course.id}/section/${course.sectionId}/sub-section/${course.subSectionId}`)}
+              onClick={() =>
+                navigate(
+                  `/view-course/${course.id}/section/${course.sectionId}/sub-section/${course.subSectionId}`
+                )
+              }
             >
               <div className="flex flex-col lg:flex-row items-center justify-between flex-grow">
                 {/* Course Info */}
@@ -77,7 +82,9 @@ export default function EnrolledCourses() {
                     className="md:w-38 rounded-md object-contain"
                   />
                   <div>
-                    <h3 className="font-semibold text-base md:text-lg">{course.title}</h3>
+                    <h3 className="font-semibold text-base md:text-lg">
+                      {course.title}
+                    </h3>
                     <p className="text-xs md:text-sm text-gray-400">
                       {course.description.substring(0, 50) + "..."}
                     </p>
@@ -112,10 +119,22 @@ export default function EnrolledCourses() {
           ))}
         {filteredCourses.length == 0 && (
           <div className="flex flex-col gap-5 justify-center items-center w-full rounded-b-xl bg-gray-800 h-[50vh] text-2xl text-center">
-            {filter=="All"&&<div>You are not Enrolled in any Courses!</div>}
-            {filter=="Pending"&&<div>You have no Pending Courses!</div>}
-            {filter=="Completed"&&<div>You have not Completed any Courses Yet!</div>}
-            {filter=="All"&&<div className="text-lg"><CTAButton text="Buy Available Courses" active="true" arrow={true} action={()=>navigate("/search/all-courses")}/></div>}
+            {filter == "All" && <div>You are not Enrolled in any Courses!</div>}
+            {filter == "Pending" && <div>You have no Pending Courses!</div>}
+            {filter == "Completed" && (
+              <div>You have not Completed any Courses Yet!</div>
+            )}
+            {filter == "All" && (
+              <div className="text-lg">
+                <button
+                  onClick={() => navigate("/search/all-courses")}
+                  className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white px-6 py-2 rounded-lg text-sm sm:text-base font-semibold flex items-center gap-2"
+                >
+                  <span>Buy Available Courses</span>
+                  <FaArrowRightLong />
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

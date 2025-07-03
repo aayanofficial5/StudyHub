@@ -41,9 +41,9 @@ const ViewCourse = () => {
   return (
     <>
       <div className="relative">
-        <div className="flex flex-row w-full gap-10">
+        <div className="flex flex-row w-full">
           <VideoDetailsSidebar setReviewModal={setReviewModal} />
-          <div className="flex justify-center items-center w-full min-h-[79vh] px-10 lg:px-20 my-10">
+          <div className="flex justify-center items-center w-full min-h-[79vh] px-10 lg:px-20 py-10 bg-gradient-to-bl from-slate-950 via-gray-800 to-slate-950">
             {loading ? <Loading /> : <Outlet />}
           </div>
         </div>

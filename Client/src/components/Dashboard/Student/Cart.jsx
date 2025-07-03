@@ -41,7 +41,7 @@ const Cart = () => {
       <h1 className="text-2xl md:text-3xl font-bold">Your Cart</h1>
       
 
-      <div className="w-full bg-gray-900 rounded-lg p-6 sm:p-10">
+      <div className="w-full bg-gray-800/80 rounded-lg p-6 sm:p-10">
         {!cart.length ? (
           <div className="flex flex-col justify-center items-center gap-8">
             <p className="text-xl sm:text-2xl font-semibold">Your cart is empty!</p>
@@ -71,7 +71,7 @@ const Cart = () => {
             </div>
 
             {/* Summary Section */}
-            <div className="bg-gray-800 p-6 rounded-2xl shadow-lg w-full lg:w-[40%] flex flex-col gap-4 h-fit">
+            <div className="bg-slate-950/90 p-6 rounded-2xl shadow-lg w-full lg:w-[40%] flex flex-col gap-4 h-fit">
               <h3 className="text-lg sm:text-xl font-semibold text-yellow-400">
                 Order Summary
               </h3>

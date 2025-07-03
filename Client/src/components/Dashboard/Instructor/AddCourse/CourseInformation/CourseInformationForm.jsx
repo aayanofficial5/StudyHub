@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaRupeeSign } from "react-icons/fa";
+import { FaRupeeSign, FaSave } from "react-icons/fa";
 import CTAButton from "./../../../../Home/CTAButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,6 +13,7 @@ import ChipInput from "./ChipInput";
 import Upload from "../Upload";
 import { COURSE_STATUS } from "../../../../../utils/constant";
 import toast from "react-hot-toast";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const CourseInformationForm = () => {
   const {
@@ -94,7 +95,7 @@ const CourseInformationForm = () => {
           formData.append("thumbnail", data.courseImage);
         }
 
-        const result = await editCourseDetails(formData,token);
+        const result = await editCourseDetails(formData, token);
 
         if (result) {
           dispatch(setStep(2));
@@ -113,7 +114,7 @@ const CourseInformationForm = () => {
       formData.append("category", data.courseCategory);
       formData.append("status", COURSE_STATUS.DRAFT);
       formData.append("thumbnail", data.courseImage);
-      const result = await createCourse(formData,token);
+      const result = await createCourse(formData, token);
       if (result) {
         dispatch(setStep(2));
         dispatch(setCourse(result));
@@ -255,25 +256,21 @@ const CourseInformationForm = () => {
           </p>
         )}
       </div>
-      {/* Next Button */}
-      <div className="flex justify-end gap-x-3">
+      {/* Buttons */}
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-end gap-3 w-full mt-4">
         {editCourse && (
-          <div>
-            <CTAButton
-              active={false}
-              text="Continue Without Saving"
-              arrow={false}
-              action={() => dispatch(setStep(2))}
-            />
-          </div>
+          <button
+            className="w-full sm:w-auto border bg-white/20 border-white/20 text-white hover:bg-white/10 transition-all duration-200 px-6 py-2 rounded-lg text-sm sm:text-base font-medium flex items-center justify-center gap-2"
+            onClick={() => dispatch(setStep(2))}
+          >
+            <span>Continue Without Saving</span>
+            <FaArrowRightLong />
+          </button>
         )}
-        <div>
-          <CTAButton
-            active={true}
-            text={!editCourse ? "Next" : "Save Changes"}
-            arrow={!editCourse && true}
-          />
-        </div>
+        <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white px-6 py-2 rounded-lg text-sm sm:text-base font-semibold flex items-center justify-center gap-2">
+          <span>{!editCourse ? "Next" : "Save Changes"}</span>
+          {!editCourse ? <FaArrowRightLong /> : <FaSave />}
+        </button>
       </div>
     </form>
   );

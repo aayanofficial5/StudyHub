@@ -58,21 +58,20 @@ const MyCourses = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-black opacity-80 w-full">
+      <div className="min-h-screen opacity-80 w-full">
         <div className="flex justify-between items-center mb-8 w-full">
-          <h1 className="text-3xl font-bold">My Courses</h1>
-          <div className="text-xl">
-          <CTAButton
-            active={true}
-            text="Add Course"
-            action={() => {
+          <h1 className="text-xl md:text-3xl font-bold">My Courses</h1>
+          <button
+            className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white px-4 py-2 rounded-lg text-base md:text-lg font-semibold flex items-center gap-2"
+            onClick={() => {
               dispatch(setEditCourse(null));
               navigate("/dashboard/add-course");
             }}
           >
             <FaPlus />
-          </CTAButton>
-        </div></div>
+            <span>Add Course</span>
+          </button>
+        </div>
         <div className="bg-gray-800/80 text-xl font-semibold text-gray-200 rounded-2xl shadow-md hidden md:flex lg:flex flex-row mb-5 justify-between py-4 px-5">
           <div>Courses</div>
           <div className="flex gap-15">

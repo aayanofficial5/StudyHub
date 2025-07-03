@@ -163,7 +163,7 @@ export default function VideoDetails() {
 
   /* ───────── UI ───────── */
   return (
-    <section className="mx-auto w-full max-w-screen-2xl px-4 py-4 md:py-6">
+    <section className="mx-auto w-full max-w-screen-2xl px-4 py-4 md:py-6 ">
       {/* Back (mobile) */}
       <button
         onClick={() => navigate(-1)}

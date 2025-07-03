@@ -6,15 +6,16 @@ import {
   setEditCourse,
   setStep,
 } from "../../../../../redux/slices/courseSlice";
-import CTAButton from "../../../../Home/CTAButton";
 import { IoMdAddCircle } from "react-icons/io";
-import { FaEdit } from "react-icons/fa";
+import {  FaArrowRightLong, FaArrowLeftLong } from "react-icons/fa6";
 import NestedView from "./NestedView";
 import {
   createSection,
   updateSection,
 } from "./../../../../../services/operations/courseapis";
 import toast from "react-hot-toast";
+import { FaEdit } from "react-icons/fa";
+
 const CourseBuilderForm = () => {
   const {
     register,
@@ -38,6 +39,7 @@ const CourseBuilderForm = () => {
     dispatch(setEditCourse(true));
     dispatch(setStep(1));
   };
+
   const goNext = () => {
     if (course.courseContent.length === 0) {
       toast.error("Please add at least one section");
@@ -51,23 +53,29 @@ const CourseBuilderForm = () => {
     }
     dispatch(setStep(3));
   };
+
   const onSubmit = async (data) => {
     let result = null;
     if (!editSectionName) {
-      console.log(data);
-      result = await createSection({
-        sectionName: data.sectionName,
-        courseId: course?._id,
-      },token);
+      result = await createSection(
+        {
+          sectionName: data.sectionName,
+          courseId: course?._id,
+        },
+        token
+      );
       if (result) {
         dispatch(setCourse(result));
         handleCancelEdit();
       }
     } else {
-      result = await updateSection({
-        sectionId: editSectionName,
-        sectionName: data.sectionName,
-      },token);
+      result = await updateSection(
+        {
+          sectionId: editSectionName,
+          sectionName: data.sectionName,
+        },
+        token
+      );
       if (result) {
         const updatedCourseContent = course?.courseContent.map((section) =>
           section?._id == result?._id ? result : section
@@ -89,8 +97,9 @@ const CourseBuilderForm = () => {
 
   return (
     <div className="space-y-6 text-white w-full">
-      {/* Section Name Input */}
       <h1 className="text-3xl font-semibold mb-6">Course Builder</h1>
+
+      {/* Form to create/edit section */}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-6 text-white w-full"
@@ -113,19 +122,19 @@ const CourseBuilderForm = () => {
           )}
         </div>
 
-        {/* Create Section Button */}
-        <div className="flex flex-row items-end gap-5">
-          <div>
-            <CTAButton
-              active={true}
-              text={editSectionName ? "Edit Section Name" : "Create Section"}
-            >
-              {editSectionName ? <FaEdit /> : <IoMdAddCircle size={25} />}
-            </CTAButton>
-          </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-end gap-3">
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white px-6 py-2 rounded-lg text-sm sm:text-base font-semibold flex items-center gap-2"
+          >
+            <span>{editSectionName ? "Edit Section Name" : "Create Section"}</span>
+            {editSectionName ? <FaEdit /> : <IoMdAddCircle className="text-2xl md:text-3xl" />}
+          </button>
+
           {editSectionName && (
             <button
-              className="underline text-sm cursor-pointer"
+              type="button"
+              className="underline text-sm sm:text-base cursor-pointer"
               onClick={handleCancelEdit}
             >
               Cancel Edit
@@ -134,21 +143,32 @@ const CourseBuilderForm = () => {
         </div>
       </form>
 
-      {/* Created Sections */}
+      {/* Show existing sections if available */}
       {course?.courseContent?.length > 0 && (
         <NestedView
           handleChangeByEditSectionName={handleChangeByEditSectionName}
         />
       )}
 
-      {/* Navigation Buttons */}
-      <div className="flex justify-end gap-x-3">
-        <div>
-          <CTAButton active={false} text="Back" action={goBack} />
-        </div>
-        <div>
-          <CTAButton active={true} text="Next" arrow={true} action={goNext} />
-        </div>
+      {/* Navigation buttons */}
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-end gap-3 w-full mt-4">
+        <button
+          type="button"
+          onClick={goBack}
+          className="w-full sm:w-auto border bg-white/20 border-white/20 text-white hover:bg-white/10 transition-all duration-200 px-6 py-2 rounded-lg text-sm sm:text-base font-medium flex items-center justify-center gap-2"
+        >
+          <FaArrowLeftLong />
+          <span>Back</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={goNext}
+          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white px-6 py-2 rounded-lg text-sm sm:text-base font-semibold flex items-center justify-center gap-2"
+        >
+          <span>Next</span>
+          <FaArrowRightLong />
+        </button>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { setCourse } from "../../../../../redux/slices/courseSlice";
 import { MdCancel } from "react-icons/md";
 import Upload from "./../Upload";
 import CTAButton from "../../../../Home/CTAButton";
+import { FaSave } from "react-icons/fa";
 
 const SubSectionModal = ({
   modalData,
@@ -106,8 +107,8 @@ const SubSectionModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[1000] overflow-auto bg-black/60 backdrop-blur-sm py-10 flex justify-center">
-      <div className=" flex flex-col w-[70%] lg:w-[45%] bg-gray-800/80 border border-gray-500/70 rounded-lg min-h-fit gap-6 overflow-hidden shadow-2xl shadow-black ">
+    <div className="fixed inset-0 z-[1000] overflow-auto bg-black/60 backdrop-blur-sm  pb-15 py-10 md:py-10 flex justify-center">
+      <div className=" flex flex-col w-[85%] lg:w-[45%] bg-gray-800/80 border border-gray-500/70 rounded-lg min-h-fit gap-6 overflow-hidden shadow-2xl shadow-black ">
         <div className="flex flex-row justify-between items-center px-3 py-4 border-b bg-gray-700 border-gray-500/70 opacity-80">
           <h1 className="text-2xl font-semibold">
             {view && "Viewing"}
@@ -173,7 +174,10 @@ const SubSectionModal = ({
           </div>
           {!view && (
             <div className="flex justify-end">
-              <CTAButton text={edit ? "Save Changes" : "Save"} active={true} />
+              <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white px-6 py-2 rounded-lg text-sm sm:text-base font-semibold flex items-center justify-center gap-2">
+                        <span>{edit ? "Save Changes" : "Save"}</span>
+                        {<FaSave />}
+                      </button>
             </div>
           )}
         </form>
