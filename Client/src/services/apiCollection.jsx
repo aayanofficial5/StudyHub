@@ -11,6 +11,7 @@ export const courseEndpoints = {
   getStudentCoursesApi: "/course/student",
   getCoursesBySearchApi: "/course/search/",
   getFullDetailsOfCourseApi: "/course/full/",
+  
   // category
   getCourseCategoriesApi: "/course/categories",
   createCategoryApi: "/course/categories",
@@ -60,4 +61,5 @@ export const paymentEndpoints = {
   coursePaymentApi: "/payment/capture",
   verifyPaymentApi: "/payment/verify",
   sendPaymentSuccessEmailApi: "/payment/success-email",
+  enrollFreeCourseApi:"/payment/enroll-free-course",
 };

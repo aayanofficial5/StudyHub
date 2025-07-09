@@ -11,7 +11,7 @@ import getAvgRating from "../utils/getAvgRating";
 import formatDate from "../services/formatDate";
 import CourseContentBar from "../components/Core/Course/CourseContentBar";
 import CourseDetailsCard from "../components/Core/Course/CourseDetailsCard";
-import { buyCourse } from "../services/operations/studentFeaturesApi";
+import { buyCourse, enrollFreeCourse } from "../services/operations/studentFeaturesApi";
 import { ACCOUNT_TYPE } from "../utils/constant";
 import CTAButton from "../components/Home/CTAButton";
 import { setTotalItems } from "../redux/slices/cartSlice";
@@ -60,7 +60,10 @@ const CourseDetails = () => {
 
   const handleBuyCourse = async () => {
     if (token) {
+      if(price>=1)
       await buyCourse([courseId], user, navigate, dispatch,token);
+      else
+      await enrollFreeCourse([courseId], navigate, dispatch,token)
     }
   };
 
@@ -171,7 +174,7 @@ const CourseDetails = () => {
                               navigate(
                                 `/view-course/${courseId}/section/${sectionId}/sub-section/${subSectionId}`
                               )
-                          : handleBuyCourse
+                          : ()=>handleBuyCourse(price)
                       }
                     />
 

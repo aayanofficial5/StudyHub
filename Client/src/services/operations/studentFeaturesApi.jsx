@@ -5,8 +5,12 @@ import { toast } from "react-hot-toast";
 import { resetCart } from "../../redux/slices/cartSlice";
 import { setPaymentLoading } from "../../redux/slices/courseSlice";
 
-const { coursePaymentApi, verifyPaymentApi, sendPaymentSuccessEmailApi } =
-  paymentEndpoints;
+const {
+  coursePaymentApi,
+  verifyPaymentApi,
+  sendPaymentSuccessEmailApi,
+  enrollFreeCourseApi,
+} = paymentEndpoints;
 
 export async function buyCourse(courses, user, navigate, dispatch, token) {
   const toastId = toast.loading(
@@ -128,5 +132,39 @@ async function sendPaymentSuccessEmail(response, orderResponse, token) {
     });
   } catch (error) {
     console.error("Error sending payment success email:", error);
+  }
+}
+
+export async function enrollFreeCourse(courses, navigate, dispatch, token) {
+  const toastId = toast.loading("Enrolling in free course(s)...");
+  // console.log("Enrolling in free course(s)...");
+  dispatch(setPaymentLoading(true));
+
+  try {
+    const response = await apiConnector(
+      "POST",
+      enrollFreeCourseApi,
+      { courses }, // only courses array sent, no Razorpay fields
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    if (!response.data.success) {
+      throw new Error(response.data.message);
+    }
+
+    toast.success(response?.data?.message);
+    dispatch(resetCart());
+    localStorage.setItem("totalItems", JSON.stringify(0));
+    navigate("/dashboard/enrolled-courses");
+  } catch (error) {
+    console.error("Error in enrollFreeCourses:", error);
+    const errMsg =
+      error?.response?.data?.message || "Failed to enroll in free courses.";
+    toast.error(errMsg);
+  } finally {
+    toast.dismiss(toastId);
+    dispatch(setPaymentLoading(false));
   }
 }

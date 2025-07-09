@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CartItem from "./CartItem";
-import { buyCourse } from "../../../services/operations/studentFeaturesApi";
+import { buyCourse, enrollFreeCourse } from "../../../services/operations/studentFeaturesApi";
 import Loading from './../../Loading';
 import CTAButton from './../../Home/CTAButton';
 
@@ -24,7 +24,10 @@ const Cart = () => {
   const handleBuyCourses = async (cart) => {
     const courses = cart.map((course) => course._id);
     if (token) {
+      if(totalAmount>=1)
       buyCourse(courses, user, navigate, dispatch, token);
+      else
+      enrollFreeCourse(courses, navigate, dispatch, token);
     }
   };
 
