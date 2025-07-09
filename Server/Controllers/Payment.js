@@ -11,6 +11,7 @@ const {
 const CourseProgress = require("../Models/CourseProgress");
 require("dotenv").config();
 
+
 // capturePayment handler function
 exports.capturePayment = async (req, res) => {
   try {
@@ -94,7 +95,7 @@ exports.verifyPayment = async (req, res) => {
 
     const userId = req.user?.id;
 
-    // Basic validations
+    // ✅ Basic validation
     if (!userId || !courses || courses.length === 0) {
       return res.status(400).json({
         success: false,
@@ -102,14 +103,13 @@ exports.verifyPayment = async (req, res) => {
       });
     }
 
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-      return res.status(400).json({
-        success: false,
-        message: "Incomplete payment information.",
-      });
+    // ✅ Handle FREE COURSES (no Razorpay payment)
+    if (!razorpay_payment_id && !razorpay_order_id && !razorpay_signature) {
+      const result = await enrollInFreeCourses(userId, courses);
+      return res.status(result.success ? 200 : 400).json(result);
     }
 
-    // Signature verification
+    // ✅ Validate Razorpay Signature (for paid courses)
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_SECRET)
@@ -123,84 +123,24 @@ exports.verifyPayment = async (req, res) => {
       });
     }
 
-    // Proceed to enroll user in courses
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found.",
-      });
-    }
+    // ✅ Payment verified — enroll in courses
+    const result = await enrollInFreeCourses(userId, courses);
 
-    const errors = [];
-    const enrolledCourses = [];
-
-    await Promise.all(
-      courses.map(async (courseId) => {
-        try {
-          const updatedCourse = await Course.findByIdAndUpdate(
-            courseId,
-            { $addToSet: { studentsEnrolled: userId } },
-            { new: true }
-          );
-
-          if (!updatedCourse) {
-            errors.push(`Course with ID ${courseId} not found.`);
-            return;
-          }
-          const courseProgress = await CourseProgress.create({
-            courseId: courseId,
-            userId: userId,
-            completedVideos: [],
-          });
-          // console.log("Course Progress Created:", courseProgress);
-
-          const enrolledStudent = await User.findByIdAndUpdate(
-            userId,
-            {
-              $addToSet: {
-                course: courseId,
-                courseProgress: courseProgress._id,
-              },
-            },
-            { new: true }
-          );
-
-          await mailSender(
-            enrolledStudent.email,
-            "Course Purchased Successfully",
-            coursePurchased(
-              enrolledStudent.email,
-              enrolledStudent.firstName,
-              enrolledStudent.courseName
-            )
-          );
-
-          enrolledCourses.push(updatedCourse.courseName);
-        } catch (err) {
-          errors.push(`Failed to enroll in course ${courseId}: ${err.message}`);
-        }
-      })
-    );
-
-    return res.status(200).json({
-      success: errors.length === 0,
-      message:
-        errors.length === 0
-          ? "Payment verified and courses enrolled successfully."
-          : "Payment verified, but some courses failed to enroll.",
+    return res.status(result.success ? 200 : 207).json({
+      success: result.success,
+      message: "Payment verified and enrollment attempted.",
       data: {
         razorpay_order_id,
         razorpay_payment_id,
-        enrolledCourses,
-        errors,
+        enrolledCourses: result.enrolledCourses,
+        errors: result.errors,
       },
     });
   } catch (error) {
     console.error("Error during payment verification:", error.message);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error during payment verification.",
+      message: "Internal server error during payment verification.",
     });
   }
 };
@@ -228,5 +168,106 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
     // console.log("Payment Success Email Sent Successfully:", mailResponse);
   } catch (error) {
     console.error("Error sending payment success email:", error);
+  }
+};
+
+// enrollFreeCourse
+exports.enrollFreeCourse = async (req, res) => {
+  const userId = req.user?.id;
+  const { courses } = req.body;
+  console.log(courses);
+
+  if (!userId || !courses || courses.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "User or course information missing.",
+    });
+  }
+
+  const result = await enrollInFreeCourses(userId, courses);
+
+  return res.status(result.success ? 200 : 400).json(result);
+};
+
+
+const enrollInFreeCourses = async (userId, courses) => {
+  const errors = [];
+  const enrolledCourses = [];
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return {
+        success: false,
+        message: "User not found.",
+        enrolledCourses,
+        errors: ["User not found"],
+      };
+    }
+
+    await Promise.all(
+      courses.map(async (courseId) => {
+        try {
+          const updatedCourse = await Course.findByIdAndUpdate(
+            courseId,
+            { $addToSet: { studentsEnrolled: userId } },
+            { new: true }
+          );
+
+          if (!updatedCourse) {
+            errors.push(`Course with ID ${courseId} not found.`);
+            return;
+          }
+
+          const courseProgress = await CourseProgress.create({
+            courseId,
+            userId,
+            completedVideos: [],
+          });
+
+          const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+              $addToSet: {
+                course: courseId,
+                courseProgress: courseProgress._id,
+              },
+            },
+            { new: true }
+          );
+
+          await mailSender(
+            updatedUser.email,
+            "Enrolled in Free Course Successfully",
+            coursePurchased(
+              updatedUser.email,
+              updatedUser.firstName,
+              updatedCourse.courseName
+            )
+          );
+
+          enrolledCourses.push(updatedCourse.courseName);
+        } catch (err) {
+          errors.push(`Error enrolling in ${courseId}: ${err.message}`);
+        }
+      })
+    );
+
+    return {
+      success: errors.length === 0,
+      message:
+        errors.length === 0
+          ? "Enrolled in all free courses successfully."
+          : "Some courses failed to enroll.",
+      enrolledCourses,
+      errors,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: "Unexpected error during enrollment.",
+      enrolledCourses,
+      errors: [err.message],
+    };
   }
 };

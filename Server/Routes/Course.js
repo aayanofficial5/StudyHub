@@ -51,6 +51,7 @@ router.get("/:courseId", getCourseDetails);
 router.get("/search/:searchTerm", getCoursesBySearch);
 router.get("/full/:courseId", auth, isStudent, getFullCourseDetails);
 router.put("/progress", auth, isStudent, updateCourseProgress);
+
 // sections routes
 router.post("/section", auth, isInstructor, createSection);
 router.put("/section", auth, isInstructor, updateSection);
@@ -64,4 +65,5 @@ router.delete("/section/subsection", auth, isInstructor, deleteSubSection);
 // rating routes
 router.post("/rating/review", auth, isStudent, createRatingAndReview);
 router.get("/rating/review",getAllRatingAndReview);
+
 module.exports = router;
